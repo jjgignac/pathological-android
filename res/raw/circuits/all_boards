@@ -1,0 +1,722 @@
+# Each tile consists of three characters:  A tile type, a path descriptor
+# and a tile-type-specific control character.  If the tile is a painter or
+# a filter, the control character should be a color.  If the tile is a
+# switch, the control character should be the secondary switch direction
+# (^, >, v, or <).  If the tile is an initial marble location, the control
+# character should be the marble's initial direction of travel.  If the
+# tile is a teleporter, the control character is an arbitrary label used to
+# match it up with its partner teleporter.  If the tile type is a buffer,
+# the control character may be either a color to denote the initial marble
+# color, or blank to denote that the buffer is initially empty.  All other
+# tile types ignore the control character.
+
+# Note that this file is not validated.  If there are errors of any sort
+# in this file, the results are undefined.
+
+# Tile Types           Paths          Colors
+# ----------           -----------    ----------
+# O - Wheel            0:    8:W      0 - Black
+# & - Painter          1:N   9:NW     1 - White
+# # - Filter           2:E   a:EW     2 - Blue
+# ^>v< - Arrow/Switch  3:NE  b:NEW    3 - Green
+# = - Teleporter       4:S   c:SW     4 - Yellow
+# % - Trigger          5:NS  d:NSW    5 - Purple
+# ! - Stoplights       6:SE  e:SEW    6 - Red
+# @ - Buffer           7:NSE f:NSEW   7 - Orange
+# X - Shredder                        8 - Crazy (wildcard)
+# * - Replicator
+# 0-8 - Initial marble location (the digit specifies the marble color)
+
+# Level parameters:
+# -----------------
+# name        - The name of the level
+# author      - The person who designed the level (may include email address)
+# launchtimer - The launch timer, measured in number of passes (default: 6)
+# boardtimer  - The board timer, in seconds (default: 30 * number of wheels)
+# colors      - The colors that will be served on this level (default: 2,3,4,6)
+# maxmarbles  - The maximum number of active marbles (default: 10)
+# stoplight   - The colors in the stoplight (default: 6,4,3)
+
+name=Easy Does It
+author=Mike Brenneman
+boardtimer=600
+launchtimer=90
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   |   |   |O7 |Od |   |   |   |
+|   |   |   | 5 | 5 |   |   |   |
+|   |   |   | 5 | 5 |   |   |   |
+|   |   |   | 5 | 5 |   |   |   |
+|   |   |   |O3 |O9 |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Grand Canyon
+author=Mike Brenneman
+boardtimer=300
+launchtimer=10
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   |O5 |   |   |   |   |O5 |   |
+|   | 5 |   |   |   |   | 5 |   |
+|   | 5 |   |   |   |   | 5 |   |
+|   | 5 |   |   |   |   | 5 |   |
+|   |O1 |   |   |   |   |O1 |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=The Abyss
+author=John-Paul Gignac <jp@gignac.org>
+boardtimer=300
+launchtimer=15
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   |O7 | a | a | a | a |Od |   |
+|   | 3 | a |ve |ve | a | 9 |   |
+|   |   |   | 5 | 5 |   |   |   |
+|   |   |   |O7 |Od |   |   |   |
+|   |   |   |O3 |O9 |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Follow the Leader
+author=John-Paul Gignac <jp@gignac.org>
+boardtimer=240
++---+---+---+---+---+---+---+---+
+| 6 | a | a |O9 |O2 | a | a | c |
+| 5 | 6 | c | 6 | c | 6 | a | 9 |
+| 3 | 9 | 5 | 5 | 5 | 3 | a | c |
+| 6 | c | 3 | 9 | 5 | 6 | c | 5 |
+| 5 | 3 | a | a | 9 | 5 | 5 | 5 |
+| 3 | a | a | a | a | 9 | 3 | 9 |
++---+---+---+---+---+---+---+---+
+
+name=Tickled Pink
+author=Kim Gignac
+boardtimer=150
++---+---+---+---+---+---+---+---+
+|   |   |   |O5 |   |O5 |   |   |
+|   |   |   | 5 |   | 5 |   |   |
+|   |>2 |&a4|Ob | a |Od |   |   |
+|   |   |   |   |   |&55|   |   |
+|   |   |   |   |   |O1 |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Split Ends
+author=Mike Brenneman
+boardtimer=180
+launchtimer=4
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   |   |O5 |   |   |O5 |   |   |
+|   |   | 5 |   |   | 5 |   |   |
+|   |   | 3 |Oc |O6 | 9 |   |   |
+|   |   |   | 5 | 5 |   |   |   |
+|   |O2 |&a4| 9 | 3 |&a3|O8 |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Trigger Practice
+author=Mike Brenneman
+boardtimer=240
+launchtimer=2
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   |   | 5 |   |   |   |   |   |
+|O2 |&a4|Of | a | a |&a3| a |O8 |
+|   |   |&52|   |%  |   |   |   |
+|   |   |O1 |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Stop and Go
+author=John-Paul Gignac <jp@gignac.org>
+boardtimer=120
++---+---+---+---+---+---+---+---+
+|   |   |O7 | a | c |   |   |   |
+|   |   | 5 |   |@5 |   |   |   |
+|   |   | 5 |   | 3 | a |O8 |   |
+|   |   | 5 |   |   |   |   |   |
+|   |   |O1 |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Ketchup and Mustard
+author=Mike Brenneman
+boardtimer=300
+launchtimer=8
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   |   |O5 |   |   |O5 |   |   |
+|   |   | 5 |O6 |Oc | 5 |   |   |
+|   |   | 5 | 5 | 5 | 5 |   |   |
+|   |   | 5 | 5 | 5 | 5 |   |   |
+|>2 |&a6|Ob | 9 | 3 |Ob |&a4|<8 |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Filters 101
+author=Mike Brenneman
+boardtimer=240
+launchtimer=6
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   |O5 |   |   |   |   |O5 |   |
+|   | 5 |   |   |   |   | 5 |   |
+|   | 3 |#a3| c | 6 |#a6| 9 |   |
+|   |   |   | 5 | 5 |   |   |   |
+|   |   |   |O3 |O9 |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Disconnect
+author=Kim Gignac
+boardtimer=120
++---+---+---+---+---+---+---+---+
+|   |   |O7 | a | a | c |   |   |
+|   |   | 5 |   |   |O1 |   |   |
+|   |   |=1k|   |   |=4k|   |   |
+|   |   |O4 |   |   | 5 |   |   |
+|   |   | 3 | a | a |O9 |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=The Run-Around
+author=John-Paul Gignac
+boardtimer=300
+launchtimer=10
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+| 6 |Of | a | c |O7 | c |O5 |   |
+| 3 | f | a | f | f | 9 | 5 |   |
+|   |#57|O4 |&57| 5 |   | 5 |   |
+|   | 5 |&56| 3 | f |>a |Od |   |
+|   |O5 |^7 | a |Ob | a | 9 |   |
+|   | 3 |O9 |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Transporter Room
+author=Mike Brenneman
+boardtimer=240
+launchtimer=6
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   | 6 |Od |   |   |O7 | c |   |
+|   |O1 | 5 |   |   | 5 |O1 |   |
+|   |   |=5a|   |   |=5a|   |   |
+| 6 | a |O9 |   |   |O3 | a | c |
+| 3 | a | a | a | a | a | a | 9 |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Red All Over
+author=John-Paul Gignac <jp@gignac.org>
+colors=6
+boardtimer=120
+launchtimer=2
++---+---+---+---+---+---+---+---+
+|   |   |   |   |O7 |Od |   |   |
+|   |   |   |   |O3 |O9 |   |   |
+|   | 6 |0cv|   |   |   |   |   |
+|=2a|1f>|Of |1a<|0cv|   |   |   |
+|   | 5 |03^|1a>|Of |1a<|#a0|=8a|
+|   |#31| a | a |09^|   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Rules of the Road
+author=Kim Gignac
+boardtimer=150
++---+---+---+---+---+---+---+---+
+|   |   |&66|Of | a |vc |   |   |
+|   |   |O1 | 5 |   |O3 |O8 |   |
+|   |   |   |O5 |!  |   |   |   |
+|   |   |   |&54|   |   |   |   |
+|   |   |   |O1 |   |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Criss-Cross
+author=John-Paul Gignac <jp@gignac.org>
+boardtimer=300
++---+---+---+---+---+---+---+---+
+|   |O5 |O5 |   |   |O5 |O5 |   |
+|   | 5 | 5 |   |   | 5 | 5 |   |
+|   |=1d|=1e|   |   |=1a|=1b|   |
+|   |=4a|=4b|   |   |=4d|=4e|   |
+|   | 5 | 5 |   |   | 5 | 5 |   |
+|=2c|Ob |Ob | a | a |Ob |Ob |=8c|
++---+---+---+---+---+---+---+---+
+
+name=Throw-Away Society
+author=John-Paul Gignac <jp@gignac.org>
+maxmarbles=3
+boardtimer=210
++---+---+---+---+---+---+---+---+
+|   | 6 |Of | a |#a3|Oe |&82|   |
+|   |X1 | 5 |   |   | 5 |   |   |
+|   |   |#54|   |   |#52|   |   |
+|   |   |&56|   |   |&55|   |   |
+|   |   |O1 |   |   |O1 |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Waterfalls
+author=Mike Brenneman
+boardtimer=180
+launchtimer=4
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   |   |   |O7 |Od |   |   |   |
+|   |   |=4f|=1f|=1a|=4a|   |   |
+|   |=4e|=1e|O6 |Oc |=1b|=4b|   |
+|=4d|=1d|   | 5 | 5 |   |=1c|=4c|
+|>3 | a | a |O9 |O3 | a | a |<9 |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Multiplicity
+author=John-Paul Gignac <jp@gignac.org>
+boardtimer=60
+launchtimer=3
++---+---+---+---+---+---+---+---+
+|   |   | 6 |Of | a | c |   |   |
+|   |   |*52|*34| c |*52|   |   |
+|   |   | 5 | 6 | 9 | 5 |   |   |
+|   |   |v5 | 3 | c |v5 |   |   |
+|   |   |O1 |v6 | 9 |O1 |   |   |
+|   |   |   |O1 |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Neither Here nor There
+author=John-Paul Gignac <jp@gignac.org>
+boardtimer=180
++---+---+---+---+---+---+---+---+
+|   |   |O7 | a |<a>| a | c |   |
+|   |   | 5 |   |   |   |O5 |   |
+|   |   |v7>| a |Oa | a | 9 |   |
+|   |   | 5 |   |   |   |   |   |
+|   |   |O1 |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=T-Intersection
+author=John-Paul Gignac
+boardtimer=210
+launchtimer=10
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   |   | 6 |Od | 6 |Od |   |   |
+|   | 6 | f | f | 9 | 5 |   |   |
+|   |O7 | f | f | c | 5 |=4a|   |
+|   |=1a| 5 | 3 | f | f |Od |   |
+|   |   | 5 | 6 | f | f | 9 |   |
+|   |   |O3 | 9 |O3 | 9 |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Which Way is Left?
+author=John-Paul Gignac <jp@gignac.org>
+colors=0,2,7
++---+---+---+---+---+---+---+---+
+|   |   |   |O5 |   |   |   |   |
+|   |   |   | 5 |   |   |   |   |
+|   |   |v6 |>b<|vc |   |   |   |
+|   |   | 5 |   | 3 | a |O8 |   |
+|   |   |O1 |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Jailbirds
+author=John-Paul Gignac
+boardtimer=600
+launchtimer=90
+maxmarbles=30
++---+---+---+---+---+---+---+---+
+|   |O7 |<e |<e |<e |<e | c |   |
+|   |*54| 5 | 5 | 5 | 5 | 5 |   |
+|   |*54| 5 | 5 | 5 | 5 | 5 |   |
+|   |&54| 5 | 5 | 5 | 5 | 5 |   |
+|   | 3 |^b>|^b>|^b>|^b>|^dv|   |
+|   |   |   |   |   |   |O1 |   |
++---+---+---+---+---+---+---+---+
+
+name=The Distributor
+author=John-Paul Gignac <jp@gignac.org>
+maxmarbles=9
+launchtimer=2
+colors=0,1,2,3,4,5,6,7
++---+---+---+---+---+---+---+---+
+| 6 | a | a | a |<ev| a |<ev|<dv|
+| 5 | 6 | a | a | f |<ev| f |<dv|
+| 5 | 5 | 6 | a | f | f |<dv| 5 |
+| 5 | 5 | 5 | 6 | f | f | f |<dv|
+|&50|&51|&52|&53|&54|&55|&56|&57|
+|O1 |O1 |O1 |O1 |O1 |O1 |O1 |O1 |
++---+---+---+---+---+---+---+---+
+
+###############################################################
+##                 Beginning of Medium Level                 ##
+###############################################################
+
+name=Blame Shorty
+author=Kim Gignac
+launchtimer=20
+maxmarbles=10
+boardtimer=240
++---+---+---+---+---+---+---+---+
+|   |   |   |O7 | c |O7 | c |   |
+|   |   |   | 3 |@f |<9 |O1 |   |
+|   |%  |   |   | 5 |   |   |   |
+|   |   |   |   | 5 |   |   |   |
+|   |   |O2 | a | 9 |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=The Matrix
+author=John-Paul Gignac <jp@gignac.org>
+colors=3
+launchtimer=20
+boardtimer=240
++---+---+---+---+---+---+---+---+
+|   |   |O7 |Of |Of |Od |   |   |
+|   |   |O7 |Of |Of |Od |   |   |
+|   |   |O7 |Of |Of |Od |   |   |
+|   |   |O3 |Ob |Ob |O9 |   |   |
+|   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Wildberries
+author=Kim Gignac
+maxmarbles=10
++---+---+---+---+---+---+---+---+
+|   | 5 |   |   |   |v6 |O9 |   |
+|&62|<b>|&a6| a |>ev|@f |=a | c |
+| 5 |   |   |   | 5 | 5 |   |&55|
+| 5 |   |   |   | 5 |O3 |Oe |Od |
+|>7v| a |=a | c | 3 |Oa |Of |Od |
+|&33| a | a |>b | a |&a2|^b>| 9 |
++---+---+---+---+---+---+---+---+
+
+name=Greetings, Earthling 
+author=John-Paul Gignac <jp@gignac.org>
+colors=0,2,4,6,7
++---+---+---+---+---+---+---+---+
+|   |   |O7 | a |Od |   |   |   |
+|   |O4 | 3 |ve | 9 |O4 |   |   |
+|   |^3 |ve<|>b<|ve>|^9 |   |   |
+|   |   |v7 | a |vd |   |   |   |
+|   |   | 5 |   | 5 |   |   |   |
+|   |   |O1 |   |O1 |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=The Blue Zone
+author=Mike Brenneman
+boardtimer=180
+launchtimer=6
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   |O7 | a |=aa|&a2| a |Od |   |
+|   |#52|   |   |   |   |#52|   |
+|   |O7 | a |Oa |Oa |=aa|Od |   |
+|   | 5 |   |   |   |   | 5 |   |
+|   |O3 | a | a | a | a |O9 |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Lily Pads
+author=Kim Gignac
++---+---+---+---+---+---+---+---+
+|   |O7 |&a7| c |   |O5 |   |   |
+|   | 5 |   |=1a|   | 5 |   |   |
+|   |v5 |   |   |   |v7>|O8 |   |
+|   | 5 |=4a|O6 |O8 | 5 |   |   |
+|   |O1 | 5 |O5 |   |O1 |   |   |
+|   |   |>3 | 9 |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Renegade
+author=John-Paul Gignac
+boardtimer=360
+launchtimer=20
+maxmarbles=10
+colors=2,5,3,7,8
++---+---+---+---+---+---+---+---+
+|   |   |=4a|O7 |Od |=4b|   |   |
+|   |O2 |@f2|vd<|>7v|@f3|O8 |   |
+|   |   |65v| 5 | 5 | 5 |   |   |
+|   |O6 |@f5| 9 | 3 |@f7|Oc |   |
+|   | 5 |=1b|   |   |=1a| 5 |   |
+|   |O3 | a | a | a | a |O9 |   |
++---+---+---+---+---+---+---+---+
+
+name=Inky Binky Bonky
+boardtimer=240
+colors=2,4,6
++---+---+---+---+---+---+---+---+
+|v6>| a |<dv|O1 |   |O4 |   |   |
+|>7v| c | 5 | 6 | c | 5 |   |   |
+| 3 |@f |@f |>b |@f |@f |Oa | c |
+| 6 |<dv|X1 |   |^7>| 9 |   | 5 |
+|&54| 5 |   | 6 | 9 |   |O4 | 5 |
+| 3 |>b | a | 9 |   |   | 3 |O9 |
++---+---+---+---+---+---+---+---+
+
+name=Beam Me Up
+author=Mike Brenneman
+boardtimer=480
+launchtimer=6
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   |O5 |O2 |=at|O8 |   |O5 |   |
+|O4 |O7 |Oe | a |=ab|Oe |Od |O4 |
+|=5l| 5 |=5r|   |   |=5l| 5 |=5r|
+|O1 | 3 |Ob |=at| a |Ob | 9 |O1 |
+|   |   |   |O2 |=ab|O8 |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=It's All in the Wrist
+author=John-Paul Gignac <jp@gignac.org>
+colors=0,1,2,3,4,5,6,7
++---+---+---+---+---+---+---+---+
+|X1 |O1 |O1 |O1 |O1 |O1 |O1 |O1 |
+|   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=The Asylum
+author=Kim Gignac
++---+---+---+---+---+---+---+---+
+|   |O3 | c |   |   | 6 |O9 |   |
+|   |   | 3 |Oc |O2 | 9 |   |   |
+|   |%  |   | 5 |   |   |=4b|   |
+|   |   |=2a| 9 |   |   |O5 |   |
+|>6 |O8 |   |   |   |O4 | 5 |   |
+|=1b|   |   |   |   | 3 |<b^|=8a|
++---+---+---+---+---+---+---+---+
+
+name=Target Practice
+author=John-Paul Gignac <jp@gignac.org>
+colors=2,3,7
+maxmarbles=16
+boardtimer=180
+launchtimer=1
+stoplight=2,3,7
++---+---+---+---+---+---+---+---+
+|>6v|*82|   |   |   | 6 | 9 |   |
+|05^| 6 | a | a | a |@f |>a |O8 |
+|>7v|Of | a | a | a |@f |>a |O8 |
+| 5 | 3 | a | a | a |@f |>a |O8 |
+|X1 |   |   |   |   | 3 |X8 |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Lost in the Shuffle
+author=John-Paul Gignac <jp@gignac.org>
+colors=0
+maxmarbles=20
+boardtimer=600
+launchtimer=1
++---+---+---+---+---+---+---+---+
+|   |   |   | 6 | c | 6 | 9 |   |
+|O2 |#a6|<a |@f |@f |@f | c |X4 |
+|O2 |#a6|<a |@f |@f |@f |Of |<d^|
+|O2 |#a6|<a |@f |@f |@f | 9 |65v|
+|   |   |   |X1 | 3 | 9 |   |v5^|
+|   |   |   |   |   |   |   |*12|
++---+---+---+---+---+---+---+---+
+
+name=The Sorter
+author=John-Paul Gignac <jp@gignac.org>
+maxmarbles=9
+launchtimer=2
+colors=0,1,2,3,4,5,6,7
++---+---+---+---+---+---+---+---+
+| 6 | a | a |>b | a | a | a | c |
+|v7^|ve<|ve<|ve<|ve<|ve<|ve<|vd<|
+|#50|#51|#52|#53|#54|#55|#56|#57|
+|v5 |v5 |v5 |v5 |v5 |v5 |v5 |v5 |
+|O1 |O1 |O1 |O1 |O1 |O1 |O1 |O1 |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+###############################################################
+##                  Beginning of Hard Level                  ##
+###############################################################
+
+name=Change Rooms
+author=Mike Brenneman (w/ tweaks by John-Paul Gignac)
+boardtimer=180
+launchtimer=2
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   |   |   | 5 |   |   |   |   |
+|   |>2 |&a4|Od |   |   |   |   |
+|   |>2 |&a6|Od |   |!  |   |   |
+|   |>2 |&a2|Od |   |   |   |   |
+|   |>2 |&a3|O9 |   |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Sharp Shooter
+author=John-Paul Gignac <jp@gignac.org>
+colors=2,3,7
+maxmarbles=16
+boardtimer=180
+launchtimer=1
+stoplight=7,2,3
++---+---+---+---+---+---+---+---+
+|>6v|*82|   |   |!  | 6 | 9 |   |
+|05^| 6 | a | a | a |@f |>a |O8 |
+|>7v|Of | a | a | a |@f |>a |O8 |
+| 5 | 3 | a | a | a |@f |>a |O8 |
+|X1 |   |   |   |   | 3 |X8 |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Traffic Cop
+author=Mike Brenneman
+boardtimer=300
+launchtimer=3
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|O5 |   |O4 |   |O4 |   |O4 |   |
+| 5 |   |#53|!  |&56|   |=5a|   |
+|O7 | a |Of | a |Of | a |Od |   |
+| 5 |   |v5 |   |=5a|   |#52|   |
+|O1 |   |O3 | a |O9 |   |O1 |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Tick Tock
+author=John-Paul Gignac <jp@gignac.org>
+launchtimer=6
+boardtimer=120
++---+---+---+---+---+---+---+---+
+|   |   |   |   | 3 | a |&c3|   |
+|   | 6 | a | a | a | a | f | c |
+|v6 | f |ve<|ve<|ve<|&a4|vd<| 5 |
+| 5 | 3 |vf<|vf<|vf<|ve<|vf<| 9 |
+|O1 |   |O7 |Of |Of |Of |Od |   |
+|   |   |O3 |Ob |Ob |Ob |O9 |   |
++---+---+---+---+---+---+---+---+
+
+name=Revenge of Lost in the Shuffle
+author=John-Paul Gignac <jp@gignac.org>
+colors=0
+maxmarbles=26
+boardtimer=600
+launchtimer=1
++---+---+---+---+---+---+---+---+
+|O2 |#c6|X4 | 6 | c | 6 | 9 |X4 |
+|O4 |^3 |@f |@f |@f |@f | c | 5 |
+|#36|<a |@f |@f |@f |@f |Of |<d^|
+|#66|<a |@f |@f |@f |@f |Of |<d^|
+|O1 |v6 |@f |@f |@f |@f | 9 |65v|
+|O2 |#96| 3 | 9 | 3 | 9 |*22|<9^|
++---+---+---+---+---+---+---+---+
+
+name=Trigger Happy
+author=Mike Brenneman
+boardtimer=300
+launchtimer=4
+maxmarbles=5
+stoplight=6,4,2
++---+---+---+---+---+---+---+---+
+|O5 |   |O5 |   |   |O5 |   |O5 |
+| 5 |%  | 5 |   |   | 5 |!  | 5 |
+|O7 | a |O9 |   |   |O3 |#a4|Od |
+| 5 |   |   |   |   |   |   | 5 |
+|O3 |&a3|O8 |   |   |O2 | a |O9 |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Code Breaker
+author=John-Paul Gignac
+boardtimer=360
+launchtimer=30
+maxmarbles=6
++---+---+---+---+---+---+---+---+
+|O6 |&a0|#c6|@6 |*a2|ve<|Ob |O9 |
+|&50|X6 |^d<|@3 |ve |<b | a | c |
+|#34|<b^|^b<| c |v7>|ve>|ve>|vd^|
+|#62|<ev|<ev|<d^|#56|#54|#53|#52|
+|&55|X3 |vd<|@5 |&54|&52|&56|&53|
+|O3 |&a5|#93| 3 |<b |<b |<b | 9 |
++---+---+---+---+---+---+---+---+
+
+name=Hot Potato
+author=Kim Gignac
+boardtimer=180
+colors=2,4,6,7
++---+---+---+---+---+---+---+---+
+| 6 | a | a |O9 |O2 | a | a | c |
+| 5 | 6 | c | 6 | c | 6 | a |O9 |
+| 3 |O9 | 5 | 5 | 5 | 3 | a | c |
+| 6 | c | 3 | 9 | 5 |O6 | c | 5 |
+| 5 | 3 |Oa | a | 9 | 5 | 5 | 5 |
+| 3 | a | a | a | a | 9 | 3 | 9 |
++---+---+---+---+---+---+---+---+
+
+name=Around the Bend
+author=Mike Brenneman
+boardtimer=360
+launchtimer=3
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   |O5 |   |   |   | 6 | c |   |
+|   | 5 |O6 |Oc |   | 3 |&f3|O8 |
+|   | 5 |O7 |Ob |#a4| a |Od |   |
+|   |O7 | 9 |%  |   |   | 5 |   |
+|   | 3 | a | a |#a2| a |O9 |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Jack Be Nimble...
+author=Mike Brenneman
+boardtimer=60
+launchtimer=1
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+| 5 |   |   |   |   |   |O5 |   |
+|O5 |   |O4 |   |   |   |&54|   |
+|v5 |   |&56|   |   |   | 5 |   |
+|O1 |   | 5 |   |   |   |&53|   |
+|   |   | 3 |&a2| a | a | 9 |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Zig Zag
+author=Mike Brenneman
+boardtimer=360
+launchtimer=3
+maxmarbles=5
++---+---+---+---+---+---+---+---+
+|   |O7 | a | a | a | a | a |Oc |
+|   | 3 | a |Oe |Oe | a | c |=1a|
+| 6 | a | a |Of |Of |vc | 3 | c |
+|=5b|=4a| 6 |<b | 9 | 3 | c |=5b|
+|O1 |O3 | 9 |O2 | a |#a2|O9 |O1 |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=The Auto-Solver
+author=John-Paul Gignac <jp@gignac.org>
+maxmarbles=10
+launchtimer=4
+boardtimer=120
+colors=1,2,3,6
++---+---+---+---+---+---+---+---+
+| 6 |ve>| c | 5 |   | 6 |>ev| c |
+|^7>|Of | 9 | 3 | c |^7>|Of |<dv|
+| 3 |<b^|#a1|<e>|>fv|#92| 3 | 9 |
+| 6 | c |#66|<b^|>b<|#a3|>ev| c |
+|>7^|Of |vd<|   |   | 6 |Of |vd<|
+| 3 |<b^| 9 |   |   | 3 |^b<| 9 |
++---+---+---+---+---+---+---+---+
+
