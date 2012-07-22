@@ -1,42 +1,62 @@
 package org.gignac.jp.pathological;
+import android.graphics.*;
 
-class Trigger extends Tile {
-	def __init__(self, colors, center=None):
-		Tile.__init__(self, 0, center) // Call base class intializer
-		self.marbles = None
-		self._setup( colors)
+class Trigger extends Tile
+{
+	public static final int trigger_time = 30; // 30 seconds
+	public String marbles;
+	private int countdown;
+	private static Bitmap image;
 
-	def _setup(self, colors):
-		self.countdown = 0
-		self.marbles = [
-			random.choice(colors),
-			random.choice(colors),
-			random.choice(colors),
-			random.choice(colors),
-			]
-		self.drawn = 0
+	public Trigger(GameResources gr, String colors) {
+		super(gr,0); // Call base class intializer
+		this.marbles = null;
+		this.setup( colors);
+	}
 
-	def update(self, board):
-		if self.countdown > 0:
-			self.countdown -= 1
-			if self.countdown == 0:
-				self._setup( board.colors)
-				play_sound( trigger_setup)
+	private void setup(String colors) {
+		this.countdown = 0;
+		this.marbles = ""+
+			colors.charAt(gr.random.nextInt()%colors.length()) +
+			colors.charAt(gr.random.nextInt()%colors.length()) +
+			colors.charAt(gr.random.nextInt()%colors.length()) +
+			colors.charAt(gr.random.nextInt()%colors.length());
+		drawn = false;
+	}
 
-	def draw_back(self, surface):
-		if self.drawn: return 0
-		Tile.draw_back(self, surface)
-		surface.blit( self.image, self.rect.topleft)
-		if self.marbles is not None:
-			for i in range(4):
-				surface.blit( Marble.images[self.marbles[i]],
-					(holecenters[0][i][0]+self.rect.left-marble_size/2,
-					 holecenters[0][i][1]+self.rect.top-marble_size/2))
-		return 1
+	@Override
+	public void update(Board board) {
+		if( countdown > 0) {
+			countdown -= 1;
+			if( countdown == 0) {
+				setup( board.colors);
+				gr.play_sound( gr.trigger_setup);
+			}
+		}
+	}
 
-	def complete(self, board):
-		self.marbles = None
-		self.countdown = trigger_time * frames_per_sec
-		self.drawn = 0
-		board.game.increase_score( 50)
+	@Override
+	public boolean draw_back(Canvas surface) {
+		if(drawn) return false;
+		super.draw_back(surface);
+		image = gr.cache(image, R.drawable.trigger);
+		surface.drawBitmap( image, null, pos, null);
+		if( marbles != null) {
+			for(int i=0; i<4; ++i) {
+				gr.blit(surface,
+					gr.marble_images[marbles.charAt(i)-'0'],
+					gr.holecenters_x[0][i]+pos.left-Marble.marble_size/2,
+					gr.holecenters_y[0][i]+pos.top-Marble.marble_size/2,
+					Marble.marble_size, Marble.marble_size);
+			}
+		}
+		return true;
+	}
+
+	public void complete(Board board) {
+		marbles = null;
+		countdown = trigger_time * Board.frames_per_sec;
+		drawn = false;
+		board.game.increase_score( 50);
+	}
 }

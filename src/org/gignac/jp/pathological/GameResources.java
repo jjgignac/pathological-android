@@ -3,10 +3,12 @@ import android.graphics.*;
 import android.media.*;
 import android.content.*;
 import android.content.res.*;
+import java.util.*;
 
 public class GameResources
 {
 	private Context context;
+	public Random random;
 	private static final int[] sound_resid = {
 		R.raw.filter_admit, R.raw.wheel_turn, R.raw.wheel_completed,
 		R.raw.change_color, R.raw.direct_marble, R.raw.ping,
@@ -45,7 +47,8 @@ public class GameResources
 	public Bitmap launcher_background;
 	public Bitmap launcher_v;
 	public Bitmap launcher_corner;
-	public Bitmap launcher_entrance;
+	public Bitmap launcher_entrance;	
+	public Bitmap trigger_image;
 	private SoundPool sp;
 
 	// Sounds
@@ -68,8 +71,38 @@ public class GameResources
 	public static final int menu_scroll = 15;
 	public static final int menu_select = 16;
 	
+	public static final int wheel_margin = 4;
+	public static final int wheel_steps = 9;
+	public int holecenter_radius;
+	public int[][] holecenters_x;
+	public int[][] holecenters_y;
+
+	private static final Rect blitRect = new Rect();
+
 	public GameResources(Context context) {
 		this.context = context;
+		random = new Random();
+
+		// The positions of the holes in the wheels in
+		// each rotational position
+		holecenter_radius = (Tile.tile_size - Marble.marble_size) / 2 - wheel_margin;
+		holecenters_x = new int[wheel_steps][];
+		holecenters_y = new int[wheel_steps][];
+		for( int i=0; i<wheel_steps; ++i) {
+			double theta = Math.PI * i / (2 * wheel_steps);
+			double c = Math.floor( 0.5 + Math.cos(theta)*holecenter_radius);
+			double s = Math.floor( 0.5 + Math.sin(theta)*holecenter_radius);
+			holecenters_x[i] = new int[4];
+			holecenters_y[i] = new int[4];
+			holecenters_x[i][0] = (int)Math.round(Tile.tile_size/2 + s);
+			holecenters_y[i][0] = (int)Math.round(Tile.tile_size/2 - c);
+			holecenters_x[i][1] = (int)Math.round(Tile.tile_size/2 + c);
+			holecenters_y[i][1] = (int)Math.round(Tile.tile_size/2 + s);
+			holecenters_x[i][2] = (int)Math.round(Tile.tile_size/2 - s);
+			holecenters_y[i][2] = (int)Math.round(Tile.tile_size/2 + c);
+			holecenters_x[i][3] = (int)Math.round(Tile.tile_size/2 - c);
+			holecenters_y[i][3] = (int)Math.round(Tile.tile_size/2 - s);
+		}
 	}
 	
 	public void create(boolean colorblind) {
@@ -97,6 +130,8 @@ public class GameResources
 			res, R.drawable.launcher_corner);
 		launcher_entrance = BitmapFactory.decodeResource(
 			res, R.drawable.entrance);
+		trigger_image = BitmapFactory.decodeResource(
+			res, R.drawable.trigger);
 		
 		// Load the sound effects
 		sp = new SoundPool(6, AudioManager.STREAM_MUSIC, 0);
@@ -104,9 +139,10 @@ public class GameResources
 		for( int i=0; i < sound_resid.length; ++i)
 			sound_id[i] = sp.load(context, sound_resid[i], 0);
 	}
-
+	
 	public void destroy() {
 		sp.release();
+		trigger_image = null;
 		launcher_entrance = null;
 		launcher_corner = null;
 		launcher_v = null;
@@ -119,5 +155,26 @@ public class GameResources
 	{
 		sp.play( sound_id[id], sound_volume[id],
 			sound_volume[id], 0, 0, 1.0f);
+	}
+	
+	public Bitmap cache(Bitmap b, int resid)
+	{
+		if(b != null) return b;
+		return BitmapFactory.decodeResource(
+			context.getResources(),resid);
+	}
+
+	public void blit( Canvas c, Bitmap b, int x, int y, int w, int h)
+	{
+		blitRect.left = x;
+		blitRect.top = y;
+		blitRect.right = x + w;
+		blitRect.bottom = y + h;
+		c.drawBitmap( b, null, blitRect, null);
+	}
+
+	public void blit( Canvas c, Bitmap b, int x, int y)
+	{
+		blit(c,b,x,y,b.getWidth(),b.getHeight());
 	}
 }

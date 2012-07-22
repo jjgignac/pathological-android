@@ -5,9 +5,16 @@ class Wheel extends Tile {
 	public int[] marbles;
 	public int spinpos;
 	private Wheel self;
-
-	public Wheel(int paths, int cx, int cy) {
-		super(paths, cx, cy); // Call base class intializer
+	private boolean completed;
+	private Bitmap moving_hole;
+	private Bitmap moving_hole_dark;
+	private Bitmap blank_wheel;
+	private Bitmap blank_wheel_dark;
+	private Bitmap wheel;
+	private Bitmap wheel_dark;
+	
+	public Wheel( GameResources gr, int paths) {
+		super(gr, paths); // Call base class intializer
 		self = this;
 		self.spinpos = 0;
 		self.completed = false;
@@ -19,30 +26,40 @@ class Wheel extends Tile {
 	}
 
 	@Override
-	public boolean draw_back(Bitmap surface) {
+	public boolean draw_back(Canvas c) {
 		if( self.drawn) return false;
-
-		super.draw_back(surface);
+		
+		moving_hole = gr.cache(moving_hole, R.drawable.moving_hole);
+		moving_hole_dark = gr.cache(moving_hole_dark, R.drawable.moving_hole);
+		blank_wheel = gr.cache(blank_wheel, R.drawable.blank_wheel);
+		blank_wheel_dark = gr.cache(blank_wheel_dark, R.drawable.blank_wheel_dark);
+		wheel = gr.cache(wheel, R.drawable.wheel);
+		wheel_dark = gr.cache(wheel_dark, R.drawable.wheel_dark);
+		
+		super.draw_back(c);
 
 		if( self.spinpos != 0) {
-			surface.blit( self.blank_images[self.completed], self.rect.topleft)
+			c.drawBitmap( completed ? blank_wheel_dark : blank_wheel,
+				null, pos, null);
 			for(int i=0; i<4; ++i) {
-				holecenter = holecenters[self.spinpos][i];
-				surface.blit( self.moving_holes[self.completed],
-					(holecenter[0]-Marble.marble_size/2+self.rect.left,
-					holecenter[1]-Marble.marble_size/2+self.rect.top));
+				int holecenter_x = gr.holecenters_x[self.spinpos][i];
+				int holecenter_y = gr.holecenters_y[self.spinpos][i];
+				gr.blit( c, completed ? moving_hole_dark : moving_hole,
+					holecenter_x-Marble.marble_size/2+pos.left,
+					holecenter_y-Marble.marble_size/2+pos.top);
 			}
 		} else {
-			surface.blit( self.images[self.completed], self.rect.topleft);
+			gr.blit( c, completed ? wheel_dark : wheel, self.pos.left, self.pos.top);
 		}
 
 		for( int i=0; i < 4; ++i) {
-			color = self.marbles[i];
+			int color = self.marbles[i];
 			if( color >= 0) {
-				holecenter = holecenters[self.spinpos][i];
-				surface.blit( Marble.images[color],
-					(holecenter[0]-Marble.marble_size/2+self.rect.left,
-					holecenter[1]-Marble.marble_size/2+self.rect.top));
+				int holecenter_x = gr.holecenters_x[self.spinpos][i];
+				int holecenter_y = gr.holecenters_y[self.spinpos][i];
+				gr.blit( c, gr.marble_images[color],
+					holecenter_x-Marble.marble_size/2+self.pos.left,
+					holecenter_y-Marble.marble_size/2+self.pos.top);
 			}
 		}
 
@@ -53,7 +70,7 @@ class Wheel extends Tile {
 	public void update( Board board) {
 		if( self.spinpos > 0) {
 			self.spinpos -= 1;
-			self.drawn = 0;
+			self.drawn = false;
 		}
 	}
 
@@ -61,81 +78,78 @@ class Wheel extends Tile {
 	public void click( Board board, int posx, int posy, int tile_x, int tile_y)
 	{
 		// Ignore all clicks while rotating
-		if( self.spinpos != 0) return
+		if( spinpos != 0) return;
 
-		b1, b2, b3 = pygame.mouse.get_pressed();
-		if( b3) {
+		// Determine which hole is being clicked
+		int m=-1;
+		for( int i=0; i<4; ++i) {
+			if( posx >= gr.holecenters_x[0][i] - Marble.marble_size/2 &&
+				posx < gr.holecenters_x[0][i] + Marble.marble_size/2 &&
+				posy >= gr.holecenters_y[0][i] - Marble.marble_size/2 &&
+				posy < gr.holecenters_y[0][i] + Marble.marble_size/2) m=i;
+		}
+		if( m == -1) {
 			// First, make sure that no marbles are currently entering
-			for( i in self.marbles)
+			for( int i=0; i < 4; ++i)
 				if( i == -1 || i == -2) return;
 
 			// Start the wheel spinning
-			self.spinpos = wheel_steps - 1;
-			play_sound( wheel_turn);
+			spinpos = gr.wheel_steps - 1;
+			gr.play_sound( gr.wheel_turn);
 
 			// Reposition the marbles
-			t = self.marbles[0];
+			int t = self.marbles[0];
 			self.marbles[0] = self.marbles[1];
 			self.marbles[1] = self.marbles[2];
 			self.marbles[2] = self.marbles[3];
 			self.marbles[3] = t;
 
-			self.drawn = 0;
+			self.drawn = false;
+		} else if( self.marbles[m] >= 0) {
+			eject( m, board, tile_x, tile_y);
+		}
+	}
+	
+	private void eject(int i, Board board, int tile_x, int tile_y)
+	{
+		// Determine the neighboring tile
+		Tile neighbor = board.tiles[ (tile_y + Marble.dy[i]) %
+			Board.vert_tiles][ (tile_x + Marble.dx[i]) % Board.horiz_tiles];
 
-		} else if( b1) {
-			// Determine which hole is being clicked
-			for( int i=0; i<4; ++i) {
-				// If there is no marble here, skip it
-				if( self.marbles[i] < 0) continue;
+		if (
+			// Disallow marbles to go off the top of the board
+			(tile_y == 0 && i==0) ||
 
-				holecenter = holecenters[0][i];
-				rect = pygame.Rect( 0, 0, marble_size, marble_size);
-				rect.center = holecenter;
-				if( rect.collidepoint( posx, posy)) {
+			// If there is no way out here, skip it
+			((self.paths & (1 << i)) == 0) ||
 
-					// Determine the neighboring tile
-					Tile neighbor = board.tiles[ (tile_y + dirs[i][1]) %
-						vert_tiles][ (tile_x + dirs[i][0]) % horiz_tiles];
-
-					if (
-						// Disallow marbles to go off the top of the board
-						(tile_y == 0 && i==0) ||
-
-						// If there is no way out here, skip it
-						((self.paths & (1 << i)) == 0) ||
-
-						// If the neighbor is a wheel that is either turning
-						// or has a marble already in the hole, disallow
-						// the ejection
-						(neighbor instanceof Wheel &&
-						(neighbor.spinpos ||
-						neighbor.marbles[i^2] != -3))
-						)
-						play_sound( incorrect);
-					else {
-						// If the neighbor is a wheel, apply a special lock
-						if( neighbor instanceof Wheel)
-							neighbor.marbles[i^2] = -2;
-						else if( board.marbles.length >= board.live_marbles_limit) {
-							// Impose the live marbles limit
-							play_sound( incorrect);
-							break;
-						}
-
-						// Eject the marble
-						board.marbles.append(
-							Marble( self.marbles[i],
-							(holecenter[0]+self.rect.left,
-							holecenter[1]+self.rect.top),
-							i));
-						self.marbles[i] = -3;
-						play_sound( marble_release);
-						self.drawn = 0;
-					}
-
-					break;
-				}
+			// If the neighbor is a wheel that is either turning
+			// or has a marble already in the hole, disallow
+			// the ejection
+			(neighbor instanceof Wheel &&
+			(((Wheel)neighbor).spinpos != 0 ||
+			 ((Wheel)neighbor).marbles[i^2] != -3))
+			)
+			gr.play_sound( gr.incorrect);
+		else {
+			// If the neighbor is a wheel, apply a special lock
+			if( neighbor instanceof Wheel)
+				((Wheel)neighbor).marbles[i^2] = -2;
+			else if( board.marbles.size() >= board.live_marbles_limit) {
+				// Impose the live marbles limit
+				gr.play_sound( gr.incorrect);
+				return;
 			}
+
+			// Eject the marble
+			board.marbles.addElement(
+				new Marble( gr, self.marbles[i],
+					gr.holecenters_x[0][i]+pos.left,
+					gr.holecenters_y[0][i]+pos.top,
+					i));
+			self.marbles[i] = -3;
+			gr.play_sound( gr.marble_release);
+			self.drawn = false;
 		}
 	}
 
@@ -143,25 +157,26 @@ class Wheel extends Tile {
 	public void affect_marble(Board board, Marble marble, int rposx, int rposy)
 	{
 		// Watch for marbles entering
-		if( rposx+Marble.marble_size/2 == wheel_margin ||
-			rposx-Marble.marble_size/2 == tile_size - wheel_margin ||
-			rposy+Marble.marble_size/2 == wheel_margin ||
-			rposy-Marble.marble_size/2 == tile_size - wheel_margin) {
-			if( self.spinpos || self.marbles[marble.direction^2] >= -1) {
+		if( rposx+Marble.marble_size/2 == gr.wheel_margin ||
+			rposx-Marble.marble_size/2 == tile_size - gr.wheel_margin ||
+			rposy+Marble.marble_size/2 == gr.wheel_margin ||
+			rposy-Marble.marble_size/2 == tile_size - gr.wheel_margin) {
+			if( spinpos != 0 || marbles[marble.direction^2] >= -1) {
 				// Reject the marble
 				marble.direction = marble.direction ^ 2;
-				play_sound( ping);
+				gr.play_sound( gr.ping);
 			} else
 				self.marbles[marble.direction^2] = -1;
 		}
 
-		for( holecenter in holecenters[0]) {
-			if( rpos == holecenter) {
+		for( int i=0; i<4; ++i) {
+			if( rposx == gr.holecenters_x[0][i] &&
+				rposy == gr.holecenters_y[0][i]) {
 				// Accept the marble
 				board.marbles.remove( marble);
 				self.marbles[marble.direction^2] = marble.color;
 
-				self.drawn = 0;
+				self.drawn = false;
 
 				break;
 			}
@@ -171,22 +186,22 @@ class Wheel extends Tile {
 	public void complete(Board board) {
 		// Complete the wheel
 		for( int i=0; i<4; ++i) self.marbles[i] = -3;
-		if( self.completed) board.game.increase_score( 10);
+		if( completed) board.game.increase_score( 10);
 		else board.game.increase_score( 50);
-		self.completed = 1;
-		play_sound( wheel_completed);
-		self.drawn = 0;
+		completed = true;
+		gr.play_sound( gr.wheel_completed);
+		self.drawn = false;
 	}
 
 	public boolean maybe_complete(Board board) {
 		if( self.spinpos > 0) return false;
 
 		// Is there a trigger?
-		if((board.trigger != null) &&
-		   (board.trigger.marbles != None)) {
+		if(board.trigger != null &&
+		   board.trigger.marbles != null) {
 			// Compare against the trigger
 			for( int i=0; i<4; ++i) {
-				if( self.marbles[i] != board.trigger.marbles[i] &&
+				if( self.marbles[i] != board.trigger.marbles.charAt(i)-'0' &&
 					self.marbles[i] != 8) return false;
 			}
 			self.complete( board);
@@ -195,8 +210,9 @@ class Wheel extends Tile {
 		}
 
 		// Do we have four the same color?
-		color = 8;
-		for( c in self.marbles) {
+		int color = 8;
+		for( int i=0; i<4; ++i) {
+			int c = marbles[i];
 			if( c < 0) return false;
 			if( color==8) color=c;
 			else if( c==8) c=color;
@@ -214,7 +230,7 @@ class Wheel extends Tile {
 				board.stoplight.complete( board);
 		}
 
-		self.complete( board);
+		complete( board);
 		return true;
 	}
 }

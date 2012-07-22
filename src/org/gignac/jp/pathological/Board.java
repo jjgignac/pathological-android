@@ -5,7 +5,9 @@ import android.graphics.*;
 
 class Board
 {
+	public static final int frames_per_sec = 100;
 	private static final String default_colors = "2346";
+	private static final String default_stoplight = "643";
 	private static final int default_launch_timer = 6;
 	private static final int default_board_timer = 30;
 	public static final int vert_tiles = 6;
@@ -20,21 +22,25 @@ class Board
 	public static final int timer_height = board_height + Marble.marble_size;
 	public static final int board_posx = timer_width;
 	public static final int board_posy = info_height + Marble.marble_size;
-	private Game game;
-	private Trigger trigger;
-	private Stoplight stoplight;
+	public Game game;
+	private GameResources gr;
+	public Trigger trigger;
+	public Stoplight stoplight;
 	private int posx, posy;
-	private Vector<Marble> marbles;
-	private Tile[][] tiles;
+	public Vector<Marble> marbles;
+	public Tile[][] tiles;
 	private Bitmap background;
 	private int[] launch_queue;
 	private int board_complete;
 	private boolean paused;
 	public String name;
-	private int live_marbles_limit;
+	public int live_marbles_limit;
 	private int launch_timeout;
+	private int launch_timeout_start;
+	private int board_timer;
 	private int board_timeout;
-	private String colors;
+	private int board_timeout_start;
+	public String colors;
 	private boolean launched;
 	private Board self;
 	private int launch_timer_height;
@@ -42,10 +48,11 @@ class Board
 	private Paint paint;
 	private Marble[] marblesCopy = new Marble[20];
 
-	public Board(Game game, int posx, int posy)
+	public Board(Game game, GameResources gr, int posx, int posy)
 	{
 		self = this;
 		this.game = game;
+		this.gr = gr;
 		this.posx = posx;
 		this.posy = posy;
 		this.marbles = new Vector<Marble>();
@@ -96,17 +103,27 @@ class Board
 				board_posy + vert_tiles * Tile.tile_size), null);
 
 		// Draw the launcher
-		c.drawBitmap( game.gr.launcher_background,
-			board_posx, board_posy - Marble.marble_size);
-		c.drawBitmap( game.gr.launcher_v,
-			board_posx+horiz_tiles*Tile.tile_size, board_posy);
+		c.drawBitmap( gr.launcher_background, null,
+			new Rect(board_posx, board_posy - Marble.marble_size,
+				board_posx + horiz_tiles * Tile.tile_size,
+				board_posy), null);
+		c.drawBitmap( gr.launcher_v, null,
+			new Rect(board_posx+horiz_tiles*Tile.tile_size, board_posy,
+				board_posx+horiz_tiles*Tile.tile_size+Marble.marble_size,
+				board_posy+vert_tiles*Tile.tile_size), null);
 		for(int i=0; i < horiz_tiles; ++i)
 			if((self.tiles[0][i].paths & 1) == 1)
-				c.drawBitmap( game.gr.launcher_entrance, 
-					board_posx+Tile.tile_size*i, board_posy-Marble.marble_size);
-		c.drawBitmap( game.gr.launcher_corner,
-			board_posx+horiz_tiles*Tile.tile_size-(Tile.tile_size-Marble.marble_size)/2,
-			board_posy - Marble.marble_size);
+				c.drawBitmap( gr.launcher_entrance, null,
+					new Rect( board_posx+Tile.tile_size*i,
+						board_posy-Marble.marble_size,
+						board_posx+Tile.tile_size*(i+1),
+						board_posy), null);
+		c.drawBitmap( gr.launcher_corner, null,
+			new Rect( board_posx+horiz_tiles*Tile.tile_size-
+				(Tile.tile_size-Marble.marble_size)/2,
+				board_posy - Marble.marble_size,
+				board_posx+horiz_tiles*Tile.tile_size+Marble.marble_size,
+				board_posy), null);
 	}
 
 	public void draw_back(Canvas c) {
@@ -198,7 +215,7 @@ class Board
 
 		if( self.launched) {
 			for(int i=0; i < self.launch_queue.length; ++i)
-				c.drawBitmap( game.gr.marble_images[self.launch_queue[i]],
+				c.drawBitmap( gr.marble_images[self.launch_queue[i]],
 					self.posx + horiz_tiles * Tile.tile_size,
 					self.posy + i * Marble.marble_size - Marble.marble_size, null);
 			c.save();
@@ -239,7 +256,7 @@ class Board
 			for(Tile[] row : self.tiles)
 				for(Tile tile : row)
 					if( tile instanceof Wheel)
-						try_again |= ((Wheel)tile).maybe_complete();
+						try_again |= ((Wheel)tile).maybe_complete(this);
 		}
 
 		// Check if the board is complete
@@ -280,8 +297,8 @@ class Board
 		tile.pos.left = self.posx + Tile.tile_size * x;
 		tile.pos.top = self.posy + Tile.tile_size * y;
 
-		tile.x = x;
-		tile.y = y;
+		//tile.x = x;
+		//tile.y = y;
 
 		// If it's a trigger, keep track of it
 		if( tile instanceof Trigger)
@@ -295,8 +312,9 @@ class Board
 	public void set_launch_timer( int passes) {
 		self.launch_timer = passes;
 		self.launch_timeout_start = (Marble.marble_size +
-			(horiz_tiles * Tile.tile_size - Marble.marble_size) * passes) / marble_speed;
-		self.launch_timer_height = null;
+			(horiz_tiles * Tile.tile_size - Marble.marble_size)
+				* passes) / Marble.marble_speed;
+		self.launch_timer_height = -1;
 	}
 
 	public void set_board_timer(int seconds) {
@@ -307,15 +325,16 @@ class Board
 
 	public void launch_marble() {
 		self.marbles.insertElementAt( new Marble(
-			game.gr, self.launch_queue[0],
+			gr, self.launch_queue[0],
 			self.posx+Tile.tile_size*horiz_tiles+Marble.marble_size/2,
 			self.posy-Marble.marble_size/2, 3), 0);
 		for( int i=0; i < launch_queue.length-1; ++i)
 			launch_queue[i] = launch_queue[i+1];
-		self.launch_queue[launch_queue.length-1] = random.choice(self.colors);
+		self.launch_queue[launch_queue.length-1] =
+			colors.charAt(gr.random.nextInt() % colors.length());
 		self.launched = true;
 		self.launch_timeout = self.launch_timeout_start;
-		self.launch_timer_height = null;
+		self.launch_timer_height = -1;
 	}
 
 	public void affect_marble( Marble marble)
@@ -462,49 +481,49 @@ class Board
 
 				Tile tile = null;
 				if( type == 'O') {
-					tile = new Wheel( pathsint);
+					tile = new Wheel( gr, pathsint);
 					numwheels += 1;
-				} else if( type == '%') tile = new Trigger(self.colors);
-				else if( type == '!') tile = new Stoplight(stoplight);
-				else if( type == '&') tile = new Painter(pathsint, colorint);
-				else if( type == '#') tile = new Filter(pathsint, colorint);
-				else if( type == '@') {
-					if( color == ' ') tile = new Buffer(pathsint);
-					else tile = new Buffer(pathsint, colorint);
-				} else if( type == ' ' ||
-					(type >= '0' && type <= '8')) tile = new Tile(pathsint);
-				else if( type == 'X') tile = new Shredder(pathsint);
-				else if( type == '*') tile = new Replicator(pathsint, colorint);
-				else if( type == '^') {
-					if( color == ' ') tile = new Director(pathsint, 0);
-					else if( color == '>') tile = new Switch(pathsint, 0, 1);
-					else if( color == 'v') tile = new Switch(pathsint, 0, 2);
-					else if( color == '<') tile = new Switch(pathsint, 0, 3);
-				} else if( type == '>') {
-					if( color == ' ') tile = new Director(pathsint, 1);
-					else if( color == '^') tile = new Switch(pathsint, 1, 0);
-					else if( color == 'v') tile = new Switch(pathsint, 1, 2);
-					else if( color == '<') tile = new Switch(pathsint, 1, 3);
-				} else if( type == 'v') {
-					if( color == ' ') tile = new Director(pathsint, 2);
-					else if( color == '^') tile = new Switch(pathsint, 2, 0);
-					else if( color == '>') tile = new Switch(pathsint, 2, 1);
-					else if( color == '<') tile = new Switch(pathsint, 2, 3);
-				} else if( type == '<') {
-					if( color == ' ') tile = new Director(pathsint, 3);
-					else if( color == '^') tile = new Switch(pathsint, 3, 0);
-					else if( color == '>') tile = new Switch(pathsint, 3, 1);
-					else if( color == 'v') tile = new Switch(pathsint, 3, 2);
-				} else if( type == '=') {
-					if( teleporter_names.indexOf(color) >= 0) {
-						Tile other = teleporters.get(teleporter_names.indexOf(color));
-						tile = new Teleporter( pathsint, other);
-					} else {
-						tile = new Teleporter( pathsint);
-						teleporters.addElement( tile);
-						teleporter_names = teleporter_names + color;
-					}
-				}
+				} else if( type == '%') tile = new Trigger(gr, self.colors);
+				else if( type == '!') tile = new Stoplight(gr, stoplight);
+//				else if( type == '&') tile = new Painter(gr, pathsint, colorint);
+//				else if( type == '#') tile = new Filter(gr, pathsint, colorint);
+//				else if( type == '@') {
+//					if( color == ' ') tile = new Buffer(gr, pathsint);
+//					else tile = new Buffer(gr, pathsint, colorint);
+//				} else if( type == ' ' ||
+//					(type >= '0' && type <= '8')) tile = new Tile(gr, pathsint);
+//				else if( type == 'X') tile = new Shredder(gr, pathsint);
+//				else if( type == '*') tile = new Replicator(gr, pathsint, colorint);
+//				else if( type == '^') {
+//					if( color == ' ') tile = new Director(gr, pathsint, 0);
+//					else if( color == '>') tile = new Switch(gr, pathsint, 0, 1);
+//					else if( color == 'v') tile = new Switch(gr, pathsint, 0, 2);
+//					else if( color == '<') tile = new Switch(gr, pathsint, 0, 3);
+//				} else if( type == '>') {
+//					if( color == ' ') tile = new Director(gr, pathsint, 1);
+//					else if( color == '^') tile = new Switch(gr, pathsint, 1, 0);
+//					else if( color == 'v') tile = new Switch(gr, pathsint, 1, 2);
+//					else if( color == '<') tile = new Switch(gr, pathsint, 1, 3);
+//				} else if( type == 'v') {
+//					if( color == ' ') tile = new Director(gr, pathsint, 2);
+//					else if( color == '^') tile = new Switch(gr, pathsint, 2, 0);
+//					else if( color == '>') tile = new Switch(gr, pathsint, 2, 1);
+//					else if( color == '<') tile = new Switch(gr, pathsint, 2, 3);
+//				} else if( type == '<') {
+//					if( color == ' ') tile = new Director(gr,pathsint, 3);
+//					else if( color == '^') tile = new Switch(gr, pathsint, 3, 0);
+//					else if( color == '>') tile = new Switch(gr, pathsint, 3, 1);
+//					else if( color == 'v') tile = new Switch(gr, pathsint, 3, 2);
+//				} else if( type == '=') {
+//					if( teleporter_names.indexOf(color) >= 0) {
+//						Tile other = teleporters.get(teleporter_names.indexOf(color));
+//						tile = new Teleporter( gr, pathsint, other);
+//					} else {
+//						tile = new Teleporter( gr, pathsint);
+//						teleporters.addElement( tile);
+//						teleporter_names = teleporter_names + color;
+//					}
+//				}
 
 				this.set_tile( i, j, tile);
 
@@ -515,7 +534,7 @@ class Board
 					else if( color == 'v') direction = 2;
 					else direction = 3;
 					marbles.addElement(
-						new Marble(game.gr, type-'0',
+						new Marble(gr, type-'0',
 							tile.pos.left + Tile.tile_size/2,
 							tile.pos.top + Tile.tile_size/2,
 							direction));
@@ -550,13 +569,13 @@ class Board
 		self.launch_marble();
 
 		// Do the first update
-		pygame.display.update();
+//		pygame.display.update();
 
 		// Play the end sound
 		if( self.board_complete > 0)
-			game.gr.play_sound( game.gr.levelfinish);
+			gr.play_sound( gr.levelfinish);
 		else
-			game.gr.play_sound( game.gr.die);
+			gr.play_sound( gr.die);
 
 		return self.board_complete;
 	}

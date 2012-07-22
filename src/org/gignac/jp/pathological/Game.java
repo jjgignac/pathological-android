@@ -5,6 +5,7 @@ import android.app.*;
 import android.os.*;
 import android.media.*;
 import android.content.res.*;
+import java.util.*;
 
 public class Game extends Activity
 {
@@ -20,7 +21,7 @@ public class Game extends Activity
 	public int lives;
 	public long score;
 	private Board board;
-	public GameResources gr;
+	private GameResources gr;
 
 	public Game()
 	{
@@ -59,7 +60,7 @@ public class Game extends Activity
 			lives = initial_lives;
 		}
 
-		board = new Board( this, timer_width,
+		board = new Board( this, gr, timer_width,
 			Board.info_height + Marble.marble_size);
 
 		int rc = board.play_level();
