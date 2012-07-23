@@ -78,9 +78,20 @@ public class Game extends Activity
 	public void onResume()
 	{
 		super.onResume();
-		
+
 		final SurfaceView g = (SurfaceView)findViewById(R.id.gameboard);
-		
+		g.setOnTouchListener(new View.OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent e)
+			{
+				if( e.getAction() == e.ACTION_DOWN) {
+					board.click(
+						(int)Math.round(e.getX()),
+						(int)Math.round(e.getY()));
+				}
+				return false;
+			}
+		});
+
 		// Schedule the updates
 		ticker = new Ticker( new Runnable() {
 			public void run() {
