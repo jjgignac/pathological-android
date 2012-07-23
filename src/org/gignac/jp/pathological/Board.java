@@ -42,7 +42,6 @@ class Board
 	private int board_timeout;
 	private int board_timeout_start;
 	public String colors;
-	private boolean launched;
 	private Board self;
 	private int launch_timer_height;
 	public int launch_timer;
@@ -67,7 +66,6 @@ class Board
 		this.launch_timeout = -1;
 		this.board_timeout = -1;
 		this.colors = default_colors;
-		this.launched = true;
 		this.launch_timer_height = -1;
 
 		set_launch_timer( default_launch_timer);
@@ -208,21 +206,10 @@ class Board
 			for( Tile tile : row)
 				tile.draw_back(c);
 
-		if( self.launched) {
-			for(int i=0; i < self.launch_queue.length; ++i)
-				c.drawBitmap( gr.marble_images[self.launch_queue[i]],
-					self.posx + horiz_tiles * Tile.tile_size,
-					self.posy + i * Marble.marble_size - Marble.marble_size, null);
-			c.save();
-			c.clipRect(
-				self.posx + Tile.tile_size * horiz_tiles,
-				self.posy - Marble.marble_size,
-				self.posx + Tile.tile_size * horiz_tiles + Marble.marble_size,
-				self.posy + Tile.tile_size * vert_tiles);
-			c.drawBitmap( self.background, 0, 0, null);
-			c.restore();
-			self.launched = false;
-		}
+		for(int i=0; i < self.launch_queue.length; ++i)
+			c.drawBitmap( gr.marble_images[self.launch_queue[i]],
+				self.posx + horiz_tiles * Tile.tile_size,
+				self.posy + i * Marble.marble_size - Marble.marble_size, null);
 	}
 
 	public void draw_fore( Canvas c) {
@@ -327,7 +314,6 @@ class Board
 			launch_queue[i] = launch_queue[i+1];
 		self.launch_queue[launch_queue.length-1] =
 			colors.charAt(gr.random.nextInt(colors.length()))-'0';
-		self.launched = true;
 		self.launch_timeout = self.launch_timeout_start;
 		self.launch_timer_height = -1;
 	}
