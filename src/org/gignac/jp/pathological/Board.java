@@ -48,6 +48,7 @@ class Board
 	public int launch_timer;
 	private Paint paint;
 	private Marble[] marblesCopy = new Marble[20];
+	private int downx, downy;
 
 	public Board(Game game, GameResources gr, int posx, int posy)
 	{
@@ -388,16 +389,42 @@ class Board
 			tile.affect_marble( this, marble, tile_xr, tile_yr);
 	}
 
-	public void click(int posx, int posy) {
+	private Tile whichTile(int posx, int posy) {
 		// Determine which tile the pointer is in
 		int tile_x = (posx - this.posx) / Tile.tile_size;
 		int tile_y = (posy - this.posy) / Tile.tile_size;
-		int tile_xr = posx - this.posx - tile_x * Tile.tile_size;
-		int tile_yr = posy - this.posy - tile_y * Tile.tile_size;
 		if( tile_x >= 0 && tile_x < horiz_tiles &&
 			tile_y >= 0 && tile_y < vert_tiles) {
-			Tile tile = self.tiles[tile_y][tile_x];
-			tile.click( self, tile_xr, tile_yr, tile_x, tile_y);
+			return self.tiles[tile_y][tile_x];
+		}
+		return null;
+	}
+
+	public void downEvent(int posx, int posy)
+	{
+		downx = posx;
+		downy = posy;
+	}
+
+	public void upEvent(int posx, int posy)
+	{
+		Tile downtile = whichTile(downx,downy);
+		if(downtile == null) return;
+		int downtile_x = (downx - this.posx) / Tile.tile_size;
+		int downtile_y = (downy - this.posy) / Tile.tile_size;
+		int tile_xr = downx-this.posx-(downtile_x*Tile.tile_size);
+		int tile_yr = downx-this.posy-(downtile_y*Tile.tile_size);
+		int dx = posx - downx;
+		int dy = posy - downy;
+		int dx2 = dx*dx;
+		int dy2 = dy*dy;
+		if(dx2 + dy2 <= Marble.marble_size * Marble.marble_size) {
+			downtile.click(this, tile_xr, tile_yr,
+				downtile_x, downtile_y);
+		} else {
+			int dir = (dx2>dy2)?(dx>0?1:3):(dy>0?2:0);
+			downtile.flick(this, tile_xr, tile_yr,
+				downtile_x, downtile_y, dir);
 		}
 	}
 

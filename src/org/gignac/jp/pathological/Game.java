@@ -84,7 +84,12 @@ public class Game extends Activity
 			public boolean onTouch(View v, MotionEvent e)
 			{
 				if( e.getAction() == e.ACTION_DOWN) {
-					board.click(
+					board.downEvent(
+						(int)Math.round(e.getX()),
+						(int)Math.round(e.getY()));
+					return true;
+				} else if( e.getAction() == e.ACTION_UP) {
+					board.upEvent(
 						(int)Math.round(e.getX()),
 						(int)Math.round(e.getY()));
 				}

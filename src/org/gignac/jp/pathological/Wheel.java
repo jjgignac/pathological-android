@@ -78,41 +78,38 @@ class Wheel extends Tile {
 		// Ignore all clicks while rotating
 		if( spinpos != 0) return;
 
-		// Determine which hole is being clicked
-		int m=-1;
-		for( int i=0; i<4; ++i) {
-			if( posx >= gr.holecenters_x[0][i] - Marble.marble_size/2 &&
-				posx < gr.holecenters_x[0][i] + Marble.marble_size/2 &&
-				posy >= gr.holecenters_y[0][i] - Marble.marble_size/2 &&
-				posy < gr.holecenters_y[0][i] + Marble.marble_size/2) m=i;
-		}
-		if( m == -1) {
-			// First, make sure that no marbles are currently entering
-			for( int i=0; i < 4; ++i)
-				if( i == -1 || i == -2) return;
+		// First, make sure that no marbles are currently entering
+		for( int i=0; i < 4; ++i)
+			if( marbles[i] == -1 || marbles[i] == -2) return;
 
-			// Start the wheel spinning
-			spinpos = gr.wheel_steps - 1;
-			gr.play_sound( gr.wheel_turn);
+		// Start the wheel spinning
+		spinpos = gr.wheel_steps - 1;
+		gr.play_sound( gr.wheel_turn);
 
-			// Reposition the marbles
-			int t = self.marbles[0];
-			self.marbles[0] = self.marbles[1];
-			self.marbles[1] = self.marbles[2];
-			self.marbles[2] = self.marbles[3];
-			self.marbles[3] = t;
-		} else if( self.marbles[m] >= 0) {
-			eject( m, board, tile_x, tile_y);
-		}
+		// Reposition the marbles
+		int t = self.marbles[0];
+		self.marbles[0] = self.marbles[1];
+		self.marbles[1] = self.marbles[2];
+		self.marbles[2] = self.marbles[3];
+		self.marbles[3] = t;
 	}
 	
+	@Override
+	public void flick( Board board, int posx, int posy,
+		int tile_x, int tile_y, int dir)
+	{
+		// Ignore all flicks while rotating
+		if( spinpos != 0) return;
+		eject( dir, board, tile_x, tile_y);
+	}
+
 	private void eject(int i, Board board, int tile_x, int tile_y)
 	{
 		// Determine the neighboring tile
 		Tile neighbor = board.tiles[ (tile_y + Marble.dy[i]) %
 			Board.vert_tiles][ (tile_x + Marble.dx[i]) % Board.horiz_tiles];
 
-		if (
+		if ( marbles[i] < 0 ||
 			// Disallow marbles to go off the top of the board
 			(tile_y == 0 && i==0) ||
 

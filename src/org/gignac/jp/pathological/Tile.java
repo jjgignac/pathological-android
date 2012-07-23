@@ -35,6 +35,9 @@ class Tile
 	}
 
 	public void click( Board board, int posx, int posy, int tile_x, int tile_y) {}
+	
+	public void flick( Board board, int posx, int posy,
+		int tile_x, int tile_y, int dir) {}
 
 	public void affect_marble( Board board, Marble marble, int rposx, int rposy)
 	{
