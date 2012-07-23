@@ -87,8 +87,7 @@ public class Game extends Activity
 				board.update();
 				SurfaceHolder h = g.getHolder();
 				Canvas c = h.lockCanvas();
-				board.draw_back(c);
-				board.draw_fore(c);
+				board.paint(c);
 				h.unlockCanvasAndPost(c);
 			}
 		}, 1000 / Board.frames_per_sec);		

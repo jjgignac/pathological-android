@@ -130,6 +130,12 @@ class Board
 	public void draw_back(Canvas c) {
 		int height;
 		
+		// Draw the background
+		c.save();
+		c.clipRect( 0,0,Game.screen_width,Game.screen_height);
+		c.drawBitmap( self.background, 0, 0, null);
+		c.restore();
+
 		// Draw the launch timer
 		if(self.launch_timer_height == -1) {
 			height = timer_height;
@@ -156,11 +162,6 @@ class Board
 /*
 		self.screen.blit( self.launch_timer_text, self.launch_timer_text_rect);
 */
-		// Clear the info bar
-		c.save();
-		c.clipRect( 0,0,Game.screen_width,info_height);
-		c.drawBitmap( self.background, 0, 0, null);
-		c.restore();
 /*
 		// Draw the score
 		String text = "Score: "+("00000000"+self.game.score)[-8:];
@@ -202,17 +203,9 @@ class Board
 		self.screen.set_clip();
 		self.screen.blit( text, rect);
 */
-
 		for( Tile[] row : self.tiles)
 			for( Tile tile : row)
-				if( tile.draw_back(c)) {
-					c.save();
-					c.clipRect( tile.pos.left, tile.pos.top,
-						tile.pos.left + Tile.tile_size,
-						tile.pos.top + Tile.tile_size);
-					c.drawBitmap( self.background, 0, 0, null);
-					c.restore();
-				}
+				tile.draw_back(c);
 
 		if( self.launched) {
 			for(int i=0; i < self.launch_queue.length; ++i)

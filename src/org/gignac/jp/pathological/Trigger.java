@@ -21,7 +21,6 @@ class Trigger extends Tile
 			colors.charAt(gr.random.nextInt()%colors.length()) +
 			colors.charAt(gr.random.nextInt()%colors.length()) +
 			colors.charAt(gr.random.nextInt()%colors.length());
-		drawn = false;
 	}
 
 	@Override
@@ -37,7 +36,6 @@ class Trigger extends Tile
 
 	@Override
 	public boolean draw_back(Canvas surface) {
-		if(drawn) return false;
 		super.draw_back(surface);
 		image = gr.cache(image, R.drawable.trigger);
 		surface.drawBitmap( image, null, pos, null);
@@ -56,7 +54,6 @@ class Trigger extends Tile
 	public void complete(Board board) {
 		marbles = null;
 		countdown = trigger_time * Board.frames_per_sec;
-		drawn = false;
 		board.game.increase_score( 50);
 	}
 }

@@ -26,9 +26,8 @@ class Wheel extends Tile {
 	}
 
 	@Override
-	public boolean draw_back(Canvas c) {
-		if( self.drawn) return false;
-		
+	public boolean draw_back(Canvas c)
+	{
 		moving_hole = gr.cache(moving_hole, R.drawable.moving_hole);
 		moving_hole_dark = gr.cache(moving_hole_dark, R.drawable.moving_hole);
 		blank_wheel = gr.cache(blank_wheel, R.drawable.blank_wheel);
@@ -70,7 +69,6 @@ class Wheel extends Tile {
 	public void update( Board board) {
 		if( self.spinpos > 0) {
 			self.spinpos -= 1;
-			self.drawn = false;
 		}
 	}
 
@@ -103,8 +101,6 @@ class Wheel extends Tile {
 			self.marbles[1] = self.marbles[2];
 			self.marbles[2] = self.marbles[3];
 			self.marbles[3] = t;
-
-			self.drawn = false;
 		} else if( self.marbles[m] >= 0) {
 			eject( m, board, tile_x, tile_y);
 		}
@@ -149,7 +145,6 @@ class Wheel extends Tile {
 					i));
 			self.marbles[i] = -3;
 			gr.play_sound( gr.marble_release);
-			self.drawn = false;
 		}
 	}
 
@@ -175,9 +170,6 @@ class Wheel extends Tile {
 				// Accept the marble
 				board.marbles.remove( marble);
 				self.marbles[marble.direction^2] = marble.color;
-
-				self.drawn = false;
-
 				break;
 			}
 		}
@@ -190,7 +182,6 @@ class Wheel extends Tile {
 		else board.game.increase_score( 50);
 		completed = true;
 		gr.play_sound( gr.wheel_completed);
-		self.drawn = false;
 	}
 
 	public boolean maybe_complete(Board board) {

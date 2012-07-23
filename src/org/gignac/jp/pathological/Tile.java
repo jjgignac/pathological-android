@@ -6,7 +6,6 @@ class Tile
 	public static final int tile_size = 92;
 	public int paths;
 	public Rect pos;  // Only left & top are maintained
-	protected boolean drawn;
 	public boolean completed;
 	protected GameResources gr;
 	
@@ -14,7 +13,6 @@ class Tile
 		this.gr = gr;
 		this.paths = paths;
 		this.pos = new Rect(cx - tile_size/2, cy - tile_size/2, 0, 0);
-		this.drawn = false;
 		this.completed = false;
 	}
 	
@@ -23,11 +21,10 @@ class Tile
 	}
 
 	public boolean draw_back(Canvas c) {
-		if(drawn) return false;
 		pos.right = pos.left + tile_size;
 		pos.bottom = pos.top + tile_size;
-		c.drawBitmap( gr.plain_tiles[paths], null, pos, null);
-		drawn = true;
+		if(paths > 0)
+			c.drawBitmap( gr.plain_tiles[paths], null, pos, null);
 		return true;
 	}
 

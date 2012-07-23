@@ -17,7 +17,6 @@ class Stoplight extends Tile {
 
 	@Override
 	public boolean draw_back( Canvas c) {
-		if(drawn) return false;
 		super.draw_back(c);
 		image = gr.cache(image, R.drawable.stoplight);
 		c.drawBitmap( image, null, pos, null);
@@ -39,7 +38,6 @@ class Stoplight extends Tile {
 			}
 		}
 		current += 1;
-		drawn = false;
 		board.game.increase_score( 20);
 	}
 }
