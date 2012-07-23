@@ -2,6 +2,7 @@ package org.gignac.jp.pathological;
 import java.io.*;
 import java.util.*;
 import android.graphics.*;
+import android.util.*;
 
 class Board
 {
@@ -331,7 +332,7 @@ class Board
 		for( int i=0; i < launch_queue.length-1; ++i)
 			launch_queue[i] = launch_queue[i+1];
 		self.launch_queue[launch_queue.length-1] =
-			colors.charAt(gr.random.nextInt() % colors.length());
+			colors.charAt(gr.random.nextInt(colors.length()))-'0';
 		self.launched = true;
 		self.launch_timeout = self.launch_timeout_start;
 		self.launch_timer_height = -1;
