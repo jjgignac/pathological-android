@@ -6,6 +6,9 @@ import android.os.*;
 import android.media.*;
 import android.content.res.*;
 import java.util.*;
+import android.view.*;
+import java.util.concurrent.*;
+import android.widget.*;
 
 public class Game extends Activity
 {
@@ -22,9 +25,16 @@ public class Game extends Activity
 	public long score;
 	private Board board;
 	private GameResources gr;
-
+	private Ticker ticker;
+	
 	public Game()
 	{
+	}
+	
+	@Override
+	public void onCreate(Bundle stat)
+	{
+		super.onCreate(stat);
 		Resources res = getResources();
 		try {
 			// Count the number of levels
@@ -33,7 +43,8 @@ public class Game extends Activity
 			int j = 0;
 			while(true) {
 				String line = f.readLine();
-				if( line.isEmpty()) break;
+				if( line == null) break;
+				if( line.isEmpty()) continue;
 				if( line.charAt(0) == '|') j += 1;
 			}
 			f.close();
@@ -41,12 +52,9 @@ public class Game extends Activity
 		} catch(IOException e) {}
 
 		gr = new GameResources(this);
-	}
-	
-	@Override
-	protected void onCreate(Bundle stat)
-	{
 		gr.create( true);
+		
+		setContentView( R.layout.in_game);
 
 		if( stat != null) {
 			// Restore the game state
@@ -63,23 +71,49 @@ public class Game extends Activity
 		board = new Board( this, gr, timer_width,
 			Board.info_height + Marble.marble_size);
 
-		int rc = board.play_level();
+		board.launch_marble();
+	}
 
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		
+		final SurfaceView g = (SurfaceView)findViewById(R.id.gameboard);
+		
+		// Schedule the updates
+		ticker = new Ticker( new Runnable() {
+			public void run() {
+				board.update();
+				SurfaceHolder h = g.getHolder();
+				Canvas c = h.lockCanvas();
+				board.draw_back(c);
+				board.draw_fore(c);
+				h.unlockCanvasAndPost(c);
+			}
+		}, 1000 / Board.frames_per_sec);		
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle out) {
 		super.onSaveInstanceState(out);
-		out.putInt("level",level);
+/*		out.putInt("level",level);
 		out.putLong("score",score);
-		out.putInt("lives",lives);
+		out.putInt("lives",lives);*/
+	}
+
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+//		ticker.stop();
 	}
 
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		gr.destroy();
+//		gr.destroy();
 	}
 
 	public void increase_score(int amount) {

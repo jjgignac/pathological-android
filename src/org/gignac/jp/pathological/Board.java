@@ -417,10 +417,11 @@ class Board
 		int j = 0;
 		while( j < vert_tiles * level) {
 			String line = f.readLine();
-			if( line.equals("")) {
+			if( line==null) {
 				f.close();
 				return false;
 			}
+			if( line.isEmpty()) continue;
 			if( line.charAt(0) == '|') j += 1;
 		}
 
@@ -434,6 +435,7 @@ class Board
 		j = 0;
 		while( j < vert_tiles) {
 			String line = f.readLine();
+			if(line.isEmpty()) continue;
 
 			if( line.charAt(0) != '|') {
 				if( line.substring(0,5).equals("name="))
@@ -490,8 +492,9 @@ class Board
 //				else if( type == '@') {
 //					if( color == ' ') tile = new Buffer(gr, pathsint);
 //					else tile = new Buffer(gr, pathsint, colorint);
-//				} else if( type == ' ' ||
-//					(type >= '0' && type <= '8')) tile = new Tile(gr, pathsint);
+//				}
+				else if( type == ' ' ||
+					(type >= '0' && type <= '8')) tile = new Tile(gr, pathsint);
 //				else if( type == 'X') tile = new Shredder(gr, pathsint);
 //				else if( type == '*') tile = new Replicator(gr, pathsint, colorint);
 //				else if( type == '^') {
