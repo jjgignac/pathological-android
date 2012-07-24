@@ -20,17 +20,18 @@ class Tile
 		this(gr,paths,0,0);
 	}
 
-	public boolean draw_back(Canvas c) {
+	public boolean draw_back(Blitter b) {
 		pos.right = pos.left + tile_size;
 		pos.bottom = pos.top + tile_size;
 		if(paths > 0)
-			c.drawBitmap( gr.plain_tiles[paths], null, pos, null);
+			b.blit( gr.plain_tiles[paths],
+				pos.left, pos.top, tile_size, tile_size);
 		return true;
 	}
 
 	public void update( Board board) {}
 
-	public boolean draw_fore( Canvas c) {
+	public boolean draw_fore( Blitter b) {
 		return false;
 	}
 

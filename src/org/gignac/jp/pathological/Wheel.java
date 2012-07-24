@@ -26,7 +26,7 @@ class Wheel extends Tile {
 	}
 
 	@Override
-	public boolean draw_back(Canvas c)
+	public boolean draw_back(Blitter b)
 	{
 		moving_hole = gr.cache(moving_hole, R.drawable.moving_hole);
 		moving_hole_dark = gr.cache(moving_hole_dark, R.drawable.moving_hole);
@@ -35,20 +35,20 @@ class Wheel extends Tile {
 		wheel = gr.cache(wheel, R.drawable.wheel);
 		wheel_dark = gr.cache(wheel_dark, R.drawable.wheel_dark);
 		
-		super.draw_back(c);
+		super.draw_back(b);
 
 		if( self.spinpos != 0) {
-			c.drawBitmap( completed ? blank_wheel_dark : blank_wheel,
-				null, pos, null);
+			b.blit( completed ? blank_wheel_dark : blank_wheel,
+				pos.left, pos.top, tile_size, tile_size);
 			for(int i=0; i<4; ++i) {
 				int holecenter_x = gr.holecenters_x[self.spinpos][i];
 				int holecenter_y = gr.holecenters_y[self.spinpos][i];
-				gr.blit( c, completed ? moving_hole_dark : moving_hole,
+				b.blit( completed ? moving_hole_dark : moving_hole,
 					holecenter_x-Marble.marble_size/2+pos.left,
 					holecenter_y-Marble.marble_size/2+pos.top);
 			}
 		} else {
-			gr.blit( c, completed ? wheel_dark : wheel, self.pos.left, self.pos.top);
+			b.blit( completed ? wheel_dark : wheel, pos.left, pos.top);
 		}
 
 		for( int i=0; i < 4; ++i) {
@@ -56,9 +56,9 @@ class Wheel extends Tile {
 			if( color >= 0) {
 				int holecenter_x = gr.holecenters_x[self.spinpos][i];
 				int holecenter_y = gr.holecenters_y[self.spinpos][i];
-				gr.blit( c, gr.marble_images[color],
-					holecenter_x-Marble.marble_size/2+self.pos.left,
-					holecenter_y-Marble.marble_size/2+self.pos.top);
+				b.blit( gr.marble_images[color],
+					holecenter_x-Marble.marble_size/2+pos.left,
+					holecenter_y-Marble.marble_size/2+pos.top);
 			}
 		}
 

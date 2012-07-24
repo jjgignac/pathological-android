@@ -16,12 +16,12 @@ class Stoplight extends Tile {
 	}
 
 	@Override
-	public boolean draw_back( Canvas c) {
-		super.draw_back(c);
+	public boolean draw_back( Blitter b) {
+		super.draw_back(b);
 		image = gr.cache(image, R.drawable.stoplight);
-		c.drawBitmap( image, null, pos, null);
+		b.blit( image, pos.left, pos.top, tile_size, tile_size);
 		for(int i=current; i < 3; ++i) {
-			gr.blit( c, gr.marble_images[marbles[i]],
+			b.blit( gr.marble_images[marbles[i]],
 				pos.left + Tile.tile_size/2 - 14,
 				pos.top + 3 + (29*i),
 				stoplight_marble_size,

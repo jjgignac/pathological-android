@@ -126,35 +126,32 @@ class Board
 				board_posy), null);
 	}
 
-	public void draw_back(Canvas c) {
+	public void draw_back(Blitter b) {
 		int height;
 		
 		// Draw the background
-		c.save();
-		c.clipRect( 0,0,Game.screen_width,Game.screen_height);
-		c.drawBitmap( self.background, 0, 0, null);
-		c.restore();
+		b.blit(background, 0, 0);
 
 		// Draw the launch timer
 		if(self.launch_timer_height == -1) {
 			height = timer_height;
-			paint.setColor(0xff000000);
-			c.drawRect( launch_timer_posx, launch_timer_posy,
-				launch_timer_posx + timer_width,
-				launch_timer_posy + timer_height, paint);
-			paint.setColor(0xff0028ff);
-			c.drawRect( launch_timer_posx+timer_margin,
-				launch_timer_posy+timer_height-height,
-				launch_timer_posx+timer_width-timer_margin,
-				launch_timer_posy+timer_height, paint);
+//			paint.setColor(0xff000000);
+//			c.drawRect( launch_timer_posx, launch_timer_posy,
+//				launch_timer_posx + timer_width,
+//				launch_timer_posy + timer_height, paint);
+//			paint.setColor(0xff0028ff);
+//			c.drawRect( launch_timer_posx+timer_margin,
+//				launch_timer_posy+timer_height-height,
+//				launch_timer_posx+timer_width-timer_margin,
+//				launch_timer_posy+timer_height, paint);
 		} else {
 			height = timer_height*self.launch_timeout/self.launch_timeout_start;
 			if( height < self.launch_timer_height) {
-				paint.setColor(0xff000000);
-				c.drawRect( launch_timer_posx + timer_margin,
-					launch_timer_posy + timer_height - self.launch_timer_height,
-					launch_timer_posx + timer_width - timer_margin,
-					launch_timer_posy + timer_height - height, paint);
+//				paint.setColor(0xff000000);
+//				c.drawRect( launch_timer_posx + timer_margin,
+//					launch_timer_posy + timer_height - self.launch_timer_height,
+//					launch_timer_posx + timer_width - timer_margin,
+//					launch_timer_posy + timer_height - height, paint);
 			}
 		}
 		this.launch_timer_height = height;
@@ -204,18 +201,18 @@ class Board
 */
 		for( Tile[] row : self.tiles)
 			for( Tile tile : row)
-				tile.draw_back(c);
+				tile.draw_back(b);
 
 		for(int i=0; i < self.launch_queue.length; ++i)
-			c.drawBitmap( gr.marble_images[self.launch_queue[i]],
+			b.blit(gr.marble_images[self.launch_queue[i]],
 				self.posx + horiz_tiles * Tile.tile_size,
-				self.posy + i * Marble.marble_size - Marble.marble_size, null);
+				self.posy + i * Marble.marble_size - Marble.marble_size);
 	}
 
-	public void draw_fore( Canvas c) {
+	public void draw_fore( Blitter b) {
 		for(Tile[] row : self.tiles)
 			for(Tile tile : row)
-				tile.draw_fore(c);
+				tile.draw_fore(b);
 	}
 
 	public void update() {
@@ -261,17 +258,17 @@ class Board
 		}
 	}
 	
-	public void paint(Canvas c)
+	public void paint(Blitter b)
 	{
 		// Draw the background
-		self.draw_back(c);
+		self.draw_back(b);
 
 		// Draw all of the marbles
 		for(Marble marble : self.marbles)
-			marble.draw(c);
+			marble.draw(b);
 
 		// Draw the foreground
-		self.draw_fore(c);
+		self.draw_fore(b);
 	}
 
 	public void set_tile( int x, int y, Tile tile) {

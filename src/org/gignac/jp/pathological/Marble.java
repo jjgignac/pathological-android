@@ -25,9 +25,10 @@ class Marble {
 		board.affect_marble(this);
 	}
 
-	public void draw(Canvas c) {
+	public void draw(Blitter b) {
 		pos.right = pos.left + marble_size;
 		pos.bottom = pos.top + marble_size;
-		c.drawBitmap( gr.marble_images[color], null, pos, null);
+		b.blit( gr.marble_images[color],
+			pos.left, pos.top, marble_size, marble_size);
 	}
 }

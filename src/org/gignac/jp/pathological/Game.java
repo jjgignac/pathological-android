@@ -9,6 +9,7 @@ import java.util.*;
 import android.view.*;
 import java.util.concurrent.*;
 import android.widget.*;
+import javax.microedition.khronos.opengles.*;
 
 public class Game extends Activity
 {
@@ -26,6 +27,7 @@ public class Game extends Activity
 	private Board board;
 	private GameResources gr;
 	private Ticker ticker;
+	private GameView view;
 	
 	public Game()
 	{
@@ -79,32 +81,14 @@ public class Game extends Activity
 	{
 		super.onResume();
 
-		final SurfaceView g = (SurfaceView)findViewById(R.id.gameboard);
-		g.setOnTouchListener(new View.OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent e)
-			{
-				if( e.getAction() == e.ACTION_DOWN) {
-					board.downEvent(
-						(int)Math.round(e.getX()),
-						(int)Math.round(e.getY()));
-					return true;
-				} else if( e.getAction() == e.ACTION_UP) {
-					board.upEvent(
-						(int)Math.round(e.getX()),
-						(int)Math.round(e.getY()));
-				}
-				return false;
-			}
-		});
+		view = (GameView)findViewById(R.id.gameboard);
+		view.setup(this);
 
 		// Schedule the updates
 		ticker = new Ticker( new Runnable() {
 			public void run() {
 				board.update();
-				SurfaceHolder h = g.getHolder();
-				Canvas c = h.lockCanvas();
-				board.paint(c);
-				h.unlockCanvasAndPost(c);
+				view.requestRender();
 			}
 		}, 1000 / Board.frames_per_sec);		
 	}
@@ -112,23 +96,36 @@ public class Game extends Activity
 	@Override
 	protected void onSaveInstanceState(Bundle out) {
 		super.onSaveInstanceState(out);
-/*		out.putInt("level",level);
+		out.putInt("level",level);
 		out.putLong("score",score);
-		out.putInt("lives",lives);*/
+		out.putInt("lives",lives);
 	}
 
 	@Override
 	protected void onPause()
 	{
 		super.onPause();
-//		ticker.stop();
+		ticker.stop();
 	}
 
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
-//		gr.destroy();
+		gr.destroy();
+	}
+	
+	public void paint(GL10 gl) {
+		view.blitter_gl = gl;
+		board.paint(view);
+	}
+
+	public void downEvent( int x, int y) {
+		board.downEvent(x,y);
+	}
+
+	public void upEvent( int x, int y) {
+		board.upEvent(x,y);
 	}
 
 	public void increase_score(int amount) {

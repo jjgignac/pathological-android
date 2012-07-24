@@ -35,14 +35,13 @@ class Trigger extends Tile
 	}
 
 	@Override
-	public boolean draw_back(Canvas surface) {
-		super.draw_back(surface);
+	public boolean draw_back(Blitter b) {
+		super.draw_back(b);
 		image = gr.cache(image, R.drawable.trigger);
-		surface.drawBitmap( image, null, pos, null);
+		b.blit( image, pos.left, pos.top, tile_size, tile_size);
 		if( marbles != null) {
 			for(int i=0; i<4; ++i) {
-				gr.blit(surface,
-					gr.marble_images[marbles.charAt(i)-'0'],
+				b.blit( gr.marble_images[marbles.charAt(i)-'0'],
 					gr.holecenters_x[0][i]+pos.left-Marble.marble_size/2,
 					gr.holecenters_y[0][i]+pos.top-Marble.marble_size/2,
 					Marble.marble_size, Marble.marble_size);
