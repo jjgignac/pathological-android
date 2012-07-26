@@ -20,6 +20,7 @@ public class GameView extends GLSurfaceView
 	private BoardRenderer renderer;
 	private Game game;
 	public GL10 blitter_gl;
+	public float scale = 1.3f;
 
 	public GameView(Context c,AttributeSet a) {
 		super(c,a);
@@ -37,26 +38,33 @@ public class GameView extends GLSurfaceView
 		switch(e.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			game.downEvent(
-				(int)Math.round(e.getX()),
-				(int)Math.round(e.getY()));
+				(int)Math.round(e.getX()/scale),
+				(int)Math.round(e.getY()/scale));
 			return true;
 		case MotionEvent.ACTION_UP:
 			game.upEvent(
-				(int)Math.round(e.getX()),
-				(int)Math.round(e.getY()));
+				(int)Math.round(e.getX()/scale),
+				(int)Math.round(e.getY()/scale));
 			return true;
 		}
 
 		return false;
 	}
 
+	@Override
+	protected void onSizeChanged(int w,int h,int oldw,int oldh)
+	{
+		scale = w * Game.screen_height < h * Game.screen_width ?
+			(float)w / Game.screen_width : (float)h / Game.screen_height;
+	}
+
 	public void blit(Bitmap b, int x, int y)
 	{
-		renderer.blit(blitter_gl,b,x,y,b.getWidth(),b.getHeight());
+		blit(b,x,y,b.getWidth(),b.getHeight());
 	}
 
 	public void blit(Bitmap b, int x, int y, int w, int h)
 	{
-		renderer.blit(blitter_gl,b,x,y,w,h);
+		renderer.blit(blitter_gl,b,x*scale,y*scale,w*scale,h*scale);
 	}
 }

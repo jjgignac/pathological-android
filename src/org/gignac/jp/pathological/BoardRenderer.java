@@ -75,7 +75,8 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 		game.paint(gl);
 	}
 
-	public void blit( GL10 gl, Bitmap bitmap, int x, int y, int w, int h)
+	public void blit( GL10 gl, Bitmap bitmap,
+		float x, float y, float w, float h)
 	{
 		float left = x * 2.0f / width - 1.0f;
 		float top = y * -2.0f / height + 1.0f;
