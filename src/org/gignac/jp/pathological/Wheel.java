@@ -29,7 +29,7 @@ class Wheel extends Tile {
 	public boolean draw_back(Blitter b)
 	{
 		moving_hole = gr.cache(moving_hole, R.drawable.moving_hole);
-		moving_hole_dark = gr.cache(moving_hole_dark, R.drawable.moving_hole);
+		moving_hole_dark = gr.cache(moving_hole_dark, R.drawable.moving_hole_dark);
 		blank_wheel = gr.cache(blank_wheel, R.drawable.blank_wheel);
 		blank_wheel_dark = gr.cache(blank_wheel_dark, R.drawable.blank_wheel_dark);
 		wheel = gr.cache(wheel, R.drawable.wheel);
