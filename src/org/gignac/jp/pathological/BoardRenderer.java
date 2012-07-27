@@ -49,6 +49,8 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 	    gl.glDisable(GL10.GL_DEPTH_TEST);
 	    gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 	    gl.glEnable(GL10.GL_CULL_FACE);
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 	}
 	
 	@Override
