@@ -58,12 +58,12 @@ public class GameView extends GLSurfaceView
 			(float)w / Game.screen_width : (float)h / Game.screen_height;
 	}
 
-	public void blit(Bitmap b, int x, int y)
+	public void blit(Sprite b, int x, int y)
 	{
-		blit(b,x,y,b.getWidth(),b.getHeight());
+		blit(b,x,y,b.bitmap.getWidth(),b.bitmap.getHeight());
 	}
 
-	public void blit(Bitmap b, int x, int y, int w, int h)
+	public void blit(Sprite b, int x, int y, int w, int h)
 	{
 		renderer.blit(blitter_gl,b,x*scale,y*scale,w*scale,h*scale);
 	}

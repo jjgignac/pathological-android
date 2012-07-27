@@ -4,7 +4,7 @@ import android.graphics.*;
 class Stoplight extends Tile {
 	public int current;
 	public int[] marbles;
-	private static Bitmap image;
+	private static Sprite image;
 	private static final int stoplight_marble_size = 28;
 
 	public Stoplight(GameResources gr, String colors) {

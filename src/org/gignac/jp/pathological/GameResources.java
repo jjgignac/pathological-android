@@ -34,7 +34,7 @@ public class GameResources
 		R.drawable.marble_6_cb, R.drawable.marble_7_cb,
 		R.drawable.marble_8_cb
 	};
-	public Bitmap[] marble_images;
+	public Sprite[] marble_images;
 	private static final int[] tileimg_resid = {
 		R.drawable.path_0, R.drawable.path_1, R.drawable.path_2,
 		R.drawable.path_3, R.drawable.path_4, R.drawable.path_5,
@@ -43,12 +43,8 @@ public class GameResources
 		R.drawable.path_12, R.drawable.path_13, R.drawable.path_14,
 		R.drawable.path_15
 	};
-	public Bitmap[] plain_tiles;
-	public Bitmap launcher_background;
-	public Bitmap launcher_v;
-	public Bitmap launcher_corner;
-	public Bitmap launcher_entrance;	
-	public Bitmap trigger_image;
+	public Sprite[] plain_tiles;
+	public Sprite trigger_image;
 	private SoundPool sp;
 
 	// Sounds
@@ -104,34 +100,28 @@ public class GameResources
 			holecenters_y[i][3] = (int)Math.round(Tile.tile_size/2 - s);
 		}
 	}
+
+	public Sprite loadBitmap( Resources res, int resid) {
+		return new Sprite( BitmapFactory.decodeResource(res, resid));
+	}
 	
 	public void create(boolean colorblind) {
 		Resources res = context.getResources();
 
 		// Load the marble images
-		marble_images = new Bitmap[marble_resid.length];
+		marble_images = new Sprite[marble_resid.length];
 		for( int i=0; i < marble_resid.length; ++i) {
-			marble_images[i] = BitmapFactory.decodeResource( res,
+			marble_images[i] = loadBitmap( res,
 				colorblind ? marble_resid_cb[i] : marble_resid[i]);
 		}
 
 		// Load the plain tile images
-		plain_tiles = new Bitmap[tileimg_resid.length];
+		plain_tiles = new Sprite[tileimg_resid.length];
 		for( int i=0; i < tileimg_resid.length; ++i) {
-			plain_tiles[i] = BitmapFactory.decodeResource(
-				res, tileimg_resid[i]);
+			plain_tiles[i] = loadBitmap(res, tileimg_resid[i]);
 		}
 
-		launcher_background = BitmapFactory.decodeResource(
-			res, R.drawable.launcher);
-		launcher_v = BitmapFactory.decodeResource(
-			res, R.drawable.launcher_v);
-		launcher_corner = BitmapFactory.decodeResource(
-			res, R.drawable.launcher_corner);
-		launcher_entrance = BitmapFactory.decodeResource(
-			res, R.drawable.entrance);
-		trigger_image = BitmapFactory.decodeResource(
-			res, R.drawable.trigger);
+		trigger_image = loadBitmap(res, R.drawable.trigger);
 		
 		// Load the sound effects
 		sp = new SoundPool(6, AudioManager.STREAM_MUSIC, 0);
@@ -143,10 +133,6 @@ public class GameResources
 	public void destroy() {
 		sp.release();
 		trigger_image = null;
-		launcher_entrance = null;
-		launcher_corner = null;
-		launcher_v = null;
-		launcher_background = null;
 		plain_tiles = null;
 		marble_images = null;
 	}
@@ -157,24 +143,10 @@ public class GameResources
 			sound_volume[id], 0, 0, 1.0f);
 	}
 	
-	public Bitmap cache(Bitmap b, int resid)
+	public Sprite cache(Sprite b, int resid)
 	{
 		if(b != null) return b;
-		return BitmapFactory.decodeResource(
-			context.getResources(),resid);
-	}
-
-	public void blit( Canvas c, Bitmap b, int x, int y, int w, int h)
-	{
-		blitRect.left = x;
-		blitRect.top = y;
-		blitRect.right = x + w;
-		blitRect.bottom = y + h;
-		c.drawBitmap( b, null, blitRect, null);
-	}
-
-	public void blit( Canvas c, Bitmap b, int x, int y)
-	{
-		blit(c,b,x,y,b.getWidth(),b.getHeight());
+		return new Sprite(BitmapFactory.decodeResource(
+			context.getResources(),resid));
 	}
 }

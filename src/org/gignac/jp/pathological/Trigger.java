@@ -6,7 +6,7 @@ class Trigger extends Tile
 	public static final int trigger_time = 30; // 30 seconds
 	public String marbles;
 	private int countdown;
-	private static Bitmap image;
+	private static Sprite image;
 
 	public Trigger(GameResources gr, String colors) {
 		super(gr,0); // Call base class intializer

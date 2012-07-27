@@ -3,6 +3,6 @@ import android.graphics.*;
 
 public interface Blitter
 {
-	public void blit( Bitmap b, int x, int y);
-	public void blit( Bitmap b, int x, int y, int w, int h);
+	public void blit( Sprite b, int x, int y);
+	public void blit( Sprite b, int x, int y, int w, int h);
 }

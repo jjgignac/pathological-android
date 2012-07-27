@@ -30,7 +30,7 @@ class Board
 	private int posx, posy;
 	public Vector<Marble> marbles;
 	public Tile[][] tiles;
-	private Bitmap background;
+	private Sprite background;
 	private int[] launch_queue;
 	private int board_complete;
 	private boolean paused;
@@ -87,10 +87,10 @@ class Board
 		}
 
 		// Create The Background
-		this.background = Bitmap.createBitmap(
+		Bitmap b = Bitmap.createBitmap(
 			Game.screen_width, Game.screen_height, Bitmap.Config.ARGB_8888);
 		
-		Canvas c = new Canvas(this.background);
+		Canvas c = new Canvas(b);
 		this.paint = new Paint();
 		paint.setColor(0xffc8c8c8);
 		c.drawPaint(paint);    // Color of Info Bar
@@ -103,27 +103,37 @@ class Board
 				board_posy + vert_tiles * Tile.tile_size), null);
 
 		// Draw the launcher
-		c.drawBitmap( gr.launcher_background, null,
+		Bitmap launcher_background = BitmapFactory.decodeResource(
+			game.getResources(), R.drawable.launcher);
+		c.drawBitmap( launcher_background, null,
 			new Rect(board_posx, board_posy - Marble.marble_size,
 				board_posx + horiz_tiles * Tile.tile_size,
 				board_posy), null);
-		c.drawBitmap( gr.launcher_v, null,
+		Bitmap launcher_v = BitmapFactory.decodeResource(
+			game.getResources(), R.drawable.launcher_v);
+		c.drawBitmap( launcher_v, null,
 			new Rect(board_posx+horiz_tiles*Tile.tile_size, board_posy,
 				board_posx+horiz_tiles*Tile.tile_size+Marble.marble_size,
 				board_posy+vert_tiles*Tile.tile_size), null);
+		Bitmap launcher_entrance = BitmapFactory.decodeResource(
+			game.getResources(), R.drawable.entrance);
 		for(int i=0; i < horiz_tiles; ++i)
 			if((self.tiles[0][i].paths & 1) == 1)
-				c.drawBitmap( gr.launcher_entrance, null,
+				c.drawBitmap( launcher_entrance, null,
 					new Rect( board_posx+Tile.tile_size*i,
 						board_posy-Marble.marble_size,
 						board_posx+Tile.tile_size*(i+1),
 						board_posy), null);
-		c.drawBitmap( gr.launcher_corner, null,
+		Bitmap launcher_corner = BitmapFactory.decodeResource(
+			game.getResources(), R.drawable.launcher_corner);
+		c.drawBitmap( launcher_corner, null,
 			new Rect( board_posx+horiz_tiles*Tile.tile_size-
 				(Tile.tile_size-Marble.marble_size)/2,
 				board_posy - Marble.marble_size,
 				board_posx+horiz_tiles*Tile.tile_size+Marble.marble_size,
 				board_posy), null);
+
+		background = new Sprite(b);
 	}
 
 	public void draw_back(Blitter b) {

@@ -6,12 +6,12 @@ class Wheel extends Tile {
 	public int spinpos;
 	private Wheel self;
 	private boolean completed;
-	private Bitmap moving_hole;
-	private Bitmap moving_hole_dark;
-	private Bitmap blank_wheel;
-	private Bitmap blank_wheel_dark;
-	private Bitmap wheel;
-	private Bitmap wheel_dark;
+	private Sprite moving_hole;
+	private Sprite moving_hole_dark;
+	private Sprite blank_wheel;
+	private Sprite blank_wheel_dark;
+	private Sprite wheel;
+	private Sprite wheel_dark;
 	
 	public Wheel( GameResources gr, int paths) {
 		super(gr, paths); // Call base class intializer

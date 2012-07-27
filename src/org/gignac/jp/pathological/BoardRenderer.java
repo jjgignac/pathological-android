@@ -75,7 +75,7 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 		game.paint(gl);
 	}
 
-	public void blit( GL10 gl, Bitmap bitmap,
+	public void blit( GL10 gl, Sprite bitmap,
 		float x, float y, float w, float h)
 	{
 		float left = x * 2.0f / width - 1.0f;
@@ -91,7 +91,7 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 		vertexBuffer.put(vertices);
 		vertexBuffer.position(0);
 
-	    GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
+	    GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap.bitmap, 0);
     	gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
     	gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
     	gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
