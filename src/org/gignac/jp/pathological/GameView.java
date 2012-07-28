@@ -61,7 +61,7 @@ public class GameView extends GLSurfaceView
 
 	public void blit(int b, int x, int y)
 	{
-		renderer.blit(blitter_gl,b,x,y);
+		renderer.blit(blitter_gl,b,x,y,scale);
 	}
 
 	public void blit(int b, int x, int y, int w, int h)

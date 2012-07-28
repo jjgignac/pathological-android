@@ -83,10 +83,12 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 		blit(gl,x,y,w,h);		
 	}
 
-	public void blit( GL10 gl, int resid, float x, float y) {
+	public void blit( GL10 gl, int resid,
+		float x, float y, float scale) {
 		Sprite.bind(gl,resid);
 		Bitmap b = Sprite.getBitmap(resid);
-		blit(gl,x,y,b.getWidth(),b.getHeight());
+		blit(gl, x*scale, y*scale,
+			b.getWidth()*scale, b.getHeight()*scale);
 	}
 
 	private void blit( GL10 gl, float x, float y, float w, float h)
