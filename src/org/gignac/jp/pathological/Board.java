@@ -501,8 +501,8 @@ class Board
 					numwheels += 1;
 				} else if( type == '%') tile = new Trigger(gr, self.colors);
 				else if( type == '!') tile = new Stoplight(gr, stoplight);
-//				else if( type == '&') tile = new Painter(gr, pathsint, colorint);
-//				else if( type == '#') tile = new Filter(gr, pathsint, colorint);
+				else if( type == '&') tile = new Painter(gr, pathsint, colorint);
+				else if( type == '#') tile = new Filter(gr, pathsint, colorint);
 //				else if( type == '@') {
 //					if( color == ' ') tile = new Buffer(gr, pathsint);
 //					else tile = new Buffer(gr, pathsint, colorint);
