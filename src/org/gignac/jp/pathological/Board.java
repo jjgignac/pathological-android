@@ -532,16 +532,16 @@ class Board
 					else if( color == '>') tile = new Switch(gr, pathsint, 3, 1);
 					else if( color == 'v') tile = new Switch(gr, pathsint, 3, 2);
 				}
-//				else if( type == '=') {
-//					if( teleporter_names.indexOf(color) >= 0) {
-//						Tile other = teleporters.get(teleporter_names.indexOf(color));
-//						tile = new Teleporter( gr, pathsint, other);
-//					} else {
-//						tile = new Teleporter( gr, pathsint);
-//						teleporters.addElement( tile);
-//						teleporter_names = teleporter_names + color;
-//					}
-//				}
+				else if( type == '=') {
+					if( teleporter_names.indexOf(color) >= 0) {
+						Tile other = teleporters.get( teleporter_names.indexOf(color));
+						tile = new Teleporter( gr, pathsint, (Teleporter)other);
+					} else {
+						tile = new Teleporter( gr, pathsint, null);
+						teleporters.addElement( tile);
+						teleporter_names = teleporter_names + color;
+					}
+				}
 
 				this.set_tile( i, j, tile);
 
