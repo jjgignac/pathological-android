@@ -19,10 +19,10 @@ class Trigger extends Tile
 	private void setup(String colors) {
 		this.countdown = 0;
 		this.marbles = ""+
-			colors.charAt(gr.random.nextInt()%colors.length()) +
-			colors.charAt(gr.random.nextInt()%colors.length()) +
-			colors.charAt(gr.random.nextInt()%colors.length()) +
-			colors.charAt(gr.random.nextInt()%colors.length());
+			colors.charAt(gr.random.nextInt(colors.length())) +
+			colors.charAt(gr.random.nextInt(colors.length())) +
+			colors.charAt(gr.random.nextInt(colors.length())) +
+			colors.charAt(gr.random.nextInt(colors.length()));
 	}
 
 	@Override
