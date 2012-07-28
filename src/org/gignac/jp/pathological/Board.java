@@ -41,6 +41,7 @@ class Board
 	private Paint paint;
 	private Marble[] marblesCopy = new Marble[20];
 	private int downx, downy;
+	private int launch_queue_offset;
 
 	public Board(Game game, GameResources gr, int posx, int posy)
 	{
@@ -140,7 +141,7 @@ class Board
 		for(int i=0; i < self.launch_queue.length; ++i)
 			b.blit(Marble.marble_images[self.launch_queue[i]],
 				self.posx + horiz_tiles * Tile.tile_size,
-				self.posy + i * Marble.marble_size - Marble.marble_size);
+				self.posy + launch_queue_offset + (i-1) * Marble.marble_size);
 	}
 
 	public void draw_fore( Blitter b) {
@@ -190,6 +191,10 @@ class Board
 			self.board_timeout -= 1;
 			if(self.board_timeout == 0) self.board_complete = -2;
 		}
+
+		// Animate the launch queue
+		if( launch_queue_offset > 0)
+			--launch_queue_offset;
 	}
 	
 	public synchronized void paint(Blitter b)
@@ -248,6 +253,7 @@ class Board
 		self.launch_queue[launch_queue.length-1] =
 			colors.charAt(gr.random.nextInt(colors.length()))-'0';
 		self.launch_timeout = self.launch_timeout_start;
+		launch_queue_offset = Marble.marble_size;
 	}
 
 	public void affect_marble( Marble marble)
