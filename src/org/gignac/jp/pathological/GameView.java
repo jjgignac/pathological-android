@@ -55,8 +55,8 @@ public class GameView extends GLSurfaceView
 	@Override
 	protected void onSizeChanged(int w,int h,int oldw,int oldh)
 	{
-		scale = w * Game.screen_height < h * Game.screen_width ?
-			(float)w / Game.screen_width : (float)h / Game.screen_height;
+		scale = w * Board.screen_height < h * Board.screen_width ?
+			(float)w / Board.screen_width : (float)h / Board.screen_height;
 	}
 
 	public void blit(int b, int x, int y)

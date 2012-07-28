@@ -13,16 +13,12 @@ class Board
 	private static final int default_board_timer = 30;
 	public static final int vert_tiles = 6;
 	public static final int horiz_tiles = 8;
-	public static final int info_height = 20;
-	public static final int launch_timer_posx = 0;
-	public static final int launch_timer_posy = info_height;
 	public static final int board_width = horiz_tiles * Tile.tile_size;
 	public static final int board_height = vert_tiles * Tile.tile_size;
-	public static final int timer_width = 36;
-	public static final int timer_margin = 4;
-	public static final int timer_height = board_height + Marble.marble_size;
-	public static final int board_posx = timer_width;
-	public static final int board_posy = info_height + Marble.marble_size;
+	public static final int board_posx = 0;
+	public static final int board_posy = Marble.marble_size;
+	public static final int screen_width = board_width + Marble.marble_size;
+	public static final int screen_height = board_height + Marble.marble_size;
 	public Game game;
 	private GameResources gr;
 	public Trigger trigger;
@@ -42,7 +38,6 @@ class Board
 	private int board_timeout_start;
 	public String colors;
 	private Board self;
-	private int launch_timer_height;
 	public int launch_timer;
 	private Paint paint;
 	private Marble[] marblesCopy = new Marble[20];
@@ -65,7 +60,6 @@ class Board
 		this.launch_timeout = -1;
 		this.board_timeout = -1;
 		this.colors = default_colors;
-		this.launch_timer_height = -1;
 
 		set_launch_timer( default_launch_timer);
 		set_board_timer( default_board_timer);
@@ -87,18 +81,18 @@ class Board
 
 		// Create The Background
 		Bitmap b = Bitmap.createBitmap(
-			Game.screen_width, Game.screen_height, Bitmap.Config.ARGB_8888);
+			screen_width, screen_height, Bitmap.Config.ARGB_8888);
 		
 		Canvas c = new Canvas(b);
 		this.paint = new Paint();
 		paint.setColor(0xffc8c8c8);
-		c.drawPaint(paint);    // Color of Info Bar
+		c.drawPaint(paint);
 
 		// Draw the Backdrop
 		Bitmap backdrop = BitmapFactory.decodeResource(game.getResources(), R.drawable.backdrop);
 		c.drawBitmap( backdrop, null,
 			new Rect(board_posx, board_posy,
-				board_posx + horiz_tiles * Tile.tile_size,-
+				board_posx + horiz_tiles * Tile.tile_size,
 				board_posy + vert_tiles * Tile.tile_size), null);
 
 		// Draw the launcher
@@ -137,78 +131,9 @@ class Board
 	}
 
 	public void draw_back(Blitter b) {
-		int height;
-		
 		// Draw the background
 		b.blit(R.drawable.backdrop, 0, 0);
 
-		// Draw the launch timer
-		if(self.launch_timer_height == -1) {
-			height = timer_height;
-//			paint.setColor(0xff000000);
-//			c.drawRect( launch_timer_posx, launch_timer_posy,
-//				launch_timer_posx + timer_width,
-//				launch_timer_posy + timer_height, paint);
-//			paint.setColor(0xff0028ff);
-//			c.drawRect( launch_timer_posx+timer_margin,
-//				launch_timer_posy+timer_height-height,
-//				launch_timer_posx+timer_width-timer_margin,
-//				launch_timer_posy+timer_height, paint);
-		} else {
-			height = timer_height*self.launch_timeout/self.launch_timeout_start;
-			if( height < self.launch_timer_height) {
-//				paint.setColor(0xff000000);
-//				c.drawRect( launch_timer_posx + timer_margin,
-//					launch_timer_posy + timer_height - self.launch_timer_height,
-//					launch_timer_posx + timer_width - timer_margin,
-//					launch_timer_posy + timer_height - height, paint);
-			}
-		}
-		this.launch_timer_height = height;
-/*
-		self.screen.blit( self.launch_timer_text, self.launch_timer_text_rect);
-*/
-/*
-		// Draw the score
-		String text = "Score: "+("00000000"+self.game.score)[-8:];
-		text = info_font.render( text, 1, (0,0,0));
-		rect = text.get_rect();
-		rect.left = self.score_pos;
-		self.screen.blit( text, rect);
-
-		// Draw the board timer
-		time_remaining = (self.board_timeout+frames_per_sec-1)/frames_per_sec;
-		text = time_remaining/60+":"+("00"+(time_remaining%60))[-2:];
-		text = info_font.render( text, 1, (0,0,0));
-		rect = text.get_rect();
-		rect.left = self.board_timer_pos;
-		self.screen.blit( text, rect);
-
-		// Draw the lives counter
-		right_edge = self.board_timer_pos - 32;
-		for(int i=0; i < self.game.lives - 1; ++i) {
-			rect = self.life_marble.get_rect();
-			rect.centery = info_height / 2;
-			rect.right = right_edge;
-			self.screen.blit( self.life_marble, rect);
-			right_edge -= rect.width + 4;
-		}
-
-		// Draw the live marbles
-		int num_marbles = self.marbles.length;
-		if( num_marbles > self.live_marbles_limit)
-			num_marbles = self.live_marbles_limit;
-		text = ""+num_marbles+"/"+self.live_marbles_limit;
-		text = active_marbles_font.render( text, 1, (40,40,40));
-		rect = text.get_rect();
-		rect.left = self.pos[0] + 8;
-		rect.centery = self.pos[1] - marble_size / 2;
-		rect.width += 100;
-		self.screen.set_clip( rect);
-		self.screen.blit( self.background, (0,0));
-		self.screen.set_clip();
-		self.screen.blit( text, rect);
-*/
 		for( Tile[] row : self.tiles)
 			for( Tile tile : row)
 				tile.draw_back(b);
@@ -303,7 +228,6 @@ class Board
 		self.launch_timeout_start = (Marble.marble_size +
 			(horiz_tiles * Tile.tile_size - Marble.marble_size)
 				* passes) / Marble.marble_speed;
-		self.launch_timer_height = -1;
 	}
 
 	public void set_board_timer(int seconds) {
@@ -322,7 +246,6 @@ class Board
 		self.launch_queue[launch_queue.length-1] =
 			colors.charAt(gr.random.nextInt(colors.length()))-'0';
 		self.launch_timeout = self.launch_timeout_start;
-		self.launch_timer_height = -1;
 	}
 
 	public void affect_marble( Marble marble)

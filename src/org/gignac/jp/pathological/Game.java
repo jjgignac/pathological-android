@@ -16,9 +16,6 @@ public class Game extends Activity
 	public static final int initial_lives = 3;
 	public static final int max_spare_lives = 10;
 	public static final int extra_life_frequency = 5000;
-	public static final int timer_width = 36;
-	public static final int screen_width = 800;
-	public static final int screen_height = 600;
 	
 	public int numlevels;
 	public int level;
@@ -70,8 +67,7 @@ public class Game extends Activity
 			lives = initial_lives;
 		}
 
-		board = new Board( this, gr, timer_width,
-			Board.info_height + Marble.marble_size);
+		board = new Board( this, gr, 0, Marble.marble_size);
 
 		board.launch_marble();
 	}
