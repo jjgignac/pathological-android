@@ -509,8 +509,8 @@ class Board
 				}
 				else if( type == ' ' ||
 					(type >= '0' && type <= '8')) tile = new Tile(gr, pathsint);
-//				else if( type == 'X') tile = new Shredder(gr, pathsint);
-//				else if( type == '*') tile = new Replicator(gr, pathsint, colorint);
+				else if( type == 'X') tile = new Shredder(gr, pathsint);
+				else if( type == '*') tile = new Replicator(gr, pathsint, colorint);
 				else if( type == '^') {
 					if( color == ' ') tile = new Director(gr, pathsint, 0);
 					else if( color == '>') tile = new Switch(gr, pathsint, 0, 1);
