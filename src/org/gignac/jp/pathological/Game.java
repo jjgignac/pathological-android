@@ -65,7 +65,7 @@ public class Game extends Activity
 			lives = stat.getInt("lives");
 		} else {
 			// Begin a new game
-			level = 0;
+			level = 2;
 			score = 0;
 			lives = initial_lives;
 		}

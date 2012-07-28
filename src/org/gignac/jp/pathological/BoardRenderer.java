@@ -63,7 +63,7 @@ public class BoardRenderer implements GLSurfaceView.Renderer
         gl.glLoadIdentity();
 		gl.glOrthof(-1.0f, 1.0f, -1.0f, 1.0f, -10.0f, 10.0f);
         gl.glMatrixMode(GL10.GL_MODELVIEW);
-		Sprite.genTextures(gl);
+		Sprite.regenerateTextures();
 	}
 
 	@Override
@@ -76,8 +76,20 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 		game.paint(gl);
 	}
 
-	public void blit( GL10 gl, Sprite sprite,
-		float x, float y, float w, float h)
+
+	public void blit( GL10 gl, int resid,
+		float x, float y, float w, float h) {
+		Sprite.bind(gl, resid);
+		blit(gl,x,y,w,h);		
+	}
+
+	public void blit( GL10 gl, int resid, float x, float y) {
+		Sprite.bind(gl,resid);
+		Bitmap b = Sprite.getBitmap(resid);
+		blit(gl,x,y,b.getWidth(),b.getHeight());
+	}
+
+	private void blit( GL10 gl, float x, float y, float w, float h)
 	{
 		float left = x * 2.0f / width - 1.0f;
 		float top = y * -2.0f / height + 1.0f;
@@ -92,7 +104,6 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 		vertexBuffer.put(vertices);
 		vertexBuffer.position(0);
 
-		sprite.bind(gl);
 	    gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 	    gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 	    gl.glFrontFace(GL10.GL_CW);

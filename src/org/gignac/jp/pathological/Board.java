@@ -30,7 +30,6 @@ class Board
 	private int posx, posy;
 	public Vector<Marble> marbles;
 	public Tile[][] tiles;
-	private Sprite background;
 	private int[] launch_queue;
 	private int board_complete;
 	private boolean paused;
@@ -133,14 +132,15 @@ class Board
 				board_posx+horiz_tiles*Tile.tile_size+Marble.marble_size,
 				board_posy), null);
 
-		background = new Sprite(b);
+		Sprite.cache( R.drawable.backdrop, b);
+		Sprite.cache( Marble.marble_images);
 	}
 
 	public void draw_back(Blitter b) {
 		int height;
 		
 		// Draw the background
-		b.blit(background, 0, 0);
+		b.blit(R.drawable.backdrop, 0, 0);
 
 		// Draw the launch timer
 		if(self.launch_timer_height == -1) {
@@ -214,7 +214,7 @@ class Board
 				tile.draw_back(b);
 
 		for(int i=0; i < self.launch_queue.length; ++i)
-			b.blit(gr.marble_images[self.launch_queue[i]],
+			b.blit(Marble.marble_images[self.launch_queue[i]],
 				self.posx + horiz_tiles * Tile.tile_size,
 				self.posy + i * Marble.marble_size - Marble.marble_size);
 	}
@@ -511,27 +511,28 @@ class Board
 					(type >= '0' && type <= '8')) tile = new Tile(gr, pathsint);
 //				else if( type == 'X') tile = new Shredder(gr, pathsint);
 //				else if( type == '*') tile = new Replicator(gr, pathsint, colorint);
-//				else if( type == '^') {
-//					if( color == ' ') tile = new Director(gr, pathsint, 0);
+				else if( type == '^') {
+					if( color == ' ') tile = new Director(gr, pathsint, 0);
 //					else if( color == '>') tile = new Switch(gr, pathsint, 0, 1);
 //					else if( color == 'v') tile = new Switch(gr, pathsint, 0, 2);
 //					else if( color == '<') tile = new Switch(gr, pathsint, 0, 3);
-//				} else if( type == '>') {
-//					if( color == ' ') tile = new Director(gr, pathsint, 1);
+				} else if( type == '>') {
+					if( color == ' ') tile = new Director(gr, pathsint, 1);
 //					else if( color == '^') tile = new Switch(gr, pathsint, 1, 0);
 //					else if( color == 'v') tile = new Switch(gr, pathsint, 1, 2);
 //					else if( color == '<') tile = new Switch(gr, pathsint, 1, 3);
-//				} else if( type == 'v') {
-//					if( color == ' ') tile = new Director(gr, pathsint, 2);
+				} else if( type == 'v') {
+					if( color == ' ') tile = new Director(gr, pathsint, 2);
 //					else if( color == '^') tile = new Switch(gr, pathsint, 2, 0);
 //					else if( color == '>') tile = new Switch(gr, pathsint, 2, 1);
 //					else if( color == '<') tile = new Switch(gr, pathsint, 2, 3);
-//				} else if( type == '<') {
-//					if( color == ' ') tile = new Director(gr,pathsint, 3);
+				} else if( type == '<') {
+					if( color == ' ') tile = new Director(gr,pathsint, 3);
 //					else if( color == '^') tile = new Switch(gr, pathsint, 3, 0);
 //					else if( color == '>') tile = new Switch(gr, pathsint, 3, 1);
 //					else if( color == 'v') tile = new Switch(gr, pathsint, 3, 2);
-//				} else if( type == '=') {
+				}
+//				else if( type == '=') {
 //					if( teleporter_names.indexOf(color) >= 0) {
 //						Tile other = teleporters.get(teleporter_names.indexOf(color));
 //						tile = new Teleporter( gr, pathsint, other);

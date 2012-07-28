@@ -4,7 +4,6 @@ import android.graphics.*;
 class Stoplight extends Tile {
 	public int current;
 	public int[] marbles;
-	private static Sprite image;
 	private static final int stoplight_marble_size = 28;
 
 	public Stoplight(GameResources gr, String colors) {
@@ -13,21 +12,20 @@ class Stoplight extends Tile {
 		for(int i=0; i<3; ++i)
 			marbles[i] = colors.charAt(i)-'0';
 		current = 0;
+		Sprite.cache(R.drawable.stoplight);
 	}
 
 	@Override
-	public boolean draw_back( Blitter b) {
+	public void draw_back( Blitter b) {
 		super.draw_back(b);
-		image = gr.cache(image, R.drawable.stoplight);
-		b.blit( image, pos.left, pos.top, tile_size, tile_size);
+		b.blit( R.drawable.stoplight, pos.left, pos.top, tile_size, tile_size);
 		for(int i=current; i < 3; ++i) {
-			b.blit( gr.marble_images[marbles[i]],
+			b.blit( Marble.marble_images[marbles[i]],
 				pos.left + Tile.tile_size/2 - 14,
 				pos.top + 3 + (29*i),
 				stoplight_marble_size,
 				stoplight_marble_size);
 		}
-		return true;
 	}
 
 	public void complete( Board board) {
