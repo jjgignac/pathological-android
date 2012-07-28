@@ -6,7 +6,6 @@ import android.util.*;
 
 class Board
 {
-	public static final int frames_per_sec = 100;
 	private static final String default_colors = "2346";
 	private static final String default_stoplight = "643";
 	private static final int default_launch_timer = 6;
@@ -193,7 +192,7 @@ class Board
 		}
 	}
 	
-	public void paint(Blitter b)
+	public synchronized void paint(Blitter b)
 	{
 		// Draw the background
 		self.draw_back(b);
@@ -204,6 +203,9 @@ class Board
 
 		// Draw the foreground
 		self.draw_fore(b);
+
+		// Trigger the update step		
+		notify();
 	}
 
 	public void set_tile( int x, int y, Tile tile) {
@@ -232,7 +234,7 @@ class Board
 
 	public void set_board_timer(int seconds) {
 		self.board_timer = seconds;
-		self.board_timeout_start = seconds * frames_per_sec;
+		self.board_timeout_start = seconds * Game.frames_per_sec;
 		self.board_timeout = self.board_timeout_start;
 	}
 

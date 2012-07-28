@@ -16,7 +16,9 @@ public class Game extends Activity
 	public static final int initial_lives = 3;
 	public static final int max_spare_lives = 10;
 	public static final int extra_life_frequency = 5000;
-	
+	private static final int frameskip = 2;
+	public static final int frames_per_sec = 100;
+
 	public int numlevels;
 	public int level;
 	public int lives;
@@ -25,6 +27,7 @@ public class Game extends Activity
 	private GameResources gr;
 	private Ticker ticker;
 	private GameView view;
+	private int framenum;
 	
 	public Game()
 	{
@@ -79,14 +82,25 @@ public class Game extends Activity
 
 		view = (GameView)findViewById(R.id.gameboard);
 		view.setup(this);
+		
+		framenum = frameskip;
 
 		// Schedule the updates
 		ticker = new Ticker( new Runnable() {
 			public void run() {
+				if(--framenum == 0) {
+					framenum = frameskip;
+
+					// Render a frame
+					synchronized(board) {
+						view.requestRender();
+						try { board.wait(); }
+						catch(InterruptedException e) {}
+					}
+				}				
 				board.update();
-				view.requestRender();
 			}
-		}, 1000 / Board.frames_per_sec);		
+		}, 1000 / frames_per_sec);		
 	}
 
 	@Override

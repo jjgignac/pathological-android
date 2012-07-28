@@ -52,7 +52,7 @@ class Trigger extends Tile
 
 	public void complete(Board board) {
 		marbles = null;
-		countdown = trigger_time * Board.frames_per_sec;
+		countdown = trigger_time * Game.frames_per_sec;
 		board.game.increase_score( 50);
 	}
 }
