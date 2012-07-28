@@ -503,34 +503,34 @@ class Board
 				else if( type == '!') tile = new Stoplight(gr, stoplight);
 				else if( type == '&') tile = new Painter(gr, pathsint, colorint);
 				else if( type == '#') tile = new Filter(gr, pathsint, colorint);
-//				else if( type == '@') {
-//					if( color == ' ') tile = new Buffer(gr, pathsint);
-//					else tile = new Buffer(gr, pathsint, colorint);
-//				}
+				else if( type == '@') {
+					if( color == ' ') tile = new Buffer(gr, pathsint, -1);
+					else tile = new Buffer(gr, pathsint, colorint);
+				}
 				else if( type == ' ' ||
 					(type >= '0' && type <= '8')) tile = new Tile(gr, pathsint);
 //				else if( type == 'X') tile = new Shredder(gr, pathsint);
 //				else if( type == '*') tile = new Replicator(gr, pathsint, colorint);
 				else if( type == '^') {
 					if( color == ' ') tile = new Director(gr, pathsint, 0);
-//					else if( color == '>') tile = new Switch(gr, pathsint, 0, 1);
-//					else if( color == 'v') tile = new Switch(gr, pathsint, 0, 2);
-//					else if( color == '<') tile = new Switch(gr, pathsint, 0, 3);
+					else if( color == '>') tile = new Switch(gr, pathsint, 0, 1);
+					else if( color == 'v') tile = new Switch(gr, pathsint, 0, 2);
+					else if( color == '<') tile = new Switch(gr, pathsint, 0, 3);
 				} else if( type == '>') {
 					if( color == ' ') tile = new Director(gr, pathsint, 1);
-//					else if( color == '^') tile = new Switch(gr, pathsint, 1, 0);
-//					else if( color == 'v') tile = new Switch(gr, pathsint, 1, 2);
-//					else if( color == '<') tile = new Switch(gr, pathsint, 1, 3);
+					else if( color == '^') tile = new Switch(gr, pathsint, 1, 0);
+					else if( color == 'v') tile = new Switch(gr, pathsint, 1, 2);
+					else if( color == '<') tile = new Switch(gr, pathsint, 1, 3);
 				} else if( type == 'v') {
 					if( color == ' ') tile = new Director(gr, pathsint, 2);
-//					else if( color == '^') tile = new Switch(gr, pathsint, 2, 0);
-//					else if( color == '>') tile = new Switch(gr, pathsint, 2, 1);
-//					else if( color == '<') tile = new Switch(gr, pathsint, 2, 3);
+					else if( color == '^') tile = new Switch(gr, pathsint, 2, 0);
+					else if( color == '>') tile = new Switch(gr, pathsint, 2, 1);
+					else if( color == '<') tile = new Switch(gr, pathsint, 2, 3);
 				} else if( type == '<') {
 					if( color == ' ') tile = new Director(gr,pathsint, 3);
-//					else if( color == '^') tile = new Switch(gr, pathsint, 3, 0);
-//					else if( color == '>') tile = new Switch(gr, pathsint, 3, 1);
-//					else if( color == 'v') tile = new Switch(gr, pathsint, 3, 2);
+					else if( color == '^') tile = new Switch(gr, pathsint, 3, 0);
+					else if( color == '>') tile = new Switch(gr, pathsint, 3, 1);
+					else if( color == 'v') tile = new Switch(gr, pathsint, 3, 2);
 				}
 //				else if( type == '=') {
 //					if( teleporter_names.indexOf(color) >= 0) {
