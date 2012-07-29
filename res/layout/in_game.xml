@@ -8,32 +8,89 @@
 		android:id="@+id/gameboard"
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
-		android:layout_weight="3" />
+		android:layout_weight="1" />
 
 	<LinearLayout
-		android:layout_width="0dp"
+		android:layout_width="350dp"
 		android:layout_height="wrap_content"
-		android:layout_weight="1"
+		android:layout_weight="0"
+		android:padding="20sp"
 		android:orientation="vertical" >
 		
 		<TextView
 			android:id="@+id/board_name"
-			android:padding="16sp"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="80sp"
 			android:textSize="30sp"
-			android:gravity="center_horizontal"
+			android:gravity="center_horizontal|bottom"
 			android:text="Lost in the Shuffle" />
 
 		<TextView
 			android:id="@+id/score"
-			android:padding="16sp"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="80sp"
 			android:textStyle="bold"
 			android:textSize="60sp"
-			android:gravity="center_horizontal"
+			android:gravity="center_horizontal|center_vertical"
 			android:text="0" />
+		
+		<Button
+			android:id="@+id/pause"
+			android:padding="6sp"
+			android:layout_width="match_parent"
+			android:layout_height="50sp"
+			android:textStyle="bold"
+			android:textSize="20sp"
+			android:text="Pause" />
+
+		<Button
+			android:id="@+id/prevlevel"
+			android:padding="6sp"
+			android:layout_width="match_parent"
+			android:layout_height="50sp"
+			android:textStyle="bold"
+			android:textSize="20sp"
+			android:gravity="center_horizontal|center_vertical"
+			android:text="Previous Level" />
+
+		<Button
+			android:id="@+id/nextlevel"
+			android:padding="6sp"
+			android:layout_width="match_parent"
+			android:layout_height="50sp"
+			android:textStyle="bold"
+			android:textSize="20sp"
+			android:gravity="center_horizontal|center_vertical"
+			android:text="Next Level" />
+
+		<Button
+			android:id="@+id/retry"
+			android:padding="6sp"
+			android:layout_width="match_parent"
+			android:layout_height="50sp"
+			android:textStyle="bold"
+			android:textSize="20sp"
+			android:text="Retry" />
+
+		<Button
+			android:id="@+id/quit"
+			android:padding="6sp"
+			android:layout_width="match_parent"
+			android:layout_height="50sp"
+			android:textStyle="bold"
+			android:textSize="20sp"
+			android:gravity="center_horizontal|center_vertical"
+			android:text="Quit" />
+
+		<Button
+			android:id="@+id/volume"
+			android:padding="6sp"
+			android:layout_width="match_parent"
+			android:layout_height="50sp"
+			android:textStyle="bold"
+			android:textSize="20sp"
+			android:gravity="center_horizontal|center_vertical"
+			android:text="Volume" />
 
 	</LinearLayout>
 </LinearLayout>
