@@ -71,7 +71,7 @@ class Wheel extends Tile {
 	}
 
 	@Override
-	public void click( Board board, int posx, int posy, int tile_x, int tile_y)
+	public void click( Board board, int posx, int posy)
 	{
 		// Ignore all clicks while rotating
 		if( spinpos != 0) return;
@@ -93,8 +93,7 @@ class Wheel extends Tile {
 	}
 	
 	@Override
-	public void flick( Board board, int posx, int posy,
-		int tile_x, int tile_y, int dir)
+	public void flick( Board board, int posx, int posy, int dir)
 	{
 		// Ignore all flicks while rotating
 		if( spinpos != 0) return;

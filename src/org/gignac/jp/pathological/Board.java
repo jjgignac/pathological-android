@@ -3,6 +3,7 @@ import java.io.*;
 import java.util.*;
 import android.graphics.*;
 import android.util.*;
+import android.content.res.*;
 
 class Board
 {
@@ -48,7 +49,7 @@ class Board
 		this.marbles = new Vector<Marble>();
 		this.trigger = null;
 		this.stoplight = null;
-		this.launch_queue = new int[vert_tiles * Tile.tile_size / Marble.marble_size + 2];
+		this.launch_queue = new int[screen_height * 3 / Marble.marble_size];
 		this.board_complete = 0;
 		this.paused = false;
 		this.live_marbles_limit = 10;
@@ -74,53 +75,42 @@ class Board
 			launch_queue[i] = colors.charAt((int)(Math.random()*colors.length()))-'0';
 		}
 
-		// Create The Background
-		Bitmap b = Bitmap.createBitmap(
-			screen_width, screen_height, Bitmap.Config.ARGB_8888);
-		
-		Canvas c = new Canvas(b);
 		this.paint = new Paint();
-		paint.setColor(0xffc8c8c8);
-		c.drawPaint(paint);
 
-		// Draw the Backdrop
-		Bitmap backdrop = BitmapFactory.decodeResource(game.getResources(), R.drawable.backdrop);
-		c.drawBitmap( backdrop, null, new Rect(
-			0, Marble.marble_size, board_width, screen_height), null);
+		// prepare the entrance image
+		Bitmap entrance = Bitmap.createBitmap( Tile.tile_size/2,
+			Tile.tile_size/2, Bitmap.Config.ARGB_8888);
+		Canvas c = new Canvas(entrance);
+		c.drawBitmap( bmap(R.drawable.path_14), null,
+			new Rect(-Tile.tile_size/4, -Tile.tile_size/4,
+				Tile.tile_size*3/4, Tile.tile_size*3/4), null);
 
-		// Draw the launcher
-		Bitmap launcher_background = BitmapFactory.decodeResource(
-			game.getResources(), R.drawable.launcher);
-		c.drawBitmap( launcher_background, null,
-			new Rect(0, 0, board_width, Marble.marble_size), null);
-		Bitmap launcher_v = BitmapFactory.decodeResource(
-			game.getResources(), R.drawable.launcher_v);
-		c.drawBitmap( launcher_v, null,
-			new Rect(board_width, Marble.marble_size,
-				screen_width, screen_height), null);
-		Bitmap launcher_entrance = BitmapFactory.decodeResource(
-			game.getResources(), R.drawable.entrance);
-		for(int i=0; i < horiz_tiles; ++i)
-			if((self.tiles[0][i].paths & 1) == 1)
-				c.drawBitmap( launcher_entrance, null,
-					new Rect( Tile.tile_size*i, 0,
-						Tile.tile_size*(i+1),
-						Marble.marble_size), null);
-		Bitmap launcher_corner = BitmapFactory.decodeResource(
-			game.getResources(), R.drawable.launcher_corner);
-		c.drawBitmap( launcher_corner, null,
-			new Rect( board_width-
-				(Tile.tile_size-Marble.marble_size)/2,
-				0, screen_width, Marble.marble_size), null);
-
-		Sprite.cache( R.drawable.backdrop, b);
+		Sprite.cache( R.drawable.backdrop);
+		Sprite.cache( R.drawable.launcher_corner);
+		Sprite.cache( R.drawable.entrance, entrance);
 		Sprite.cache( Marble.marble_images);
 	}
 
-	public void draw_back(Blitter b) {
-		// Draw the background
-		b.blit(R.drawable.backdrop, 0, 0);
+	private Bitmap bmap( int resid) {
+		return BitmapFactory.decodeResource(
+			game.getResources(), resid);
+	}
 
+	public void draw_back(Blitter b) {
+		// Draw the launcher
+		b.blit( R.drawable.path_10,
+			Marble.marble_size, (Marble.marble_size-Tile.tile_size)/2,
+			board_width - Marble.marble_size, Tile.tile_size);
+		b.blit( R.drawable.path_2,
+			(Marble.marble_size-Tile.tile_size)/2,
+			(Marble.marble_size-Tile.tile_size)/2);
+		b.blit( R.drawable.launcher_corner,
+			board_width-(Tile.tile_size-Marble.marble_size)/2, 0);
+		b.blit(R.drawable.path_5,
+			   board_width+(Marble.marble_size-Tile.tile_size)/2,
+			   Marble.marble_size-1, Tile.tile_size,
+			   board_height*3);
+		
 		for( Tile[] row : self.tiles)
 			for( Tile tile : row)
 				tile.draw_back(b);
@@ -203,9 +193,8 @@ class Board
 		self.tiles[y][x] = tile;
 		tile.pos.left = Tile.tile_size * x;
 		tile.pos.top = Marble.marble_size + Tile.tile_size * y;
-
-		//tile.x = x;
-		//tile.y = y;
+		tile.tile_x = x;
+		tile.tile_y = y;
 
 		// If it's a trigger, keep track of it
 		if( tile instanceof Trigger)
@@ -329,12 +318,10 @@ class Board
 		int dx2 = dx*dx;
 		int dy2 = dy*dy;
 		if(dx2 + dy2 <= Marble.marble_size * Marble.marble_size) {
-			downtile.click(this, tile_xr, tile_yr,
-				downtile_x, downtile_y);
+			downtile.click(this, tile_xr, tile_yr);
 		} else {
 			int dir = (dx2>dy2)?(dx>0?1:3):(dy>0?2:0);
-			downtile.flick(this, tile_xr, tile_yr,
-				downtile_x, downtile_y, dir);
+			downtile.flick(this, tile_xr, tile_yr, dir);
 		}
 	}
 

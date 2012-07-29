@@ -6,6 +6,7 @@ class Tile
 	public static final int tile_size = 92;
 	public int paths;
 	public Rect pos;  // Only left & top are maintained
+	public int tile_x, tile_y;
 	public boolean completed;
 	protected GameResources gr;
 	private static final int[] plain_tiles = {
@@ -17,35 +18,42 @@ class Tile
 		R.drawable.path_15
 	};
 	
-	public Tile( GameResources gr, int paths, int cx, int cy) {
+	public Tile( GameResources gr, int paths, int cx, int cy, int x, int y) {
 		this.gr = gr;
 		this.paths = paths;
 		this.pos = new Rect(cx - tile_size/2, cy - tile_size/2, 0, 0);
 		this.completed = false;
+		this.tile_x = x;
+		this.tile_y = y;
 		Sprite.cache(plain_tiles);
 	}
 	
 	public Tile( GameResources gr, int paths) {
-		this(gr,paths,0,0);
+		this(gr,paths,0,0, 0, 0);
 		Sprite.cache(plain_tiles);
 	}
 
 	public void draw_back(Blitter b) {
 		pos.right = pos.left + tile_size;
 		pos.bottom = pos.top + tile_size;
-		if(paths > 0)
+		if(paths > 0) {
 			b.blit( plain_tiles[paths],
 				pos.left, pos.top, tile_size, tile_size);
+			if( (paths & 1) > 0 && tile_y == 0) {
+				b.blit( R.drawable.entrance,
+					pos.left + Tile.tile_size/4,
+					Marble.marble_size/2-Tile.tile_size/4);
+			}
+		}
 	}
 
 	public void update( Board board) {}
 
 	public void draw_fore( Blitter b) {}
 
-	public void click( Board board, int posx, int posy, int tile_x, int tile_y) {}
+	public void click( Board board, int posx, int posy) {}
 	
-	public void flick( Board board, int posx, int posy,
-		int tile_x, int tile_y, int dir) {}
+	public void flick( Board board, int posx, int posy, int dir) {}
 
 	public void affect_marble( Board board, Marble marble, int rposx, int rposy)
 	{

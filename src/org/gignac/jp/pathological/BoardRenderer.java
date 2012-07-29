@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
+import android.view.*;
 
 public class BoardRenderer implements GLSurfaceView.Renderer
 {
@@ -24,6 +25,9 @@ public class BoardRenderer implements GLSurfaceView.Renderer
     private FloatBuffer vertexBuffer;
 	private int width;
 	private int height;
+	private float scale;
+	private float offsetx;
+	private float offsety;
 
 	BoardRenderer( Game game)
 	{
@@ -58,7 +62,13 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 		this.width = width;
 		this.height = height;
 		if(height == 0) height = 1;
-        gl.glViewport(0, 0, width, height);
+
+		scale = width * Board.screen_height < height * Board.screen_width ?
+			(float)width / Board.screen_width : (float)height / Board.screen_height;
+		offsetx = width - Board.screen_width*scale;
+		offsety = 0.0f;
+
+		gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
 		gl.glOrthof(-1.0f, 1.0f, -1.0f, 1.0f, -10.0f, 10.0f);
@@ -68,35 +78,40 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 
 	@Override
 	public void onDrawFrame(GL10 gl) {
-		gl.glClearColor(0, 0, 0.5f, 1.0f);
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+//		gl.glClearColor(0, 0, 0.5f, 1.0f);
+//		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		gl.glTranslatef(0.0f, 0.0f, -5.0f);
 
+		Sprite.bind(gl, R.drawable.backdrop);
+		blit(gl, 0.0f, 0.0f,
+			(float)width-Marble.marble_size*3/4*scale,
+			(float)height);
 		game.paint(gl);
 	}
 
-
 	public void blit( GL10 gl, int resid,
-		float x, float y, float w, float h) {
+		int x, int y, int w, int h) {
 		Sprite.bind(gl, resid);
-		blit(gl,x,y,w,h);		
+		blit(gl,x*scale+offsetx,y*scale+offsety,w*scale,h*scale);		
 	}
 
-	public void blit( GL10 gl, int resid,
-		float x, float y, float scale) {
+	public void blit( GL10 gl, int resid, int x, int y) {
 		Sprite.bind(gl,resid);
 		Bitmap b = Sprite.getBitmap(resid);
-		blit(gl, x, y,
+		blit(gl, x*scale+offsetx, y*scale+offsety,
 			b.getWidth()*scale, b.getHeight()*scale);
 	}
-
+	
 	private void blit( GL10 gl, float x, float y, float w, float h)
 	{
 		float left = x * 2.0f / width - 1.0f;
 		float top = y * -2.0f / height + 1.0f;
 		float wid = w * 2.0f / width;
 		float hei = h * -2.0f / height;
+
+		// Small optimization
+		if(x > width || y > height) return;
 		
 		vertices[0] = vertices[3] = left;
 		vertices[4] = vertices[10] = top;
@@ -116,6 +131,14 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 	    }
 	    gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 	    gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+	}
+
+	public int evX( MotionEvent e) {		
+		return (int)Math.round((e.getX()-offsetx)/scale);
+	}
+
+	public int evY( MotionEvent e) {		
+		return (int)Math.round((e.getY()-offsety)/scale);
 	}
 }
 
