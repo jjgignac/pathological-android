@@ -90,41 +90,33 @@ class Board
 
 		// Draw the Backdrop
 		Bitmap backdrop = BitmapFactory.decodeResource(game.getResources(), R.drawable.backdrop);
-		c.drawBitmap( backdrop, null,
-			new Rect(board_posx, board_posy,
-				board_posx + horiz_tiles * Tile.tile_size,
-				board_posy + vert_tiles * Tile.tile_size), null);
+		c.drawBitmap( backdrop, null, new Rect(
+			0, Marble.marble_size, board_width, screen_height), null);
 
 		// Draw the launcher
 		Bitmap launcher_background = BitmapFactory.decodeResource(
 			game.getResources(), R.drawable.launcher);
 		c.drawBitmap( launcher_background, null,
-			new Rect(board_posx, board_posy - Marble.marble_size,
-				board_posx + horiz_tiles * Tile.tile_size,
-				board_posy), null);
+			new Rect(0, 0, board_width, Marble.marble_size), null);
 		Bitmap launcher_v = BitmapFactory.decodeResource(
 			game.getResources(), R.drawable.launcher_v);
 		c.drawBitmap( launcher_v, null,
-			new Rect(board_posx+horiz_tiles*Tile.tile_size, board_posy,
-				board_posx+horiz_tiles*Tile.tile_size+Marble.marble_size,
-				board_posy+vert_tiles*Tile.tile_size), null);
+			new Rect(board_width, Marble.marble_size,
+				screen_width, screen_height), null);
 		Bitmap launcher_entrance = BitmapFactory.decodeResource(
 			game.getResources(), R.drawable.entrance);
 		for(int i=0; i < horiz_tiles; ++i)
 			if((self.tiles[0][i].paths & 1) == 1)
 				c.drawBitmap( launcher_entrance, null,
-					new Rect( board_posx+Tile.tile_size*i,
-						board_posy-Marble.marble_size,
-						board_posx+Tile.tile_size*(i+1),
-						board_posy), null);
+					new Rect( Tile.tile_size*i, 0,
+						Tile.tile_size*(i+1),
+						Marble.marble_size), null);
 		Bitmap launcher_corner = BitmapFactory.decodeResource(
 			game.getResources(), R.drawable.launcher_corner);
 		c.drawBitmap( launcher_corner, null,
-			new Rect( board_posx+horiz_tiles*Tile.tile_size-
+			new Rect( board_width-
 				(Tile.tile_size-Marble.marble_size)/2,
-				board_posy - Marble.marble_size,
-				board_posx+horiz_tiles*Tile.tile_size+Marble.marble_size,
-				board_posy), null);
+				0, screen_width, Marble.marble_size), null);
 
 		Sprite.cache( R.drawable.backdrop, b);
 		Sprite.cache( Marble.marble_images);
@@ -132,7 +124,8 @@ class Board
 
 	public void draw_back(Blitter b) {
 		// Draw the background
-		b.blit(R.drawable.backdrop, 0, 0);
+		b.blit(R.drawable.backdrop,
+			board_posx, board_posy-Marble.marble_size);
 
 		for( Tile[] row : self.tiles)
 			for( Tile tile : row)
