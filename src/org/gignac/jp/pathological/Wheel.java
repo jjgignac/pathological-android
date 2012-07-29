@@ -104,8 +104,9 @@ class Wheel extends Tile {
 	private void eject(int i, Board board, int tile_x, int tile_y)
 	{
 		// Determine the neighboring tile
-		Tile neighbor = board.tiles[ (tile_y + Marble.dy[i]) %
-			Board.vert_tiles][ (tile_x + Marble.dx[i]) % Board.horiz_tiles];
+		Tile neighbor = board.tiles
+			[(tile_y+Marble.dy[i]+Board.vert_tiles) % Board.vert_tiles]
+			[(tile_x+Marble.dx[i]+Board.horiz_tiles) % Board.horiz_tiles];
 
 		if ( marbles[i] < 0 ||
 			// Disallow marbles to go off the top of the board
