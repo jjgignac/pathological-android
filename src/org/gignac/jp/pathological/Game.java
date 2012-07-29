@@ -70,7 +70,7 @@ public class Game extends Activity
 			lives = initial_lives;
 		}
 
-		board = new Board( this, gr, 0, Marble.marble_size);
+		board = new Board( this, gr);
 
 		board.launch_marble();
 	}

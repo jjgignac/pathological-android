@@ -14,15 +14,12 @@ class Board
 	public static final int horiz_tiles = 8;
 	public static final int board_width = horiz_tiles * Tile.tile_size;
 	public static final int board_height = vert_tiles * Tile.tile_size;
-	public static final int board_posx = 0;
-	public static final int board_posy = Marble.marble_size;
 	public static final int screen_width = board_width + Marble.marble_size;
 	public static final int screen_height = board_height + Marble.marble_size;
 	public Game game;
 	private GameResources gr;
 	public Trigger trigger;
 	public Stoplight stoplight;
-	private int posx, posy;
 	public Vector<Marble> marbles;
 	public Tile[][] tiles;
 	private int[] launch_queue;
@@ -43,13 +40,11 @@ class Board
 	private int downx, downy;
 	private int launch_queue_offset;
 
-	public Board(Game game, GameResources gr, int posx, int posy)
+	public Board(Game game, GameResources gr)
 	{
 		self = this;
 		this.game = game;
 		this.gr = gr;
-		this.posx = posx;
-		this.posy = posy;
 		this.marbles = new Vector<Marble>();
 		this.trigger = null;
 		this.stoplight = null;
@@ -124,8 +119,7 @@ class Board
 
 	public void draw_back(Blitter b) {
 		// Draw the background
-		b.blit(R.drawable.backdrop,
-			board_posx, board_posy-Marble.marble_size);
+		b.blit(R.drawable.backdrop, 0, 0);
 
 		for( Tile[] row : self.tiles)
 			for( Tile tile : row)
@@ -133,8 +127,7 @@ class Board
 
 		for(int i=0; i < self.launch_queue.length; ++i)
 			b.blit(Marble.marble_images[self.launch_queue[i]],
-				self.posx + horiz_tiles * Tile.tile_size,
-				self.posy + launch_queue_offset + (i-1) * Marble.marble_size);
+				board_width, launch_queue_offset + i * Marble.marble_size);
 	}
 
 	public void draw_fore( Blitter b) {
@@ -208,8 +201,8 @@ class Board
 
 	public void set_tile( int x, int y, Tile tile) {
 		self.tiles[y][x] = tile;
-		tile.pos.left = self.posx + Tile.tile_size * x;
-		tile.pos.top = self.posy + Tile.tile_size * y;
+		tile.pos.left = Tile.tile_size * x;
+		tile.pos.top = Marble.marble_size + Tile.tile_size * y;
 
 		//tile.x = x;
 		//tile.y = y;
@@ -239,8 +232,8 @@ class Board
 	public void launch_marble() {
 		self.marbles.insertElementAt( new Marble(
 			gr, self.launch_queue[0],
-			self.posx+Tile.tile_size*horiz_tiles+Marble.marble_size/2,
-			self.posy-Marble.marble_size/2, 3), 0);
+			board_width+Marble.marble_size/2,
+			Marble.marble_size/2, 3), 0);
 		for( int i=0; i < launch_queue.length-1; ++i)
 			launch_queue[i] = launch_queue[i+1];
 		self.launch_queue[launch_queue.length-1] =
@@ -251,8 +244,8 @@ class Board
 
 	public void affect_marble( Marble marble)
 	{
-		int cx = marble.pos.left + Marble.marble_size/2 - self.posx;
-		int cy = marble.pos.top + Marble.marble_size/2 - self.posy;
+		int cx = marble.pos.left + Marble.marble_size/2;
+		int cy = marble.pos.top - Marble.marble_size/2;
 
 		// Bounce marbles off of the top
 		if( cy == Marble.marble_size/2) {
@@ -308,8 +301,8 @@ class Board
 
 	private Tile whichTile(int posx, int posy) {
 		// Determine which tile the pointer is in
-		int tile_x = (posx - this.posx) / Tile.tile_size;
-		int tile_y = (posy - this.posy) / Tile.tile_size;
+		int tile_x = posx / Tile.tile_size;
+		int tile_y = (posy - Marble.marble_size) / Tile.tile_size;
 		if( tile_x >= 0 && tile_x < horiz_tiles &&
 			tile_y >= 0 && tile_y < vert_tiles) {
 			return self.tiles[tile_y][tile_x];
@@ -327,10 +320,10 @@ class Board
 	{
 		Tile downtile = whichTile(downx,downy);
 		if(downtile == null) return;
-		int downtile_x = (downx - this.posx) / Tile.tile_size;
-		int downtile_y = (downy - this.posy) / Tile.tile_size;
-		int tile_xr = downx-this.posx-(downtile_x*Tile.tile_size);
-		int tile_yr = downx-this.posy-(downtile_y*Tile.tile_size);
+		int downtile_x = downx / Tile.tile_size;
+		int downtile_y = (downy - Marble.marble_size) / Tile.tile_size;
+		int tile_xr = downx-(downtile_x*Tile.tile_size);
+		int tile_yr = downx-Marble.marble_size-(downtile_y*Tile.tile_size);
 		int dx = posx - downx;
 		int dy = posy - downy;
 		int dx2 = dx*dx;

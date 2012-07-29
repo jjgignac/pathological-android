@@ -87,7 +87,7 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 		float x, float y, float scale) {
 		Sprite.bind(gl,resid);
 		Bitmap b = Sprite.getBitmap(resid);
-		blit(gl, x*scale, y*scale,
+		blit(gl, x, y,
 			b.getWidth()*scale, b.getHeight()*scale);
 	}
 
