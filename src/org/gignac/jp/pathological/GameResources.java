@@ -76,7 +76,7 @@ public class GameResources
 
 	public void create(boolean colorblind) {
 		// Load the sound effects
-		sp = new SoundPool(6, AudioManager.STREAM_MUSIC, 0);
+		sp = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
 		sound_id = new int[sound_resid.length];
 		for( int i=0; i < sound_resid.length; ++i)
 			sound_id[i] = sp.load(context, sound_resid[i], 0);
