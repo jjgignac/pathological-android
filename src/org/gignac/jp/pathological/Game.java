@@ -13,15 +13,11 @@ import javax.microedition.khronos.opengles.*;
 
 public class Game extends Activity
 {
-	public static final int initial_lives = 3;
-	public static final int max_spare_lives = 10;
-	public static final int extra_life_frequency = 5000;
 	private static final int frameskip = 2;
 	public static final int frames_per_sec = 100;
 
 	public int numlevels;
 	public int level;
-	public int lives;
 	public long score;
 	private Board board;
 	private GameResources gr;
@@ -62,16 +58,26 @@ public class Game extends Activity
 			// Restore the game state
 			level = stat.getInt("level");
 			score = stat.getLong("score");
-			lives = stat.getInt("lives");
 		} else {
 			// Begin a new game
-			level = 2;
+			level = 0;
 			score = 0;
-			lives = initial_lives;
 		}
 
-		board = new Board( this, gr);
+		ButtonListener bl = new ButtonListener(this);
+		((Button)findViewById(R.id.prevlevel)).setOnClickListener(bl);
+		((Button)findViewById(R.id.nextlevel)).setOnClickListener(bl);
+		((Button)findViewById(R.id.quit)).setOnClickListener(bl);
+		((Button)findViewById(R.id.pause)).setOnClickListener(bl);
+		((Button)findViewById(R.id.volume)).setOnClickListener(bl);
+		((Button)findViewById(R.id.retry)).setOnClickListener(bl);
 
+		playLevel(level);		
+	}
+
+	public void playLevel(int level) {
+		this.level = level;
+		board = new Board( this, gr);
 		board.launch_marble();
 	}
 
@@ -108,7 +114,6 @@ public class Game extends Activity
 		super.onSaveInstanceState(out);
 		out.putInt("level",level);
 		out.putLong("score",score);
-		out.putInt("lives",lives);
 	}
 
 	@Override
@@ -141,15 +146,5 @@ public class Game extends Activity
 	public void increase_score(int amount) {
 		// Add the amount to the score
 		score += amount;
-
-		// Award any extra lives that are due
-		int extra_lives = amount / extra_life_frequency +
-			((score % extra_life_frequency < amount % extra_life_frequency)
-			? 1 : 0);
-		extra_lives = Math.min( extra_lives, max_spare_lives+1 - lives);
-		if( extra_lives > 0) {
-			lives += extra_lives;
-			gr.play_sound( gr.extra_life);
-		}
 	}
 }
