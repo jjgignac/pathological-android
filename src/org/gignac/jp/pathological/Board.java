@@ -57,6 +57,13 @@ class Board
 		this.board_timeout = -1;
 		this.colors = default_colors;
 
+		// Seed the randomness based on the level number and
+		// the current time.  Only use the time accurate to
+		// the ten-minute interval.  This will discourage players
+		// from reloading levels repeatedly in order to get
+		// their choice of marbles/trigger/etc.
+		gr.random.setSeed((System.currentTimeMillis()/600000)*1000+game.level);
+
 		set_launch_timer( default_launch_timer);
 		set_board_timer( default_board_timer);
 
@@ -72,7 +79,7 @@ class Board
 
 		// Fill up the launch queue
 		for( int i=0; i < launch_queue.length; ++i) {
-			launch_queue[i] = colors.charAt((int)(Math.random()*colors.length()))-'0';
+			launch_queue[i] = colors.charAt(gr.random.nextInt(colors.length()))-'0';
 		}
 
 		this.paint = new Paint();
