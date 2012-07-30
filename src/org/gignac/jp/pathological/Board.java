@@ -360,15 +360,15 @@ class Board
 			if(line.isEmpty()) continue;
 
 			if( line.charAt(0) != '|') {
-				if( line.substring(0,5).equals("name="))
+				if( line.startsWith("name="))
 					self.name = line.substring(5);
-				else if( line.substring(0,11).equals("maxmarbles="))
+				else if( line.startsWith("maxmarbles="))
 					self.live_marbles_limit = Integer.parseInt(line.substring(11));
-				else if( line.substring(0,12).equals("launchtimer="))
+				else if( line.startsWith("launchtimer="))
 					self.set_launch_timer( Integer.parseInt(line.substring(12)));
-				else if( line.substring(0,11).equals("boardtimer="))
+				else if( line.startsWith("boardtimer="))
 					boardtimer = Integer.parseInt(line.substring(11));
-				else if( line.substring(0,7).equals("colors=")) {
+				else if( line.startsWith("colors=")) {
 					self.colors = "";
 					for( char c : line.substring(7).toCharArray()) {
 						if( c >= '0' && c <= '7') {
@@ -380,7 +380,7 @@ class Board
 							self.colors = self.colors + c;
 						}
 					}
-				} else if( line.substring(0,10).equals("stoplight=")) {
+				} else if( line.startsWith("stoplight=")) {
 					stoplight = "";
 					for(char c : line.substring(10).toCharArray())
 						if( c >= '0' && c <= '7')
