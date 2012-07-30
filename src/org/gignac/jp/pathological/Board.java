@@ -36,7 +36,6 @@ class Board
 	public String colors;
 	private Board self;
 	public int launch_timer;
-	private Paint paint;
 	private Marble[] marblesCopy = new Marble[20];
 	private int downx, downy;
 	private int launch_queue_offset;
@@ -81,8 +80,6 @@ class Board
 		for( int i=0; i < launch_queue.length; ++i) {
 			launch_queue[i] = colors.charAt(gr.random.nextInt(colors.length()))-'0';
 		}
-
-		this.paint = new Paint();
 
 		// prepare the entrance image
 		Bitmap entrance = Bitmap.createBitmap( Tile.tile_size/2,
