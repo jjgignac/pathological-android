@@ -22,8 +22,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="80sp"
 			android:textSize="30sp"
-			android:gravity="center_horizontal|bottom"
-			android:text="Lost in the Shuffle" />
+			android:gravity="center_horizontal|bottom" />
 
 		<TextView
 			android:id="@+id/score"
@@ -50,7 +49,6 @@
 			android:layout_height="50sp"
 			android:textStyle="bold"
 			android:textSize="20sp"
-			android:gravity="center_horizontal|center_vertical"
 			android:text="Previous Level" />
 
 		<Button
@@ -60,7 +58,6 @@
 			android:layout_height="50sp"
 			android:textStyle="bold"
 			android:textSize="20sp"
-			android:gravity="center_horizontal|center_vertical"
 			android:text="Next Level" />
 
 		<Button
@@ -79,7 +76,6 @@
 			android:layout_height="50sp"
 			android:textStyle="bold"
 			android:textSize="20sp"
-			android:gravity="center_horizontal|center_vertical"
 			android:text="Quit" />
 
 		<Button
@@ -89,7 +85,6 @@
 			android:layout_height="50sp"
 			android:textStyle="bold"
 			android:textSize="20sp"
-			android:gravity="center_horizontal|center_vertical"
 			android:text="Volume" />
 
 	</LinearLayout>

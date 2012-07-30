@@ -78,6 +78,7 @@ public class Game extends Activity
 	public void playLevel(int level) {
 		this.level = level;
 		board = new Board( this, gr);
+		((TextView)findViewById(R.id.board_name)).setText(board.name);
 		board.launch_marble();
 	}
 
