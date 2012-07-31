@@ -17,6 +17,7 @@ class Board
 	public static final int board_height = vert_tiles * Tile.tile_size;
 	public static final int screen_width = board_width + Marble.marble_size;
 	public static final int screen_height = board_height + Marble.marble_size;
+	public static final int timer_width = Marble.marble_size*3/4;
 	public Game game;
 	private GameResources gr;
 	public Trigger trigger;
@@ -118,6 +119,20 @@ class Board
 		for( Tile[] row : self.tiles)
 			for( Tile tile : row)
 				tile.draw_back(b);
+
+		int x = (launch_timeout*board_width+launch_timeout_start/2) /
+			launch_timeout_start;
+		b.fill(0x40404040, x, 0,
+			board_width - x, Marble.marble_size);
+
+		Rect visible = b.getVisibleArea();
+		int timer_height = visible.bottom - visible.top;
+		int y = (board_timeout*timer_height+board_timeout_start/2) /
+			board_timeout_start;
+		b.fill(0xff000000, screen_width+3,
+			0, timer_width-3, timer_height-y);
+		b.fill(0xff000080, screen_width+3,
+			timer_height-y, timer_width-3, y);
 
 		for(int i=0; i < self.launch_queue.length; ++i)
 			b.blit(Marble.marble_images[self.launch_queue[i]],

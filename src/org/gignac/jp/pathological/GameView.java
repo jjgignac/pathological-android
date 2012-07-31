@@ -13,6 +13,7 @@ import android.content.*;
 import javax.microedition.khronos.opengles.*;
 import javax.microedition.khronos.egl.*;
 import android.util.*;
+import android.graphics.*;
 
 public class GameView extends GLSurfaceView
 	implements Blitter
@@ -55,5 +56,14 @@ public class GameView extends GLSurfaceView
 	public void blit(int b, int x, int y, int w, int h)
 	{
 		renderer.blit(blitter_gl,b,x,y,w,h);
+	}
+
+	public void fill(int color, int x, int y, int w, int h)
+	{
+		renderer.fill(blitter_gl,color,x,y,w,h);
+	}
+
+	public Rect getVisibleArea() {
+		return renderer.getVisibleArea();
 	}
 }

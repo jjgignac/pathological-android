@@ -12,6 +12,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
 import android.view.*;
+import android.graphics.*;
 
 public class BoardRenderer implements GLSurfaceView.Renderer
 {
@@ -28,6 +29,7 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 	private float scale;
 	private float offsetx;
 	private float offsety;
+	private Rect rect;
 
 	BoardRenderer( Game game)
 	{
@@ -44,11 +46,13 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 
 		textureBuffer.put(texture);
 		textureBuffer.position(0);
+
+		rect = new Rect();
 	}
 
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-	    gl.glEnable(GL10.GL_TEXTURE_2D);
+//	    gl.glEnable(GL10.GL_TEXTURE_2D);
 	    gl.glShadeModel(GL10.GL_SMOOTH);
 	    gl.glDisable(GL10.GL_DEPTH_TEST);
 	    gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
@@ -59,13 +63,14 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 	
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
+		int px = Board.screen_width + Board.timer_width;
 		this.width = width;
 		this.height = height;
 		if(height == 0) height = 1;
 
-		scale = width * Board.screen_height < height * Board.screen_width ?
-			(float)width / Board.screen_width : (float)height / Board.screen_height;
-		offsetx = width - Board.screen_width*scale;
+		scale = width * Board.screen_height < height * px ?
+			(float)width / px : (float)height / Board.screen_height;
+		offsetx = width - px*scale;
 		offsety = 0.0f;
 
 		gl.glViewport(0, 0, width, height);
@@ -85,24 +90,45 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 
 		Sprite.bind(gl, R.drawable.backdrop);
 		blit(gl, 0.0f, 0.0f,
-			(float)width-Marble.marble_size*3/4*scale,
+			(float)width-(Board.timer_width+Marble.marble_size*3/4)*scale,
 			(float)height);
 		game.paint(gl);
 	}
 
+	static final float s = 1.0f / 255.0f;
+
+	public void fill( GL10 gl, int color,
+		int x, int y, int w, int h) {
+	    gl.glDisable(GL10.GL_TEXTURE_2D);
+		gl.glColor4f(((color>>16)&0xff)*s,((color>>8)&0xff)*s,
+			(color&0xff)*s,((color>>24)&0xff)*s);
+		blit(gl,x*scale+offsetx,y*scale+offsety,w*scale,h*scale);		
+		gl.glColor4f(1f,1f,1f,1f);
+	}
+	
 	public void blit( GL10 gl, int resid,
 		int x, int y, int w, int h) {
+	    gl.glEnable(GL10.GL_TEXTURE_2D);
 		Sprite.bind(gl, resid);
 		blit(gl,x*scale+offsetx,y*scale+offsety,w*scale,h*scale);		
 	}
 
 	public void blit( GL10 gl, int resid, int x, int y) {
+	    gl.glEnable(GL10.GL_TEXTURE_2D);
 		Sprite.bind(gl,resid);
 		Bitmap b = Sprite.getBitmap(resid);
 		blit(gl, x*scale+offsetx, y*scale+offsety,
 			b.getWidth()*scale, b.getHeight()*scale);
 	}
-	
+
+	public Rect getVisibleArea() {
+		rect.left = (int)Math.floor(-offsetx/scale);
+		rect.top = (int)Math.floor(-offsety/scale);
+		rect.right = (int)Math.ceil((width-offsetx)/scale);
+		rect.bottom = (int)Math.ceil((height-offsety)/scale);
+		return rect;
+	}
+
 	private void blit( GL10 gl, float x, float y, float w, float h)
 	{
 		float left = x * 2.0f / width - 1.0f;
