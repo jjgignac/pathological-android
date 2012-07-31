@@ -36,12 +36,20 @@ public class GameView extends GLSurfaceView
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
-		switch(e.getAction()) {
+		final int action = e.getAction();
+		final int index =
+			(action & MotionEvent.ACTION_POINTER_INDEX_MASK) >>
+			MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+		final int id = e.getPointerId(index);
+
+		switch(action & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
-			game.downEvent(renderer.evX(e),renderer.evY(e));
+		case MotionEvent.ACTION_POINTER_DOWN:
+			game.downEvent(id,renderer.evX(e,index),renderer.evY(e,index));
 			return true;
 		case MotionEvent.ACTION_UP:
-			game.upEvent(renderer.evX(e),renderer.evY(e));
+		case MotionEvent.ACTION_POINTER_UP:
+			game.upEvent(id,renderer.evX(e,index),renderer.evY(e,index));
 			return true;
 		}
 

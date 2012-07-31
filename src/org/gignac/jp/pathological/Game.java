@@ -136,12 +136,12 @@ public class Game extends Activity
 		board.paint(view);
 	}
 
-	public void downEvent( int x, int y) {
-		board.downEvent(x,y);
+	public void downEvent( int pointerId, int x, int y) {
+		board.downEvent(pointerId,x,y);
 	}
 
-	public void upEvent( int x, int y) {
-		board.upEvent(x,y);
+	public void upEvent( int pointerId, int x, int y) {
+		board.upEvent(pointerId,x,y);
 	}
 
 	public void increase_score(int amount) {

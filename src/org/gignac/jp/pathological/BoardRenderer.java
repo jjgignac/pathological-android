@@ -159,12 +159,12 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 	    gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 	}
 
-	public int evX( MotionEvent e) {		
-		return (int)Math.round((e.getX()-offsetx)/scale);
+	public int evX( MotionEvent e, int index) {		
+		return (int)Math.round((e.getX(index)-offsetx)/scale);
 	}
 
-	public int evY( MotionEvent e) {		
-		return (int)Math.round((e.getY()-offsety)/scale);
+	public int evY( MotionEvent e, int index) {		
+		return (int)Math.round((e.getY(index)-offsety)/scale);
 	}
 }
 

@@ -38,7 +38,7 @@ class Board
 	private Board self;
 	public int launch_timer;
 	private Marble[] marblesCopy = new Marble[20];
-	private int downx, downy;
+	private HashMap<Integer,Point> down;
 	private int launch_queue_offset;
 
 	public Board(Game game, GameResources gr)
@@ -56,6 +56,8 @@ class Board
 		this.launch_timeout = -1;
 		this.board_timeout = -1;
 		this.colors = default_colors;
+
+		down = new HashMap<Integer,Point>();
 
 		// Seed the randomness based on the level number and
 		// the current time.  Only use the time accurate to
@@ -336,14 +338,21 @@ class Board
 		return null;
 	}
 
-	public void downEvent(int posx, int posy)
+	public void downEvent(int pointerId, int posx, int posy)
 	{
-		downx = posx;
-		downy = posy;
+		Point pos = down.get(pointerId);
+		if( pos == null) {
+			down.put(pointerId,new Point(posx,posy));
+		} else {
+			pos.x = posx;
+			pos.y = posy;
+		}
 	}
 
-	public void upEvent(int posx, int posy)
+	public void upEvent(int pointerId, int posx, int posy)
 	{
+		final Point dpos = down.get(pointerId);
+		final int downx = dpos.x, downy = dpos.y;
 		Tile downtile = whichTile(downx,downy);
 		if(downtile == null) return;
 		int downtile_x = downx / Tile.tile_size;
