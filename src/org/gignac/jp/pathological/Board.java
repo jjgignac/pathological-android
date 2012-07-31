@@ -120,18 +120,36 @@ class Board
 			for( Tile tile : row)
 				tile.draw_back(b);
 
+		int timerColor = 0x40404040;
+		float timeLeft = (float)launch_timeout / Game.frames_per_sec;
+		if( timeLeft < 3.5f) {
+			// Make the timer flash to indicate that time
+			// is running out.
+			float s = (float)Math.sin(timeLeft*5);
+			int phase = Math.round(s*s*191);
+			timerColor = 0x40404040 + (phase<<16) + ((phase*2/3)<<24);
+		}
 		int x = (launch_timeout*board_width+launch_timeout_start/2) /
 			launch_timeout_start;
-		b.fill(0x40404040, x, 0,
+		b.fill(timerColor, x, 0,
 			board_width - x, Marble.marble_size);
 
+		timerColor = 0xff000080;
+		timeLeft = (float)board_timeout / Game.frames_per_sec;
+		if( timeLeft < 60f && board_timeout*2 < board_timeout_start) {
+			// Make the timer flash to indicate that time
+			// is running out.
+			float s = (float)Math.sin(timeLeft*3);
+			int phase = Math.round(s*s*255);
+			timerColor = 0xff000000 | phase | (255-phase)<<16;
+		}
 		Rect visible = b.getVisibleArea();
 		int timer_height = visible.bottom - visible.top;
 		int y = (board_timeout*timer_height+board_timeout_start/2) /
 			board_timeout_start;
 		b.fill(0xff000000, screen_width+3,
 			0, timer_width-3, timer_height-y);
-		b.fill(0xff000080, screen_width+3,
+		b.fill(timerColor, screen_width+3,
 			timer_height-y, timer_width-3, y);
 
 		for(int i=0; i < self.launch_queue.length; ++i)
