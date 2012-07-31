@@ -352,6 +352,7 @@ class Board
 	public void upEvent(int pointerId, int posx, int posy)
 	{
 		final Point dpos = down.get(pointerId);
+		if(dpos == null) return;
 		final int downx = dpos.x, downy = dpos.y;
 		Tile downtile = whichTile(downx,downy);
 		if(downtile == null) return;
