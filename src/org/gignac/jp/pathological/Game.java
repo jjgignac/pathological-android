@@ -148,4 +148,11 @@ public class Game extends Activity
 		// Add the amount to the score
 		score += amount;
 	}
+
+	public void pause() {
+		if(ticker.isStopped())
+			ticker.go();
+		else
+			ticker.stop();
+	}
 }

@@ -24,6 +24,9 @@ public class ButtonListener
 		case R.id.retry:
 			game.playLevel(game.level);
 			break;
+		case R.id.pause:
+			game.pause();
+			break;
 		}
 	}
 }

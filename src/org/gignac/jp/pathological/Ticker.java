@@ -5,13 +5,17 @@ import android.util.*;
 public class Ticker
 {
 	final Handler handler = new Handler();
-	Runnable command;
-	long delayMillis;
-	long targetTime;
-	boolean stop;
+	private Runnable command;
+	private long delayMillis;
+	private long targetTime;
+	private boolean stop;
+	private boolean stopped = true;
 	final Runnable runner = new Runnable() {
 		public void run() {
-			if(stop) return;
+			if(stop) {
+				stopped = true;
+				return;
+			}
 			command.run();
 			long curTime = SystemClock.uptimeMillis();
 			if(curTime < targetTime) targetTime = curTime;
@@ -25,11 +29,22 @@ public class Ticker
 		this.command = command;
 		this.delayMillis = delayMillis;
 		this.targetTime = SystemClock.uptimeMillis();
-		stop = false;
-		handler.postDelayed(runner, delayMillis);
+		go();
 	}
 
 	public void stop() {
 		stop = true;
+	}
+
+	public void go() {
+		stop = false;
+		if(stopped) {
+			stopped = false;
+			handler.postDelayed(runner, delayMillis);
+		}
+	}
+
+	public boolean isStopped() {
+		return stop;
 	}
 }
