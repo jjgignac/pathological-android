@@ -4,6 +4,7 @@ import android.media.*;
 import android.content.*;
 import android.content.res.*;
 import java.util.*;
+import java.io.*;
 
 public class GameResources
 {
@@ -90,5 +91,14 @@ public class GameResources
 	{
 		sp.play( sound_id[id], sound_volume[id],
 			sound_volume[id], 0, 0, 1.0f);
+	}
+
+	public Bitmap loadBitmap( int resid) {
+		return BitmapFactory.decodeResource(
+			context.getResources(),resid);
+	}
+
+	public InputStream openRawResource( int resid) {
+		return context.getResources().openRawResource(resid);
 	}
 }

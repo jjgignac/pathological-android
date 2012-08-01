@@ -36,6 +36,5 @@ class Stoplight extends Tile {
 			}
 		}
 		current += 1;
-		board.game.increase_score( 20);
 	}
 }

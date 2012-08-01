@@ -18,7 +18,6 @@ public class Game extends Activity
 
 	public int numlevels;
 	public int level;
-	public long score;
 	private Board board;
 	private GameResources gr;
 	private Ticker ticker;
@@ -57,11 +56,9 @@ public class Game extends Activity
 		if( stat != null) {
 			// Restore the game state
 			level = stat.getInt("level");
-			score = stat.getLong("score");
 		} else {
 			// Begin a new game
 			level = 0;
-			score = 0;
 		}
 
 		ButtonListener bl = new ButtonListener(this);
@@ -77,7 +74,7 @@ public class Game extends Activity
 
 	public void playLevel(int level) {
 		this.level = level;
-		board = new Board( this, gr);
+		board = new Board(gr, level);
 		((TextView)findViewById(R.id.board_name)).setText(board.name);
 		board.launch_marble();
 	}
@@ -114,7 +111,6 @@ public class Game extends Activity
 	protected void onSaveInstanceState(Bundle out) {
 		super.onSaveInstanceState(out);
 		out.putInt("level",level);
-		out.putLong("score",score);
 	}
 
 	@Override
@@ -142,11 +138,6 @@ public class Game extends Activity
 
 	public void upEvent( int pointerId, int x, int y) {
 		board.upEvent(pointerId,x,y);
-	}
-
-	public void increase_score(int amount) {
-		// Add the amount to the score
-		score += amount;
 	}
 
 	public void pause() {

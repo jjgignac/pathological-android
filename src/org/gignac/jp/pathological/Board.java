@@ -18,7 +18,6 @@ class Board
 	public static final int screen_width = board_width + Marble.marble_size;
 	public static final int screen_height = board_height + Marble.marble_size;
 	public static final int timer_width = Marble.marble_size*3/4;
-	public Game game;
 	private GameResources gr;
 	public Trigger trigger;
 	public Stoplight stoplight;
@@ -44,10 +43,9 @@ class Board
 	private Canvas liveCounterCanvas;
 	private final Paint paint = new Paint();
 
-	public Board(Game game, GameResources gr)
+	public Board(GameResources gr, int level)
 	{
 		self = this;
-		this.game = game;
 		this.gr = gr;
 		this.marbles = new Vector<Marble>();
 		this.trigger = null;
@@ -72,7 +70,7 @@ class Board
 		// the ten-minute interval.  This will discourage players
 		// from reloading levels repeatedly in order to get
 		// their choice of marbles/trigger/etc.
-		gr.random.setSeed((System.currentTimeMillis()/600000)*1000+game.level);
+		gr.random.setSeed((System.currentTimeMillis()/600000)*1000+level);
 
 		set_launch_timer( default_launch_timer);
 		set_board_timer( default_board_timer);
@@ -84,7 +82,7 @@ class Board
 
 		// Load the level
 		try {
-			_load( game.level % game.numlevels);
+			_load(gr,  level);
 		} catch(IOException e) {}
 
 		// Fill up the launch queue
@@ -96,7 +94,7 @@ class Board
 		Bitmap entrance = Bitmap.createBitmap( Tile.tile_size/2,
 			Tile.tile_size/2, Bitmap.Config.ARGB_8888);
 		Canvas c = new Canvas(entrance);
-		c.drawBitmap( bmap(R.drawable.path_14), null,
+		c.drawBitmap( gr.loadBitmap(R.drawable.path_14), null,
 			new Rect(-Tile.tile_size/4, -Tile.tile_size/4,
 				Tile.tile_size*3/4, Tile.tile_size*3/4), null);
 
@@ -111,11 +109,6 @@ class Board
 		Sprite.cache( R.drawable.entrance, entrance);
 		Sprite.cache( Marble.marble_images);
 		Sprite.cache( R.drawable.blank_bg_tile, liveCounter);
-	}
-
-	private Bitmap bmap( int resid) {
-		return BitmapFactory.decodeResource(
-			game.getResources(), resid);
 	}
 
 	public void draw_back(Blitter b) {
@@ -408,11 +401,11 @@ class Board
 		}
 	}
 
-	public boolean _load(int level)
+	public boolean _load(GameResources gr, int level)
 		throws IOException
 	{
 		BufferedReader f = new BufferedReader( new InputStreamReader(
-			game.getResources().openRawResource( R.raw.all_boards)));
+			gr.openRawResource( R.raw.all_boards)));
 
 		// Skip the previous levels
 		int j = 0;

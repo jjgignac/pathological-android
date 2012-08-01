@@ -173,8 +173,6 @@ class Wheel extends Tile {
 	public void complete(Board board) {
 		// Complete the wheel
 		for( int i=0; i<4; ++i) self.marbles[i] = -3;
-		if( completed) board.game.increase_score( 10);
-		else board.game.increase_score( 50);
 		completed = true;
 		gr.play_sound( gr.wheel_completed);
 	}
