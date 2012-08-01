@@ -28,16 +28,21 @@ public class Sprite
 		int i=0;
 		for( Sprite s : sprites.values()) {
 			s.glName = textures[i];
-			gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[i]);
-		    GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, s.bitmap, 0);
-			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
-			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+			s.prep(gl);
 			++i;
 		}
 
 		dirty = false;
 	}
-	
+
+	private void prep(GL10 gl) {
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, glName);
+		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+		needsPrep = false;
+	}
+
 	public static void regenerateTextures() {
 		dirty = true;
 	}
@@ -45,6 +50,7 @@ public class Sprite
 	private int resid;
 	private int glName;
 	private Bitmap bitmap;
+	private boolean needsPrep;
 
 	private Sprite(int resid, Bitmap b) {
 		this.bitmap = b;
@@ -61,15 +67,21 @@ public class Sprite
 	}
 
 	public static void cache(int resid, Bitmap b) {
-		if( sprites.containsKey(Integer.valueOf(resid))) return;
-		sprites.put(Integer.valueOf(resid), new Sprite(resid,b));
-		dirty = true;
+		Sprite s = sprites.get(resid);
+		if( s == null) {
+			sprites.put(Integer.valueOf(resid), new Sprite(resid,b));
+			dirty = true;
+		} else {
+			s.bitmap = b;
+			s.needsPrep = true;
+		}
 	}
 
 	public static void bind(GL10 gl, int resid) {
 		if(dirty) genTextures(gl);
-		gl.glBindTexture(GL10.GL_TEXTURE_2D,
-			sprites.get(Integer.valueOf(resid)).glName);
+		Sprite s = sprites.get(resid);
+		if(s.needsPrep) s.prep(gl);
+		else gl.glBindTexture(GL10.GL_TEXTURE_2D,s.glName);
 	}
 
 	public static Bitmap getBitmap(int resid) {

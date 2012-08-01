@@ -55,7 +55,7 @@ class Buffer extends TunnelTile
 					pos.left + tile_size/2, pos.top + tile_size/2,
 					marble.direction);
 
-				board.marbles.addElement( newmarble);
+				board.activateMarble( newmarble);
 
 				gr.play_sound( gr.ping);
 
@@ -71,7 +71,7 @@ class Buffer extends TunnelTile
 		} else if( x == tile_size/2 && y == tile_size/2) {
 			// Catch this marble
 			this.marble = marble.color;
-			board.marbles.remove( marble);
+			board.deactivateMarble( marble);
 			entering = null;
 		}
 	}

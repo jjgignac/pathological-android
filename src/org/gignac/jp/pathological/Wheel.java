@@ -133,7 +133,7 @@ class Wheel extends Tile {
 			}
 
 			// Eject the marble
-			board.marbles.addElement(
+			board.activateMarble(
 				new Marble( gr, self.marbles[i],
 					gr.holecenters_x[0][i]+pos.left,
 					gr.holecenters_y[0][i]+pos.top,
@@ -163,7 +163,7 @@ class Wheel extends Tile {
 			if( rposx == gr.holecenters_x[0][i] &&
 				rposy == gr.holecenters_y[0][i]) {
 				// Accept the marble
-				board.marbles.remove( marble);
+				board.deactivateMarble( marble);
 				self.marbles[marble.direction^2] = marble.color;
 				break;
 			}

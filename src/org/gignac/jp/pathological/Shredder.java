@@ -14,7 +14,7 @@ class Shredder extends TunnelTile
 	public void affect_marble(Board board, Marble marble, int x, int y)
 	{
 		if( x == tile_size/2 && y == tile_size/2) {
-			board.marbles.remove( marble);
+			board.deactivateMarble( marble);
 			gr.play_sound( gr.shredder);
 		}
 	}

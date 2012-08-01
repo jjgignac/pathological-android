@@ -40,6 +40,9 @@ class Board
 	private Marble[] marblesCopy = new Marble[20];
 	private HashMap<Integer,Point> down;
 	private int launch_queue_offset;
+	private Bitmap liveCounter;
+	private Canvas liveCounterCanvas;
+	private final Paint paint = new Paint();
 
 	public Board(Game game, GameResources gr)
 	{
@@ -58,6 +61,11 @@ class Board
 		this.colors = default_colors;
 
 		down = new HashMap<Integer,Point>();
+
+		paint.setAntiAlias(true);
+		paint.setColor(0xfff0f0f0);
+		paint.setTextSize(Marble.marble_size*4/5);
+		paint.setTypeface(Typeface.DEFAULT_BOLD);
 
 		// Seed the randomness based on the level number and
 		// the current time.  Only use the time accurate to
@@ -92,10 +100,17 @@ class Board
 			new Rect(-Tile.tile_size/4, -Tile.tile_size/4,
 				Tile.tile_size*3/4, Tile.tile_size*3/4), null);
 
+		// Prepare the live marbles counter image
+		liveCounter = Bitmap.createBitmap(
+			Marble.marble_size * 5, Marble.marble_size,
+			Bitmap.Config.ARGB_8888);
+		liveCounterCanvas = new Canvas(liveCounter);
+
 		Sprite.cache( R.drawable.backdrop);
 		Sprite.cache( R.drawable.launcher_corner);
 		Sprite.cache( R.drawable.entrance, entrance);
 		Sprite.cache( Marble.marble_images);
+		Sprite.cache( R.drawable.blank_bg_tile, liveCounter);
 	}
 
 	private Bitmap bmap( int resid) {
@@ -135,6 +150,8 @@ class Board
 			launch_timeout_start;
 		b.fill(timerColor, x, 0,
 			board_width - x, Marble.marble_size);
+
+		b.blit(R.drawable.blank_bg_tile, Marble.marble_size/2, 0);
 
 		timerColor = 0xff000080;
 		timeLeft = (float)board_timeout / Game.frames_per_sec;
@@ -257,11 +274,30 @@ class Board
 		self.board_timeout = self.board_timeout_start;
 	}
 
+	public void activateMarble( Marble m) {
+		marbles.add(m);
+		updateLiveCounter();
+	}
+
+	public void deactivateMarble( Marble m) {
+		marbles.remove(m);
+		updateLiveCounter();
+	}
+
+	private void updateLiveCounter() {
+		liveCounterCanvas.drawColor(0,PorterDuff.Mode.CLEAR);
+		int live = marbles.size();
+		if( live > live_marbles_limit) live = live_marbles_limit;
+		String s = live+" / "+live_marbles_limit;
+		liveCounterCanvas.drawText( s, 0, Marble.marble_size*4/5, paint);
+		Sprite.cache( R.drawable.blank_bg_tile, liveCounter);
+	}
+
 	public void launch_marble() {
-		self.marbles.insertElementAt( new Marble(
+		activateMarble( new Marble(
 			gr, self.launch_queue[0],
 			board_width+Marble.marble_size/2,
-			Marble.marble_size/2, 3), 0);
+			Marble.marble_size/2, 3));
 		for( int i=0; i < launch_queue.length-1; ++i)
 			launch_queue[i] = launch_queue[i+1];
 		self.launch_queue[launch_queue.length-1] =
@@ -502,11 +538,10 @@ class Board
 					else if( color == '>') direction = 1;
 					else if( color == 'v') direction = 2;
 					else direction = 3;
-					marbles.addElement(
-						new Marble(gr, type-'0',
-							tile.pos.left + Tile.tile_size/2,
-							tile.pos.top + Tile.tile_size/2,
-							direction));
+					activateMarble( new Marble(gr, type-'0',
+						tile.pos.left + Tile.tile_size/2,
+						tile.pos.top + Tile.tile_size/2,
+						direction));
 				}
 			}
 

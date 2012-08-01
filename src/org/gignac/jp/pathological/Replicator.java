@@ -44,7 +44,7 @@ class Replicator extends TunnelTile
 				}
 
 				// Add the new marble
-				board.marbles.addElement( new Marble( gr,
+				board.activateMarble( new Marble( gr,
 					pending_col[i], pos.left + tile_size/2,
 					pos.top + tile_size/2, pending_dir[i]));
 				gr.play_sound( gr.replicator);
