@@ -18,8 +18,7 @@ public class ButtonListener
 				game.playLevel(game.level-1);
 			break;
 		case R.id.nextlevel:
-			if(game.level < game.numlevels-1)
-				game.playLevel(game.level+1);
+			game.nextLevel();
 			break;
 		case R.id.retry:
 			game.playLevel(game.level);

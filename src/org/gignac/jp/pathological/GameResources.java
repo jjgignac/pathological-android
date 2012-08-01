@@ -49,8 +49,26 @@ public class GameResources
 	public int[][] holecenters_x;
 	public int[][] holecenters_y;
 
+	public int numlevels;
+
 	public GameResources(Context context) {
 		this.context = context;
+
+		try {
+			// Count the number of levels
+			BufferedReader f = new BufferedReader(
+				new InputStreamReader(openRawResource(R.raw.all_boards)));
+			int j = 0;
+			while(true) {
+				String line = f.readLine();
+				if( line == null) break;
+				if( line.isEmpty()) continue;
+				if( line.charAt(0) == '|') j += 1;
+			}
+			f.close();
+			numlevels = j / Board.vert_tiles;
+		} catch(IOException e) {}
+
 		random = new Random();
 
 		// The positions of the holes in the wheels in

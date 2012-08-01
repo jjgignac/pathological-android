@@ -16,7 +16,6 @@ public class Game extends Activity
 	private static final int frameskip = 2;
 	public static final int frames_per_sec = 100;
 
-	public int numlevels;
 	public int level;
 	private Board board;
 	private GameResources gr;
@@ -32,21 +31,6 @@ public class Game extends Activity
 	public void onCreate(Bundle stat)
 	{
 		super.onCreate(stat);
-		Resources res = getResources();
-		try {
-			// Count the number of levels
-			BufferedReader f = new BufferedReader( new InputStreamReader(
-				res.openRawResource(R.raw.all_boards)));
-			int j = 0;
-			while(true) {
-				String line = f.readLine();
-				if( line == null) break;
-				if( line.isEmpty()) continue;
-				if( line.charAt(0) == '|') j += 1;
-			}
-			f.close();
-			numlevels = j / Board.vert_tiles;
-		} catch(IOException e) {}
 
 		gr = new GameResources(this);
 		gr.create( true);
@@ -77,6 +61,11 @@ public class Game extends Activity
 		board = new Board(gr, level);
 		((TextView)findViewById(R.id.board_name)).setText(board.name);
 		board.launch_marble();
+	}
+
+	public void nextLevel() {
+		if(level < gr.numlevels-1)
+			playLevel( level+1);
 	}
 
 	@Override
