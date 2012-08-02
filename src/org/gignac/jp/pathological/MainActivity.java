@@ -12,6 +12,9 @@ public class MainActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
 	{
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.in_game);
+        setContentView(R.layout.main);
+		GameResources gr = new GameResources(this);
+		Sprite.setResources(getResources());
+		((LevelSelectView)findViewById(R.id.levelSelect)).setup(gr);
     }
 }
