@@ -112,6 +112,12 @@ class Board
 	}
 
 	public void draw_back(Blitter b) {
+		// Draw the backdrop
+		Rect v = b.getVisibleArea();
+		b.blit( R.drawable.backdrop, v.left, v.top,
+			screen_width - Marble.marble_size*3/4 - v.left,
+			v.bottom - v.top);
+
 		// Draw the launcher
 		b.blit( R.drawable.path_10,
 			Marble.marble_size, (Marble.marble_size-Tile.tile_size)/2,

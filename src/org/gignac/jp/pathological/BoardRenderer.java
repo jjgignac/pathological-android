@@ -88,10 +88,6 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 		gl.glLoadIdentity();
 		gl.glTranslatef(0.0f, 0.0f, -5.0f);
 
-		Sprite.bind(gl, R.drawable.backdrop);
-		blit(gl, 0.0f, 0.0f,
-			(float)width-(Board.timer_width+Marble.marble_size*3/4)*scale,
-			(float)height);
 		game.paint(gl);
 	}
 
