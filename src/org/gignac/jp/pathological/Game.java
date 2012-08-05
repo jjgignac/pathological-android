@@ -12,6 +12,7 @@ import android.widget.*;
 import javax.microedition.khronos.opengles.*;
 
 public class Game extends Activity
+	implements GLPainter
 {
 	private static final int frameskip = 2;
 	public static final int frames_per_sec = 100;

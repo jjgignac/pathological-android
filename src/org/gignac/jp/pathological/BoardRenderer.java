@@ -16,7 +16,7 @@ import android.graphics.*;
 
 public class BoardRenderer implements GLSurfaceView.Renderer
 {
-	private Game game;
+	private GLPainter painter;
 	private float[] vertices;
 	private static final float[] texture = {
 		0.0f, 1.0f, 0.0f, 0.0f,
@@ -31,9 +31,9 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 	private float offsety;
 	private Rect rect;
 
-	BoardRenderer( Game game)
+	BoardRenderer( GLPainter painter)
 	{
-		this.game = game;
+		this.painter = painter;
 
 		vertices = new float[12];
    		ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertices.length * 4);
@@ -88,7 +88,7 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 		gl.glLoadIdentity();
 		gl.glTranslatef(0.0f, 0.0f, -5.0f);
 
-		game.paint(gl);
+		painter.paint(gl);
 	}
 
 	static final float s = 1.0f / 255.0f;
