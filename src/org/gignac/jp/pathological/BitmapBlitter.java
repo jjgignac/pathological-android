@@ -26,13 +26,23 @@ public class BitmapBlitter
 
 	public void blit(int resid, int x, int y)
 	{
-		Bitmap b = Sprite.getBitmap(resid);
+		blit(resid&0xffffffffl, x, y);
+	}
+
+	public void blit(long uniq, int x, int y)
+	{
+		Bitmap b = Sprite.getBitmap(uniq);
 		blit(b, x, y, b.getWidth(), b.getHeight());
 	}
 
 	public void blit(int resid, int x, int y, int w, int h)
 	{
-		Bitmap b = Sprite.getBitmap(resid);
+		blit(resid&0xffffffffl, x, y, w, h);
+	}
+
+	public void blit(long uniq, int x, int y, int w, int h)
+	{
+		Bitmap b = Sprite.getBitmap(uniq);
 		blit(b, x, y, w, h);
 	}
 

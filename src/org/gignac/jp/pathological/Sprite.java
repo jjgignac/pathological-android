@@ -8,8 +8,8 @@ import android.content.res.*;
 public class Sprite
 {
     private static int[] textures;
-	private static final HashMap<Integer,Sprite> sprites =
-		new HashMap<Integer,Sprite>();
+	private static final HashMap<Long,Sprite> sprites =
+		new HashMap<Long,Sprite>();
 	private static boolean dirty = true;
 	private static Resources res;
 
@@ -47,19 +47,20 @@ public class Sprite
 		dirty = true;
 	}
 
-	private int resid;
+	private long uniq;
 	private int glName;
 	private Bitmap bitmap;
 	private boolean needsPrep;
 
-	private Sprite(int resid, Bitmap b) {
+	private Sprite(long uniq, Bitmap b) {
 		this.bitmap = b;
-		this.resid = resid;
+		this.uniq = uniq;
 	}
 
 	public static void cache(int resid) {
-		if( sprites.containsKey(Integer.valueOf(resid))) return;
-		cache(resid, BitmapFactory.decodeResource(res, resid));
+		long uniq = resid&0xffffffffl;
+		if( sprites.containsKey(uniq)) return;
+		cache(uniq, BitmapFactory.decodeResource(res, resid));
 	}
 
 	public static void cache(int[] resids) {
@@ -67,9 +68,13 @@ public class Sprite
 	}
 
 	public static void cache(int resid, Bitmap b) {
-		Sprite s = sprites.get(resid);
+		throw new IllegalArgumentException();
+	}
+
+	public static void cache(long uniq, Bitmap b) {
+		Sprite s = sprites.get(uniq);
 		if( s == null) {
-			sprites.put(Integer.valueOf(resid), new Sprite(resid,b));
+			sprites.put(uniq, new Sprite(uniq,b));
 			dirty = true;
 		} else {
 			s.bitmap = b;
@@ -78,13 +83,17 @@ public class Sprite
 	}
 
 	public static void bind(GL10 gl, int resid) {
+		bind(gl, resid&0xffffffffl);
+	}
+
+	public static void bind(GL10 gl, long uniq) {
 		if(dirty) genTextures(gl);
-		Sprite s = sprites.get(resid);
+		Sprite s = sprites.get(uniq);
 		if(s.needsPrep) s.prep(gl);
 		else gl.glBindTexture(GL10.GL_TEXTURE_2D,s.glName);
 	}
 
-	public static Bitmap getBitmap(int resid) {
-		return sprites.get(Integer.valueOf(resid)).bitmap;
+	public static Bitmap getBitmap(long uniq) {
+		return sprites.get(uniq).bitmap;
 	}
 }

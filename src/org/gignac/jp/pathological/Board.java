@@ -103,9 +103,9 @@ class Board implements Paintable
 
 		Sprite.cache( R.drawable.backdrop);
 		Sprite.cache( R.drawable.launcher_corner);
-		Sprite.cache( R.drawable.entrance, entrance);
+		Sprite.cache( 0x100000001l, entrance);
 		Sprite.cache( Marble.marble_images);
-		Sprite.cache( R.drawable.blank_bg_tile, liveCounter);
+		Sprite.cache( 0x100000002l, liveCounter);
 
 		// Load the level
 		try {
@@ -154,7 +154,7 @@ class Board implements Paintable
 		b.fill(timerColor, x, 0,
 			board_width - x, Marble.marble_size);
 
-		b.blit(R.drawable.blank_bg_tile, Marble.marble_size/2, 0);
+		b.blit(0x100000002l, Marble.marble_size/2, 0);
 
 		timerColor = 0xff000080;
 		timeLeft = (float)board_timeout / Game.frames_per_sec;
@@ -301,7 +301,7 @@ class Board implements Paintable
 		if( live > live_marbles_limit) live = live_marbles_limit;
 		String s = live+" / "+live_marbles_limit;
 		liveCounterCanvas.drawText( s, 0, Marble.marble_size*4/5, paint);
-		Sprite.cache( R.drawable.blank_bg_tile, liveCounter);
+		Sprite.cache( 0x100000002l, liveCounter);
 	}
 
 	public void launch_marble() {

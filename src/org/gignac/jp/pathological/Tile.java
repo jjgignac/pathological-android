@@ -40,7 +40,7 @@ class Tile
 			b.blit( plain_tiles[paths],
 				pos.left, pos.top, tile_size, tile_size);
 			if( (paths & 1) > 0 && tile_y == 0) {
-				b.blit( R.drawable.entrance,
+				b.blit( 0x100000001l,
 					pos.left + Tile.tile_size/4,
 					Marble.marble_size/2-Tile.tile_size/4);
 			}

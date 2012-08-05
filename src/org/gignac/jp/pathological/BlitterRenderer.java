@@ -106,16 +106,26 @@ public class BlitterRenderer
 
 	@Override	
 	public void blit(int resid, int x, int y, int w, int h) {
+		blit(resid&0xffffffffl, x, y, w, h);
+	}
+
+	@Override	
+	public void blit(long uniq, int x, int y, int w, int h) {
 	    gl.glEnable(GL10.GL_TEXTURE_2D);
-		Sprite.bind(gl, resid);
+		Sprite.bind(gl, uniq);
 		blit(x,y,w,h);		
 	}
 
 	@Override
 	public void blit( int resid, int x, int y) {
+		blit(resid&0xffffffffl, x, y);
+	}
+
+	@Override
+	public void blit( long uniq, int x, int y) {
 	    gl.glEnable(GL10.GL_TEXTURE_2D);
-		Sprite.bind(gl,resid);
-		Bitmap b = Sprite.getBitmap(resid);
+		Sprite.bind(gl, uniq);
+		Bitmap b = Sprite.getBitmap(uniq);
 		blit(x, y, b.getWidth(), b.getHeight());
 	}
 
