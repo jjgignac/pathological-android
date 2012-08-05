@@ -116,9 +116,11 @@ class Board implements Paintable
 	public void draw_back(Blitter b) {
 		// Draw the backdrop
 		Rect v = b.getVisibleArea();
-		b.blit( R.drawable.backdrop, v.left, v.top,
-			screen_width - Marble.marble_size*3/4 - v.left,
-			v.bottom - v.top);
+		int fullHeight = (int)Math.ceil(v.bottom/scale);
+		int leftMargin = Math.round(offsetx/scale);
+		b.blit( R.drawable.backdrop, -leftMargin, 0,
+			screen_width - Marble.marble_size*3/4 + leftMargin,
+			fullHeight);
 
 		// Draw the launcher
 		b.blit( R.drawable.path_10,
@@ -163,7 +165,7 @@ class Board implements Paintable
 			int phase = Math.round(s*s*255);
 			timerColor = 0xff000000 | phase | (255-phase)<<16;
 		}
-		int timer_height = v.bottom - v.top;
+		int timer_height = fullHeight;
 		int y = (board_timeout*timer_height+board_timeout_start/2) /
 			board_timeout_start;
 		b.fill(0xff000000, screen_width+3,
