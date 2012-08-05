@@ -17,7 +17,7 @@ import android.graphics.*;
 public class BoardRenderer
 	implements GLSurfaceView.Renderer, Blitter
 {
-	private GLPainter painter;
+	private Paintable painter;
 	private float[] vertices;
 	private static final float[] texture = {
 		0.0f, 1.0f, 0.0f, 0.0f,
@@ -50,7 +50,7 @@ public class BoardRenderer
 		rect = new Rect();
 	}
 
-	public void setPaintable( GLPainter painter)
+	public void setPaintable( Paintable painter)
 	{
 		this.painter = painter;
 	}
