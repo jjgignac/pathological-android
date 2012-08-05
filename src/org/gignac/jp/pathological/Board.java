@@ -80,11 +80,6 @@ class Board
 		for( int j=0; j < vert_tiles; ++j)
 			tiles[j] = new Tile[horiz_tiles];
 
-		// Load the level
-		try {
-			_load(gr,  level);
-		} catch(IOException e) {}
-
 		// Fill up the launch queue
 		for( int i=0; i < launch_queue.length; ++i) {
 			launch_queue[i] = colors.charAt(gr.random.nextInt(colors.length()))-'0';
@@ -109,6 +104,11 @@ class Board
 		Sprite.cache( R.drawable.entrance, entrance);
 		Sprite.cache( Marble.marble_images);
 		Sprite.cache( R.drawable.blank_bg_tile, liveCounter);
+
+		// Load the level
+		try {
+			_load(gr,  level);
+		} catch(IOException e) {}
 	}
 
 	public void draw_back(Blitter b) {
