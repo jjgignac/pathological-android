@@ -14,7 +14,8 @@ import android.opengl.GLUtils;
 import android.view.*;
 import android.graphics.*;
 
-public class BoardRenderer implements GLSurfaceView.Renderer
+public class BoardRenderer
+	implements GLSurfaceView.Renderer, Blitter
 {
 	private GLPainter painter;
 	private float[] vertices;
@@ -30,11 +31,10 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 	private float offsetx;
 	private float offsety;
 	private Rect rect;
+	private GL10 gl;
 
-	BoardRenderer( GLPainter painter)
+	BoardRenderer()
 	{
-		this.painter = painter;
-
 		vertices = new float[12];
    		ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertices.length * 4);
    		byteBuffer.order(ByteOrder.nativeOrder());
@@ -48,6 +48,11 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 		textureBuffer.position(0);
 
 		rect = new Rect();
+	}
+
+	public void setPaintable( GLPainter painter)
+	{
+		this.painter = painter;
 	}
 
 	@Override
@@ -88,35 +93,38 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 		gl.glLoadIdentity();
 		gl.glTranslatef(0.0f, 0.0f, -5.0f);
 
-		painter.paint(gl);
+		this.gl = gl;
+		painter.paint(this);
 	}
 
 	static final float s = 1.0f / 255.0f;
 
-	public void fill( GL10 gl, int color,
-		int x, int y, int w, int h) {
+	@Override
+	public void fill(int color, int x, int y, int w, int h) {
 	    gl.glDisable(GL10.GL_TEXTURE_2D);
 		gl.glColor4f(((color>>16)&0xff)*s,((color>>8)&0xff)*s,
 			(color&0xff)*s,((color>>24)&0xff)*s);
-		blit(gl,x*scale+offsetx,y*scale+offsety,w*scale,h*scale);		
+		blit(x*scale+offsetx,y*scale+offsety,w*scale,h*scale);		
 		gl.glColor4f(1f,1f,1f,1f);
 	}
-	
-	public void blit( GL10 gl, int resid,
-		int x, int y, int w, int h) {
+
+	@Override	
+	public void blit(int resid, int x, int y, int w, int h) {
 	    gl.glEnable(GL10.GL_TEXTURE_2D);
 		Sprite.bind(gl, resid);
-		blit(gl,x*scale+offsetx,y*scale+offsety,w*scale,h*scale);		
+		blit(x*scale+offsetx,y*scale+offsety,w*scale,h*scale);		
 	}
 
-	public void blit( GL10 gl, int resid, int x, int y) {
+	@Override
+	public void blit( int resid, int x, int y) {
 	    gl.glEnable(GL10.GL_TEXTURE_2D);
 		Sprite.bind(gl,resid);
 		Bitmap b = Sprite.getBitmap(resid);
-		blit(gl, x*scale+offsetx, y*scale+offsety,
+		blit(x*scale+offsetx, y*scale+offsety,
 			b.getWidth()*scale, b.getHeight()*scale);
 	}
 
+	@Override
 	public Rect getVisibleArea() {
 		rect.left = (int)Math.floor(-offsetx/scale);
 		rect.top = (int)Math.floor(-offsety/scale);
@@ -125,7 +133,7 @@ public class BoardRenderer implements GLSurfaceView.Renderer
 		return rect;
 	}
 
-	private void blit( GL10 gl, float x, float y, float w, float h)
+	private void blit( float x, float y, float w, float h)
 	{
 		float left = x * 2.0f / width - 1.0f;
 		float top = y * -2.0f / height + 1.0f;

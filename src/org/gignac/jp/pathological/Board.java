@@ -5,7 +5,7 @@ import android.graphics.*;
 import android.util.*;
 import android.content.res.*;
 
-class Board
+class Board implements GLPainter
 {
 	private static final String default_colors = "2346";
 	private static final String default_stoplight = "643";

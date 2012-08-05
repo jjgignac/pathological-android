@@ -16,22 +16,22 @@ import android.util.*;
 import android.graphics.*;
 
 public class GameView extends GLSurfaceView
-	implements Blitter
 {
 	private BoardRenderer renderer;
-	private Game game;
+	private Board board;
 	public GL10 blitter_gl;
 
 	public GameView(Context c,AttributeSet a) {
 		super(c,a);
 		Sprite.setResources(getResources());
-	}
-
-	public void setup(Game game) {
-		this.game = game;
-		renderer = new BoardRenderer(game);
+		renderer = new BoardRenderer();
 		setRenderer(renderer);
 		setRenderMode(RENDERMODE_WHEN_DIRTY);
+	}
+
+	public void setBoard(Board board) {
+		this.board = board;
+		renderer.setPaintable(board);
 	}
 
 	@Override
@@ -45,33 +45,14 @@ public class GameView extends GLSurfaceView
 		switch(action & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
 		case MotionEvent.ACTION_POINTER_DOWN:
-			game.downEvent(id,renderer.evX(e,index),renderer.evY(e,index));
+			board.downEvent(id,renderer.evX(e,index),renderer.evY(e,index));
 			return true;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_POINTER_UP:
-			game.upEvent(id,renderer.evX(e,index),renderer.evY(e,index));
+			board.upEvent(id,renderer.evX(e,index),renderer.evY(e,index));
 			return true;
 		}
 
 		return false;
-	}
-
-	public void blit(int b, int x, int y)
-	{
-		renderer.blit(blitter_gl,b,x,y);
-	}
-
-	public void blit(int b, int x, int y, int w, int h)
-	{
-		renderer.blit(blitter_gl,b,x,y,w,h);
-	}
-
-	public void fill(int color, int x, int y, int w, int h)
-	{
-		renderer.fill(blitter_gl,color,x,y,w,h);
-	}
-
-	public Rect getVisibleArea() {
-		return renderer.getVisibleArea();
 	}
 }

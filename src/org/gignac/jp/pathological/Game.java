@@ -9,10 +9,8 @@ import java.util.*;
 import android.view.*;
 import java.util.concurrent.*;
 import android.widget.*;
-import javax.microedition.khronos.opengles.*;
 
 public class Game extends Activity
-	implements GLPainter
 {
 	private static final int frameskip = 2;
 	public static final int frames_per_sec = 100;
@@ -21,7 +19,6 @@ public class Game extends Activity
 	private Board board;
 	private GameResources gr;
 	private Ticker ticker;
-	private GameView view;
 	private int framenum;
 	
 	public Game()
@@ -62,6 +59,7 @@ public class Game extends Activity
 		board = new Board(gr, level);
 		((TextView)findViewById(R.id.board_name)).setText(board.name);
 		board.launch_marble();
+		((GameView)findViewById(R.id.gameboard)).setBoard(board);
 	}
 
 	public void nextLevel() {
@@ -74,9 +72,6 @@ public class Game extends Activity
 	{
 		super.onResume();
 
-		view = (GameView)findViewById(R.id.gameboard);
-		view.setup(this);
-		
 		framenum = frameskip;
 
 		// Schedule the updates
@@ -87,7 +82,7 @@ public class Game extends Activity
 
 					// Render a frame
 					synchronized(board) {
-						view.requestRender();
+						((GameView)findViewById(R.id.gameboard)).requestRender();
 						try { board.wait(); }
 						catch(InterruptedException e) {}
 					}
@@ -117,19 +112,6 @@ public class Game extends Activity
 		gr.destroy();
 	}
 	
-	public void paint(GL10 gl) {
-		view.blitter_gl = gl;
-		board.paint(view);
-	}
-
-	public void downEvent( int pointerId, int x, int y) {
-		board.downEvent(pointerId,x,y);
-	}
-
-	public void upEvent( int pointerId, int x, int y) {
-		board.upEvent(pointerId,x,y);
-	}
-
 	public void pause() {
 		if(ticker.isStopped())
 			ticker.go();
