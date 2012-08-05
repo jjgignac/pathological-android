@@ -45,11 +45,11 @@ public class GameView extends GLSurfaceView
 		switch(action & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
 		case MotionEvent.ACTION_POINTER_DOWN:
-			board.downEvent(id,renderer.evX(e,index),renderer.evY(e,index));
+			board.downEvent(id,e.getX(index),e.getY(index));
 			return true;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_POINTER_UP:
-			board.upEvent(id,renderer.evX(e,index),renderer.evY(e,index));
+			board.upEvent(id,e.getX(index),e.getY(index));
 			return true;
 		}
 

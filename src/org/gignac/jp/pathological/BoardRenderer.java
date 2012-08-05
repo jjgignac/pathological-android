@@ -20,16 +20,11 @@ public class BoardRenderer
 	private Paintable painter;
 	private float[] vertices;
 	private static final float[] texture = {
-		0.0f, 1.0f, 0.0f, 0.0f,
-		1.0f, 1.0f, 1.0f, 0.0f
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 1.0f, 1.0f
 	};
 	private FloatBuffer textureBuffer;
     private FloatBuffer vertexBuffer;
-	private int width;
-	private int height;
-	private float scale;
-	private float offsetx;
-	private float offsety;
 	private Rect rect;
 	private GL10 gl;
 
@@ -68,15 +63,8 @@ public class BoardRenderer
 	
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
-		int px = Board.screen_width + Board.timer_width;
-		this.width = width;
-		this.height = height;
-		if(height == 0) height = 1;
-
-		scale = width * Board.screen_height < height * px ?
-			(float)width / px : (float)height / Board.screen_height;
-		offsetx = width - px*scale;
-		offsety = 0.0f;
+		rect.right = width;
+		rect.bottom = height;
 
 		gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL10.GL_PROJECTION);
@@ -91,7 +79,8 @@ public class BoardRenderer
 //		gl.glClearColor(0, 0, 0.5f, 1.0f);
 //		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
-		gl.glTranslatef(0.0f, 0.0f, -5.0f);
+		gl.glTranslatef(-1f,1f,-5f);
+		gl.glScalef(2f/rect.right,-2f/rect.bottom,1f);
 
 		this.gl = gl;
 		painter.paint(this);
@@ -100,11 +89,18 @@ public class BoardRenderer
 	static final float s = 1.0f / 255.0f;
 
 	@Override
+	public void transform(float scale, float dx, float dy)
+	{
+		gl.glScalef(scale,scale,1.0f);
+		gl.glTranslatef(dx,dy,0.0f);
+	}
+
+	@Override
 	public void fill(int color, int x, int y, int w, int h) {
 	    gl.glDisable(GL10.GL_TEXTURE_2D);
 		gl.glColor4f(((color>>16)&0xff)*s,((color>>8)&0xff)*s,
 			(color&0xff)*s,((color>>24)&0xff)*s);
-		blit(x*scale+offsetx,y*scale+offsety,w*scale,h*scale);		
+		blit(x,y,w,h);		
 		gl.glColor4f(1f,1f,1f,1f);
 	}
 
@@ -112,7 +108,7 @@ public class BoardRenderer
 	public void blit(int resid, int x, int y, int w, int h) {
 	    gl.glEnable(GL10.GL_TEXTURE_2D);
 		Sprite.bind(gl, resid);
-		blit(x*scale+offsetx,y*scale+offsety,w*scale,h*scale);		
+		blit(x,y,w,h);		
 	}
 
 	@Override
@@ -120,33 +116,20 @@ public class BoardRenderer
 	    gl.glEnable(GL10.GL_TEXTURE_2D);
 		Sprite.bind(gl,resid);
 		Bitmap b = Sprite.getBitmap(resid);
-		blit(x*scale+offsetx, y*scale+offsety,
-			b.getWidth()*scale, b.getHeight()*scale);
+		blit(x, y, b.getWidth(), b.getHeight());
 	}
 
 	@Override
 	public Rect getVisibleArea() {
-		rect.left = (int)Math.floor(-offsetx/scale);
-		rect.top = (int)Math.floor(-offsety/scale);
-		rect.right = (int)Math.ceil((width-offsetx)/scale);
-		rect.bottom = (int)Math.ceil((height-offsety)/scale);
 		return rect;
 	}
 
 	private void blit( float x, float y, float w, float h)
 	{
-		float left = x * 2.0f / width - 1.0f;
-		float top = y * -2.0f / height + 1.0f;
-		float wid = w * 2.0f / width;
-		float hei = h * -2.0f / height;
-
-		// Small optimization
-		if(x > width || y > height) return;
-		
-		vertices[0] = vertices[3] = left;
-		vertices[4] = vertices[10] = top;
-		vertices[6] = vertices[9] = left + wid;
-		vertices[1] = vertices[7] = top + hei;
+		vertices[0] = vertices[6] = x;
+		vertices[1] = vertices[4] = y;
+		vertices[3] = vertices[9] = x + w;
+		vertices[7] = vertices[10] = y + h;
 		
 		vertexBuffer.put(vertices);
 		vertexBuffer.position(0);
@@ -161,14 +144,6 @@ public class BoardRenderer
 	    }
 	    gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 	    gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-	}
-
-	public int evX( MotionEvent e, int index) {		
-		return (int)Math.round((e.getX(index)-offsetx)/scale);
-	}
-
-	public int evY( MotionEvent e, int index) {		
-		return (int)Math.round((e.getY(index)-offsety)/scale);
 	}
 }
 

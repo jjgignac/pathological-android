@@ -10,14 +10,18 @@ public class BitmapBlitter
 	private Paint paint;
 	private Rect visibleArea;
 
-	public BitmapBlitter( Bitmap dest, float scale) {
+	public BitmapBlitter( Bitmap dest) {
 		this.c = new Canvas(dest);
-		c.scale(scale,scale);
 		rect = new Rect();
 		paint = new Paint();
 		visibleArea = new Rect( 0, 0,
-			Math.round(dest.getWidth() / scale),
-			Math.round(dest.getHeight() / scale));
+			dest.getWidth(), dest.getHeight());
+	}
+
+	public void transform(float scale, float dx, float dy)
+	{
+		c.scale(scale,scale);
+		c.translate(dx,dy);		
 	}
 
 	public void blit(int resid, int x, int y)

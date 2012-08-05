@@ -42,6 +42,8 @@ class Board implements Paintable
 	private Bitmap liveCounter;
 	private Canvas liveCounterCanvas;
 	private final Paint paint = new Paint();
+	private float scale = 0f;
+	private float offsetx;
 
 	public Board(GameResources gr, int level)
 	{
@@ -161,8 +163,7 @@ class Board implements Paintable
 			int phase = Math.round(s*s*255);
 			timerColor = 0xff000000 | phase | (255-phase)<<16;
 		}
-		Rect visible = b.getVisibleArea();
-		int timer_height = visible.bottom - visible.top;
+		int timer_height = v.bottom - v.top;
 		int y = (board_timeout*timer_height+board_timeout_start/2) /
 			board_timeout_start;
 		b.fill(0xff000000, screen_width+3,
@@ -230,6 +231,15 @@ class Board implements Paintable
 	
 	public synchronized void paint(Blitter b)
 	{
+		int px = Board.screen_width + Board.timer_width;
+		Rect r = b.getVisibleArea();
+		float width = r.right - r.left;
+		float height = r.bottom - r.top;
+		scale = width * Board.screen_height < height * px ?
+			width / px : height / Board.screen_height;
+		offsetx = width - px*scale;
+		b.transform( scale, offsetx, 0.0f);
+		
 		// Draw the background
 		self.draw_back(b);
 
@@ -373,8 +383,11 @@ class Board implements Paintable
 		return null;
 	}
 
-	public void downEvent(int pointerId, int posx, int posy)
+	public void downEvent(int pointerId, float x, float y)
 	{
+		if(scale == 0f) return;
+		int posx = Math.round((x - offsetx) / scale);
+		int posy = Math.round(y / scale);
 		Point pos = down.get(pointerId);
 		if( pos == null) {
 			down.put(pointerId,new Point(posx,posy));
@@ -384,8 +397,11 @@ class Board implements Paintable
 		}
 	}
 
-	public void upEvent(int pointerId, int posx, int posy)
+	public void upEvent(int pointerId, float x, float y)
 	{
+		if(scale == 0f) return;
+		int posx = Math.round((x - offsetx) / scale);
+		int posy = Math.round(y / scale);
 		final Point dpos = down.get(pointerId);
 		if(dpos == null) return;
 		final int downx = dpos.x, downy = dpos.y;

@@ -10,7 +10,7 @@ public class Preview
 			Math.round(Board.screen_width * scale),
 			Math.round(Board.screen_height * scale),
 			Bitmap.Config.ARGB_8888);
-		Blitter b = new BitmapBlitter(preview, scale);
+		Blitter b = new BitmapBlitter(preview);
 		new Board( gr, level).paint(b);
 		return preview;
 	}
