@@ -19,7 +19,6 @@ public class GameView extends GLSurfaceView
 {
 	private BlitterRenderer renderer;
 	private Board board;
-	public GL10 blitter_gl;
 
 	public GameView(Context c,AttributeSet a) {
 		super(c,a);
