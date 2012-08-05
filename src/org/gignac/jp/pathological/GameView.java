@@ -17,14 +17,14 @@ import android.graphics.*;
 
 public class GameView extends GLSurfaceView
 {
-	private BoardRenderer renderer;
+	private BlitterRenderer renderer;
 	private Board board;
 	public GL10 blitter_gl;
 
 	public GameView(Context c,AttributeSet a) {
 		super(c,a);
 		Sprite.setResources(getResources());
-		renderer = new BoardRenderer();
+		renderer = new BlitterRenderer();
 		setRenderer(renderer);
 		setRenderMode(RENDERMODE_WHEN_DIRTY);
 	}

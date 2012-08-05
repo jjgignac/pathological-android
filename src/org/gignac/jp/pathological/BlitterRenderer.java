@@ -14,7 +14,7 @@ import android.opengl.GLUtils;
 import android.view.*;
 import android.graphics.*;
 
-public class BoardRenderer
+public class BlitterRenderer
 	implements GLSurfaceView.Renderer, Blitter
 {
 	private Paintable painter;
@@ -28,7 +28,7 @@ public class BoardRenderer
 	private Rect rect;
 	private GL10 gl;
 
-	BoardRenderer()
+	BlitterRenderer()
 	{
 		vertices = new float[12];
    		ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertices.length * 4);
