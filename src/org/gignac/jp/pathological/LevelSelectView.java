@@ -5,7 +5,6 @@ import android.util.*;
 import android.graphics.*;
 import android.opengl.*;
 import android.os.*;
-import android.widget.*;
 
 public class LevelSelectView extends GLSurfaceView
 	implements Paintable
@@ -140,7 +139,9 @@ public class LevelSelectView extends GLSurfaceView
 		if( i < 0 || i >= cols) return;
 		if( x - i*hSpacing > previewWidth) return;
 		int level = (page*rows+j)*cols+i;
-		Toast.makeText(getContext(),"level="+level,Toast.LENGTH_SHORT).show();
+		Intent intent = new Intent(getContext(),Game.class);
+		intent.putExtra("level",level);
+		getContext().startActivity(intent);
 	}
 
 	private void fling( float velX)

@@ -40,7 +40,8 @@ public class Game extends Activity
 			level = stat.getInt("level");
 		} else {
 			// Begin a new game
-			level = 0;
+			Bundle extras = getIntent().getExtras();
+			level = extras.getInt("level");
 		}
 
 		ButtonListener bl = new ButtonListener(this);
