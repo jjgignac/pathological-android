@@ -3,40 +3,120 @@ import android.view.*;
 import android.content.*;
 import android.util.*;
 import android.graphics.*;
+import android.opengl.*;
+import android.os.*;
 
-public class LevelSelectView extends View
+public class LevelSelectView extends GLSurfaceView
+	implements Paintable
 {
+	private static final int rows = 2;
+	private static final int cols = 3;
+	private static final float previewScale = 0.28f;
+	private static final int hmargin = Board.board_width/4;
+	private static final int vmargin = Board.board_width/4;
+	
 	private GameResources gr;
-	private final Rect r = new Rect(0,0,Board.board_width/3,Board.board_height/3);
-	private final Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
+	private BlitterRenderer renderer;
 	private GestureDetector g;
 	private float xOffset = 0.0f;
+	private Bitmap[] preview;
+	private float vel;
+	private long prevTime;
 
 	public LevelSelectView( Context context, AttributeSet a)
 	{
 		super(context,a);
+		renderer = new BlitterRenderer();
+		setRenderer(renderer);
+		setRenderMode(RENDERMODE_CONTINUOUSLY);
 	}
 
 	public void setup(GameResources gr) {
 		this.gr = gr;
 		g = new GestureDetector(new LevelSelectGestureListener(this));
+		renderer.setPaintable(this);
+		preview = new Bitmap[gr.numlevels];
+		for( int i=0; i < gr.numlevels; ++i)
+			Sprite.cache(0x200000000l+i, Preview.create(gr,i,0.5f));
+		Sprite.cache(R.drawable.intro);
+	}
+
+	private void update(int pageWidth)
+	{
+		final long time = SystemClock.uptimeMillis();
+		final long dt = time-prevTime;
+		prevTime = time;
+
+		int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
+		float pos = xOffset / pageWidth;
+		float prevPos = pos;
+		int a = Math.round(pos);
+		if( pos < 0) a = 0;
+		else if( pos > npages-1) a = npages-1;
+		pos += dt * vel / pageWidth;
+		if( (prevPos < a) ^ (pos < a)) {
+			vel = 0f;
+			pos = a;
+			setRenderMode(RENDERMODE_WHEN_DIRTY);
+		}
+		if( pos < -0.1f) pos = -0.1f;
+		else if( pos > npages-1+0.1f) pos = npages-1+0.1f;
+		xOffset = pos * pageWidth;
+
+		if( pos < 0) vel = 0.005f * 300;
+		else if( pos > npages-1) vel = -0.005f * 300;
+		else vel += dt * (a-pos) * 0.005f;
 	}
 
 	@Override
-	public void onDraw( Canvas c) {
-		c.translate( -xOffset, 0.0f);
-		c.drawBitmap( Preview.create(gr,7,0.5f), null, r, paint);
+	public synchronized void paint( Blitter b)
+	{
+		Rect v = b.getVisibleArea();
+		int pageWidth = v.right - v.left;
+		update(pageWidth);
+
+		int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
+		b.blit(R.drawable.intro, 0, 0, v.right, v.bottom);
+		b.transform( 1f, -xOffset, 0f);
+
+		int previewWidth = Math.round(Board.screen_width * previewScale);
+		int previewHeight = Math.round(Board.screen_height * previewScale);
+		int hSpacing = (pageWidth - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
+		int vSpacing = ((v.bottom - v.top) - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;
+		
+		for( int page=0; page < npages; ++page) {
+			for( int j=0; j < rows; ++j) {
+				for( int i=0; i < cols; ++i) {
+					int level = (page*rows+j)*cols+i;
+					if(level >= gr.numlevels) continue;
+					b.blit( 0x200000000l+level, page*pageWidth+hmargin+i*hSpacing, vmargin+j*vSpacing,
+						previewWidth, previewHeight);
+				}
+			}
+		}
+		notify();
 	}
 
 	@Override
-	public boolean onTouchEvent(MotionEvent e) {
+	public synchronized boolean onTouchEvent(MotionEvent e) {
+		setRenderMode(RENDERMODE_WHEN_DIRTY);
+		vel = 0f;
+		switch(e.getAction() & MotionEvent.ACTION_MASK) {
+		case MotionEvent.ACTION_UP:
+			prevTime = SystemClock.uptimeMillis();
+			setRenderMode(RENDERMODE_CONTINUOUSLY);
+			break;
+		}
 		return g.onTouchEvent(e);
 	}
 
 	private void scroll( float dx)
 	{
 		xOffset += dx;
-		invalidate();
+		requestRender();
+		try {
+			wait();
+		} catch( InterruptedException e) {}
 	}
 
 	private void tap( float x, float y)
@@ -45,23 +125,17 @@ public class LevelSelectView extends View
 
 	private void fling( float velX)
 	{
+		vel = velX * -0.001f;
 	}
 
 	private class LevelSelectGestureListener
 		extends GestureDetector.SimpleOnGestureListener
 	{
 		LevelSelectView view;
-		int minFlingDistance;
-		int minFlingSpeed;
-		int maxFlingSpeed;
 
 		LevelSelectGestureListener( LevelSelectView view)
 		{
 			this.view = view;
-			final ViewConfiguration vc = ViewConfiguration.get(view.getContext());
-			minFlingDistance = vc.getScaledTouchSlop();
-			minFlingSpeed = vc.getScaledMinimumFlingVelocity();
-			maxFlingSpeed = vc.getScaledMaximumFlingVelocity();
 		}
 
 		@Override
@@ -76,11 +150,15 @@ public class LevelSelectView extends View
 			view.scroll(dx);
 			return true;
 		}
-		
+
 		@Override
 		public boolean onFling( MotionEvent e1, MotionEvent e2,
 			float velX, float velY)
 		{
+			final ViewConfiguration vc = ViewConfiguration.get(view.getContext());
+			final int minFlingDistance = vc.getScaledTouchSlop();
+			final int minFlingSpeed = vc.getScaledMinimumFlingVelocity();
+			final int maxFlingSpeed = vc.getScaledMaximumFlingVelocity();
 			if (Math.abs(e1.getY() - e2.getY()) >
 				Math.abs(e1.getX() - e2.getX()) ||
 				Math.abs(e1.getX() - e2.getX()) < minFlingDistance ||
