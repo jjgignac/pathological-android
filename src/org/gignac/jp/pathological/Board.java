@@ -82,11 +82,6 @@ class Board implements Paintable
 		for( int j=0; j < vert_tiles; ++j)
 			tiles[j] = new Tile[horiz_tiles];
 
-		// Fill up the launch queue
-		for( int i=0; i < launch_queue.length; ++i) {
-			launch_queue[i] = colors.charAt(gr.random.nextInt(colors.length()))-'0';
-		}
-
 		// prepare the entrance image
 		Bitmap entrance = Bitmap.createBitmap( Tile.tile_size/2,
 			Tile.tile_size/2, Bitmap.Config.ARGB_8888);
@@ -111,6 +106,11 @@ class Board implements Paintable
 		try {
 			_load(gr,  level);
 		} catch(IOException e) {}
+
+		// Fill up the launch queue
+		for( int i=0; i < launch_queue.length; ++i) {
+			launch_queue[i] = colors.charAt(gr.random.nextInt(colors.length()))-'0';
+		}
 	}
 
 	public void draw_back(Blitter b) {
