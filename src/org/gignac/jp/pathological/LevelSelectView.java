@@ -5,6 +5,7 @@ import android.util.*;
 import android.graphics.*;
 import android.opengl.*;
 import android.os.*;
+import android.widget.*;
 
 public class LevelSelectView extends GLSurfaceView
 	implements Paintable
@@ -22,6 +23,7 @@ public class LevelSelectView extends GLSurfaceView
 	private Bitmap[] preview;
 	private float vel;
 	private long prevTime;
+	private int width, height;
 
 	public LevelSelectView( Context context, AttributeSet a)
 	{
@@ -41,19 +43,19 @@ public class LevelSelectView extends GLSurfaceView
 		Sprite.cache(R.drawable.intro);
 	}
 
-	private void update(int pageWidth)
+	private void update()
 	{
 		final long time = SystemClock.uptimeMillis();
 		final long dt = time-prevTime;
 		prevTime = time;
 
 		int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
-		float pos = xOffset / pageWidth;
+		float pos = xOffset / width;
 		float prevPos = pos;
 		int a = Math.round(pos);
 		if( pos < 0) a = 0;
 		else if( pos > npages-1) a = npages-1;
-		pos += dt * vel / pageWidth;
+		pos += dt * vel / width;
 		if( (prevPos < a) ^ (pos < a)) {
 			vel = 0f;
 			pos = a;
@@ -61,7 +63,7 @@ public class LevelSelectView extends GLSurfaceView
 		}
 		if( pos < -0.1f) pos = -0.1f;
 		else if( pos > npages-1+0.1f) pos = npages-1+0.1f;
-		xOffset = pos * pageWidth;
+		xOffset = pos * width;
 
 		if( pos < 0) vel = 0.005f * 300;
 		else if( pos > npages-1) vel = -0.005f * 300;
@@ -72,24 +74,25 @@ public class LevelSelectView extends GLSurfaceView
 	public synchronized void paint( Blitter b)
 	{
 		Rect v = b.getVisibleArea();
-		int pageWidth = v.right - v.left;
-		update(pageWidth);
+		width = v.right - v.left;
+		height = v.bottom - v.top;
+		update();
 
 		int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
-		b.blit(R.drawable.intro, 0, 0, v.right, v.bottom);
+		b.blit(R.drawable.intro, 0, 0, width, height);
 		b.transform( 1f, -xOffset, 0f);
 
 		int previewWidth = Math.round(Board.screen_width * previewScale);
 		int previewHeight = Math.round(Board.screen_height * previewScale);
-		int hSpacing = (pageWidth - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
-		int vSpacing = ((v.bottom - v.top) - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;
+		int hSpacing = (width - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
+		int vSpacing = (height - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;
 		
 		for( int page=0; page < npages; ++page) {
 			for( int j=0; j < rows; ++j) {
 				for( int i=0; i < cols; ++i) {
 					int level = (page*rows+j)*cols+i;
 					if(level >= gr.numlevels) continue;
-					b.blit( 0x200000000l+level, page*pageWidth+hmargin+i*hSpacing, vmargin+j*vSpacing,
+					b.blit( 0x200000000l+level, page*width+hmargin+i*hSpacing, vmargin+j*vSpacing,
 						previewWidth, previewHeight);
 				}
 			}
@@ -121,6 +124,23 @@ public class LevelSelectView extends GLSurfaceView
 
 	private void tap( float x, float y)
 	{
+		int previewWidth = Math.round(Board.screen_width * previewScale);
+		int previewHeight = Math.round(Board.screen_height * previewScale);
+		int hSpacing = (width - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
+		int vSpacing = (height - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;
+		x += xOffset;
+		int page = (int)Math.floor(x / width);
+		x -= page * width;
+		y -= vmargin;
+		int j = (int)Math.floor(y / vSpacing);
+		if( j < 0 || j >= rows) return;
+		if( y - j*vSpacing > previewHeight) return;
+		x -= hmargin;
+		int i = (int)Math.floor(x / hSpacing);
+		if( i < 0 || i >= cols) return;
+		if( x - i*hSpacing > previewWidth) return;
+		int level = (page*rows+j)*cols+i;
+		Toast.makeText(getContext(),"level="+level,Toast.LENGTH_SHORT).show();
 	}
 
 	private void fling( float velX)
