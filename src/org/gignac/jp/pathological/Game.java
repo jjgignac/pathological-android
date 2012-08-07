@@ -32,7 +32,8 @@ public class Game extends Activity
 
 		gr = new GameResources(this);
 		gr.create( true);
-		
+
+		overridePendingTransition(R.anim.begin, R.anim.fadeout);
 		setContentView( R.layout.in_game);
 
 		if( stat != null) {
