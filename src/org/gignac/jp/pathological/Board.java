@@ -44,6 +44,8 @@ class Board implements Paintable
 	private final Paint paint = new Paint();
 	private float scale = 0f;
 	private float offsetx;
+	private Bitmap bg;
+	private BitmapBlitter bgBlitter;
 
 	public Board(GameResources gr, int level)
 	{
@@ -113,14 +115,17 @@ class Board implements Paintable
 		}
 	}
 
-	public void draw_back(Blitter b) {
-		// Draw the backdrop
+	private void draw_backdrop(Blitter b) {
 		Rect v = b.getVisibleArea();
-		int fullHeight = (int)Math.ceil(v.bottom/scale);
-		int leftMargin = Math.round(offsetx/scale);
-		b.blit( R.drawable.backdrop, -leftMargin, 0,
-			screen_width - Marble.marble_size*3/4 + leftMargin,
-			fullHeight);
+		b.blit( R.drawable.backdrop,
+			0, 0, v.right, v.bottom);
+	}
+
+	private void draw_back(Blitter b)
+	{
+		// Black-out the right edge of the backdrop
+		b.fill( 0xff000000, screen_width - Marble.marble_size*3/4,
+			0, Marble.marble_size*3/4+timer_width, screen_height);
 
 		// Draw the launcher
 		b.blit( R.drawable.path_10,
@@ -139,7 +144,14 @@ class Board implements Paintable
 		for( Tile[] row : self.tiles)
 			for( Tile tile : row)
 				tile.draw_back(b);
+	}
 
+	private void draw_mid( Blitter b)
+	{
+		Rect v = b.getVisibleArea();
+		int fullHeight = (int)Math.ceil(v.bottom/scale);
+
+		// Draw the launch timer
 		int timerColor = 0x40404040;
 		float timeLeft = (float)launch_timeout / Game.frames_per_sec;
 		if( timeLeft < 3.5f) {
@@ -154,8 +166,10 @@ class Board implements Paintable
 		b.fill(timerColor, x, 0,
 			board_width - x, Marble.marble_size);
 
+		// Draw the live marble counter
 		b.blit(0x100000002l, Marble.marble_size/2, 0);
 
+		// Draw the board timer
 		timerColor = 0xff000080;
 		timeLeft = (float)board_timeout / Game.frames_per_sec;
 		if( timeLeft < 60f && board_timeout*2 < board_timeout_start) {
@@ -173,12 +187,13 @@ class Board implements Paintable
 		b.fill(timerColor, screen_width+3,
 			timer_height-y, timer_width-3, y);
 
+		// Draw the marble queue
 		for(int i=0; i < self.launch_queue.length; ++i)
 			b.blit(Marble.marble_images[self.launch_queue[i]],
 				board_width, launch_queue_offset + i * Marble.marble_size);
 	}
 
-	public void draw_fore( Blitter b) {
+	private void draw_fore( Blitter b) {
 		for(Tile[] row : self.tiles)
 			for(Tile tile : row)
 				tile.draw_fore(b);
@@ -229,8 +244,48 @@ class Board implements Paintable
 		// Animate the launch queue
 		if( launch_queue_offset > 0)
 			--launch_queue_offset;
+
+		if( bgBlitter == null) return;
+
+		// Refresh the background
+		boolean dirty = false;
+		for( Tile[] row : self.tiles) {
+			for( Tile tile : row) {
+				if( tile.dirty) {
+					tile.draw_back(bgBlitter);
+					tile.dirty = false;
+					dirty = true;
+				}
+			}
+		}
+		if(dirty) Sprite.cache(0x500000000l,bg);
 	}
-	
+
+	private void cache_background(int w,int h)
+	{
+		int px = Board.screen_width + Board.timer_width;
+		int py = Board.screen_height;
+		if( w * py > h * px) {
+			w = (py * w + h/2) / h;
+			h = py;
+		} else {
+			h = (px * h + w/2) / w;
+			w = px;
+		}
+
+		if( bgBlitter != null) {
+			Rect v = bgBlitter.getVisibleArea();
+			if( v.right == w && v.bottom == h) return;
+		}
+
+		bg = Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888);
+		bgBlitter = new BitmapBlitter(bg);
+		draw_backdrop(bgBlitter);
+		bgBlitter.transform(1f,w-px,0f);
+		draw_back(bgBlitter);
+		Sprite.cache(0x500000000l,bg);
+	}
+
 	public synchronized void paint(Blitter b)
 	{
 		int px = Board.screen_width + Board.timer_width;
@@ -240,10 +295,15 @@ class Board implements Paintable
 		scale = width * Board.screen_height < height * px ?
 			width / px : height / Board.screen_height;
 		offsetx = width - px*scale;
-		b.transform( scale, offsetx, 0.0f);
 		
 		// Draw the background
-		self.draw_back(b);
+		cache_background(r.right, r.bottom);
+		b.blit(0x500000000l,0,0,r.right,r.bottom);
+
+		b.transform( scale, offsetx, 0.0f);
+
+		// Draw the middle
+		self.draw_mid(b);
 
 		// Draw all of the marbles
 		for(Marble marble : self.marbles)

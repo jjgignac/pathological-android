@@ -9,6 +9,7 @@ class Tile
 	public int tile_x, tile_y;
 	public boolean completed;
 	protected GameResources gr;
+	public boolean dirty;
 	private static final int[] plain_tiles = {
 		R.drawable.path_0, R.drawable.path_1, R.drawable.path_2,
 		R.drawable.path_3, R.drawable.path_4, R.drawable.path_5,
@@ -25,12 +26,12 @@ class Tile
 		this.completed = false;
 		this.tile_x = x;
 		this.tile_y = y;
+		this.dirty = true;
 		Sprite.cache(plain_tiles);
 	}
 	
 	public Tile( GameResources gr, int paths) {
 		this(gr,paths,0,0, 0, 0);
-		Sprite.cache(plain_tiles);
 	}
 
 	public void draw_back(Blitter b) {
@@ -70,5 +71,7 @@ class Tile
 		}
 	}
 
-	public void invalidate() {}
+	public void invalidate() {
+		dirty = true;
+	}
 }
