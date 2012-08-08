@@ -64,6 +64,8 @@ class Buffer extends TunnelTile
 					tile_size/2, tile_size/2);
 
 				this.marble = -1;
+
+				invalidate();
 			}
 
 			// Remember which marble is on its way in
@@ -73,6 +75,8 @@ class Buffer extends TunnelTile
 			this.marble = marble.color;
 			board.deactivateMarble( marble);
 			entering = null;
+
+			invalidate();
 		}
 	}
 }

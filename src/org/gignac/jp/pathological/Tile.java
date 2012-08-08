@@ -69,4 +69,6 @@ class Tile
 			else marble.direction = marble.direction ^ 2;
 		}
 	}
+
+	public void invalidate() {}
 }

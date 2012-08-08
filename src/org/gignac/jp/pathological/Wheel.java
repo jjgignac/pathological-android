@@ -67,6 +67,7 @@ class Wheel extends Tile {
 	public void update( Board board) {
 		if( self.spinpos > 0) {
 			self.spinpos -= 1;
+			invalidate();
 		}
 	}
 
@@ -90,6 +91,8 @@ class Wheel extends Tile {
 		self.marbles[1] = self.marbles[2];
 		self.marbles[2] = self.marbles[3];
 		self.marbles[3] = t;
+
+		invalidate();
 	}
 	
 	@Override
@@ -140,6 +143,7 @@ class Wheel extends Tile {
 					i));
 			self.marbles[i] = -3;
 			gr.play_sound( gr.marble_release);
+			invalidate();
 		}
 	}
 
@@ -165,6 +169,7 @@ class Wheel extends Tile {
 				// Accept the marble
 				board.deactivateMarble( marble);
 				self.marbles[marble.direction^2] = marble.color;
+				invalidate();
 				break;
 			}
 		}
@@ -175,6 +180,7 @@ class Wheel extends Tile {
 		for( int i=0; i<4; ++i) self.marbles[i] = -3;
 		completed = true;
 		gr.play_sound( gr.wheel_completed);
+		invalidate();
 	}
 
 	public boolean maybe_complete(Board board) {
