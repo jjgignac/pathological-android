@@ -46,8 +46,9 @@ class Board implements Paintable
 	private float offsetx;
 	private Bitmap bg;
 	private BitmapBlitter bgBlitter;
+	private Runnable onPainted;
 
-	public Board(GameResources gr, int level)
+	public Board(GameResources gr, int level, Runnable onPainted)
 	{
 		self = this;
 		this.gr = gr;
@@ -61,6 +62,7 @@ class Board implements Paintable
 		this.launch_timeout = -1;
 		this.board_timeout = -1;
 		this.colors = default_colors;
+		this.onPainted = onPainted;
 
 		down = new HashMap<Integer,Point>();
 
@@ -199,7 +201,7 @@ class Board implements Paintable
 				tile.draw_fore(b);
 	}
 
-	public void update() {
+	public synchronized void update() {
 		// Animate the marbles
 		marblesCopy = marbles.toArray(marblesCopy);
 		for(Marble marble : marblesCopy) {
@@ -244,9 +246,10 @@ class Board implements Paintable
 		// Animate the launch queue
 		if( launch_queue_offset > 0)
 			--launch_queue_offset;
+	}
 
-		if( bgBlitter == null) return;
-
+	private void refresh_bg_cache()
+	{
 		// Refresh the background
 		boolean dirty = false;
 		for( Tile[] row : self.tiles) {
@@ -298,6 +301,7 @@ class Board implements Paintable
 		
 		// Draw the background
 		cache_background(r.right, r.bottom);
+		refresh_bg_cache();
 		b.blit(0x500000000l,0,0,r.right,r.bottom);
 
 		b.transform( scale, offsetx, 0.0f);
@@ -313,7 +317,7 @@ class Board implements Paintable
 		self.draw_fore(b);
 
 		// Trigger the update step		
-		notify();
+		if(onPainted != null) onPainted.run();
 	}
 
 	public void set_tile( int x, int y, Tile tile) {

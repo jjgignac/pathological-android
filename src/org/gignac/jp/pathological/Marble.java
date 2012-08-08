@@ -3,7 +3,7 @@ import android.graphics.*;
 
 class Marble {
 	public static final int marble_size = 28;
-	public static final int marble_speed = 2;
+	public static final int marble_speed = 4;
 	public static final int dx[] = {0,1,0,-1};
 	public static final int dy[] = {-1,0,1,0};
 	public int color;

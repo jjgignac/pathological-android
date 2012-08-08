@@ -12,14 +12,13 @@ import android.widget.*;
 
 public class Game extends Activity
 {
-	private static final int frameskip = 2;
-	public static final int frames_per_sec = 100;
+	public static final int frames_per_sec = 50;
 
 	public int level;
 	private Board board;
 	private GameResources gr;
-	private Ticker ticker;
-	private int framenum;
+	private GameLoop gameLoop;
+	private GameView gv;
 	
 	public Game()
 	{
@@ -53,15 +52,21 @@ public class Game extends Activity
 		((Button)findViewById(R.id.volume)).setOnClickListener(bl);
 		((Button)findViewById(R.id.retry)).setOnClickListener(bl);
 
+		gv = (GameView)findViewById(R.id.gameboard);
+
 		playLevel(level);		
 	}
 
 	public void playLevel(int level) {
 		this.level = level;
-		board = new Board(gr, level);
+		board = new Board(gr, level, new Runnable() {
+			public void run() {
+				gv.getHandler().post(gameLoop);
+			}
+		});
 		((TextView)findViewById(R.id.board_name)).setText(board.name);
 		board.launch_marble();
-		((GameView)findViewById(R.id.gameboard)).setBoard(board);
+		gv.setBoard(board);
 	}
 
 	public void nextLevel() {
@@ -74,24 +79,19 @@ public class Game extends Activity
 	{
 		super.onResume();
 
-		framenum = frameskip;
-
-		// Schedule the updates
-		ticker = new Ticker( new Runnable() {
+		Runnable update = new Runnable() {
 			public void run() {
-				if(--framenum == 0) {
-					framenum = frameskip;
-
-					// Render a frame
-					synchronized(board) {
-						((GameView)findViewById(R.id.gameboard)).requestRender();
-						try { board.wait(); }
-						catch(InterruptedException e) {}
-					}
-				}				
 				board.update();
 			}
-		}, 1000 / frames_per_sec);		
+		};
+		Runnable render = new Runnable() {
+			public void run() {
+				gv.requestRender();
+			}
+		};
+
+		// Schedule the updates
+		gameLoop = new GameLoop( update, render, 1000 / frames_per_sec);
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class Game extends Activity
 	protected void onPause()
 	{
 		super.onPause();
-		ticker.stop();
+		gameLoop.stop();
 	}
 
 	@Override
@@ -115,9 +115,9 @@ public class Game extends Activity
 	}
 	
 	public void pause() {
-		if(ticker.isStopped())
-			ticker.go();
+		if(gameLoop.isStopped())
+			gameLoop.go();
 		else
-			ticker.stop();
+			gameLoop.stop();
 	}
 }
