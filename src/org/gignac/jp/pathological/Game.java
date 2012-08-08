@@ -9,6 +9,7 @@ import java.util.*;
 import android.view.*;
 import java.util.concurrent.*;
 import android.widget.*;
+import android.content.pm.*;
 
 public class Game extends Activity
 {
@@ -34,6 +35,8 @@ public class Game extends Activity
 
 		overridePendingTransition(R.anim.begin, R.anim.fadeout);
 		setContentView( R.layout.in_game);
+		setRequestedOrientation(
+			ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
 		if( stat != null) {
 			// Restore the game state
