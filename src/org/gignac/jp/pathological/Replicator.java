@@ -78,6 +78,10 @@ class Replicator extends TunnelTile
 				System.arraycopy(pending_dir,0,new_dir,0,npending);
 				System.arraycopy(pending_count,0,new_count,0,npending);
 				System.arraycopy(pending_delay,0,new_delay,0,npending);
+				pending_col = new_col;
+				pending_dir = new_dir;
+				pending_count = new_count;
+				pending_delay = new_delay;
 			}
 			// Add the marble to the pending list
 			pending_col[npending] = marble.color;
