@@ -8,6 +8,7 @@ import java.io.*;
 
 public class GameResources
 {
+	private static GameResources instance;
 	private Context context;
 	public Random random;
 	private static final int[] sound_resid = {
@@ -20,7 +21,7 @@ public class GameResources
 	private static final float[] sound_volume = {
 		0.8f, 0.8f, 0.7f, 0.8f, 0.6f, 0.8f, 1.0f, 0.6f, 0.5f,
 		0.6f, 1.0f, 0.15f, 1.0f, 1.0f, 1.0f, 1.0f, 0.8f, 1.0f};
-	private int[] sound_id;
+	private int[] sound_id = new int[sound_resid.length];
 	private SoundPool sp;
 
 	// Sounds
@@ -50,8 +51,13 @@ public class GameResources
 	public int[][] holecenters_y;
 
 	public int numlevels;
+	
+	public static synchronized GameResources getInstance(Context context) {
+		if(instance == null) instance = new GameResources(context);
+		return instance;
+	}
 
-	public GameResources(Context context) {
+	private GameResources(Context context) {
 		this.context = context;
 
 		try {
@@ -94,15 +100,17 @@ public class GameResources
 	}
 
 	public void create(boolean colorblind) {
+		if(sp != null) return;
+
 		// Load the sound effects
 		sp = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
-		sound_id = new int[sound_resid.length];
 		for( int i=0; i < sound_resid.length; ++i)
 			sound_id[i] = sp.load(context, sound_resid[i], 0);
 	}
 	
 	public void destroy() {
 		sp.release();
+		sp = null;
 	}
 
 	public void play_sound( int id)

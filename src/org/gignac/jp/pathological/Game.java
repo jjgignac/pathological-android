@@ -30,7 +30,7 @@ public class Game extends Activity
 	{
 		super.onCreate(stat);
 
-		gr = new GameResources(this);
+		gr = GameResources.getInstance(this);
 		gr.create( true);
 
 		overridePendingTransition(R.anim.begin, R.anim.fadeout);

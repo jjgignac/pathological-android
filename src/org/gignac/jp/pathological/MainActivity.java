@@ -16,7 +16,7 @@ public class MainActivity extends Activity
         setContentView(R.layout.main);
 		setRequestedOrientation(
 			ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-		GameResources gr = new GameResources(this);
+		GameResources gr = GameResources.getInstance(this);
 		Sprite.setResources(getResources());
 		((LevelSelectView)findViewById(R.id.levelSelect)).setup(gr);
     }
