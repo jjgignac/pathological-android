@@ -34,6 +34,13 @@ class Tile
 		this(board,paths,0,0, 0, 0);
 	}
 
+	public void setxy(int x, int y) {
+		pos.left = Tile.tile_size * x;
+		pos.top = Marble.marble_size + Tile.tile_size * y;
+		tile_x = x;
+		tile_y = y;
+	}
+
 	public void draw_back(Blitter b) {
 		pos.right = pos.left + tile_size;
 		pos.bottom = pos.top + tile_size;

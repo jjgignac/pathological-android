@@ -325,10 +325,7 @@ class Board implements Paintable
 
 	public void set_tile( int x, int y, Tile tile) {
 		self.tiles[y][x] = tile;
-		tile.pos.left = Tile.tile_size * x;
-		tile.pos.top = Marble.marble_size + Tile.tile_size * y;
-		tile.tile_x = x;
-		tile.tile_y = y;
+		tile.setxy(x,y);
 
 		// If it's a trigger, keep track of it
 		if( tile instanceof Trigger)
