@@ -7,7 +7,7 @@ class Shredder extends TunnelTile
 		board.sc.cache(R.drawable.shredder);
 	}
 
-	public void draw_fore(Blitter surface) {
+	protected void draw_cap(Blitter surface) {
 		surface.blit( R.drawable.shredder, pos.left, pos.top);
 	}
 

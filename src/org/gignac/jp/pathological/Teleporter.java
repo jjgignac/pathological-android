@@ -15,7 +15,7 @@ class Teleporter extends TunnelTile
 		board.sc.cache(image);
 	}
 
-	public void draw_fore(Blitter surface) {
+	protected void draw_cap(Blitter surface) {
 		surface.blit( image, pos.left, pos.top);
 	}
 

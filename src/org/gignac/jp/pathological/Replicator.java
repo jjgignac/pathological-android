@@ -23,7 +23,7 @@ class Replicator extends TunnelTile
 	}
 
 	@Override
-	public void draw_fore(Blitter surface) {
+	protected void draw_cap(Blitter surface) {
 		surface.blit( R.drawable.replicator, pos.left, pos.top);
 	}
 

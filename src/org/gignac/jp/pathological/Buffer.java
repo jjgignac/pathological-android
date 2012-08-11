@@ -25,7 +25,7 @@ class Buffer extends TunnelTile
 		}
 	}
 
-	public void draw_fore(Blitter surface) {
+	protected void draw_cap(Blitter surface) {
 		surface.blit( R.drawable.buffer_top, pos.left, pos.top);
 	}
 

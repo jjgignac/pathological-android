@@ -23,7 +23,7 @@ class Filter extends TunnelTile
 		this.color = color;
 	}
 
-	public void draw_fore(Blitter surface) {
+	protected void draw_cap(Blitter surface) {
 		surface.blit( filter_images[color], pos.left, pos.top);
 	}
 
