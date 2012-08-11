@@ -18,7 +18,7 @@ class Board implements Paintable
 	public static final int screen_width = board_width + Marble.marble_size;
 	public static final int screen_height = board_height + Marble.marble_size;
 	public static final int timer_width = Marble.marble_size*3/4;
-	private GameResources gr;
+	public GameResources gr;
 	public Trigger trigger;
 	public Stoplight stoplight;
 	public Vector<Marble> marbles;
@@ -565,47 +565,47 @@ class Board implements Paintable
 
 				Tile tile = null;
 				if( type == 'O') {
-					tile = new Wheel( gr, pathsint);
+					tile = new Wheel(this, pathsint);
 					numwheels += 1;
-				} else if( type == '%') tile = new Trigger(gr, self.colors);
-				else if( type == '!') tile = new Stoplight(gr, stoplight);
-				else if( type == '&') tile = new Painter(gr, pathsint, colorint);
-				else if( type == '#') tile = new Filter(gr, pathsint, colorint);
+				} else if( type == '%') tile = new Trigger(this, self.colors);
+				else if( type == '!') tile = new Stoplight(this, stoplight);
+				else if( type == '&') tile = new Painter(this, pathsint, colorint);
+				else if( type == '#') tile = new Filter(this, pathsint, colorint);
 				else if( type == '@') {
-					if( color == ' ') tile = new Buffer(gr, pathsint, -1);
-					else tile = new Buffer(gr, pathsint, colorint);
+					if( color == ' ') tile = new Buffer(this, pathsint, -1);
+					else tile = new Buffer(this, pathsint, colorint);
 				}
 				else if( type == ' ' ||
-					(type >= '0' && type <= '8')) tile = new Tile(gr, pathsint);
-				else if( type == 'X') tile = new Shredder(gr, pathsint);
-				else if( type == '*') tile = new Replicator(gr, pathsint, colorint);
+					(type >= '0' && type <= '8')) tile = new Tile(this, pathsint);
+				else if( type == 'X') tile = new Shredder(this, pathsint);
+				else if( type == '*') tile = new Replicator(this, pathsint, colorint);
 				else if( type == '^') {
-					if( color == ' ') tile = new Director(gr, pathsint, 0);
-					else if( color == '>') tile = new Switch(gr, pathsint, 0, 1);
-					else if( color == 'v') tile = new Switch(gr, pathsint, 0, 2);
-					else if( color == '<') tile = new Switch(gr, pathsint, 0, 3);
+					if( color == ' ') tile = new Director(this, pathsint, 0);
+					else if( color == '>') tile = new Switch(this, pathsint, 0, 1);
+					else if( color == 'v') tile = new Switch(this, pathsint, 0, 2);
+					else if( color == '<') tile = new Switch(this, pathsint, 0, 3);
 				} else if( type == '>') {
-					if( color == ' ') tile = new Director(gr, pathsint, 1);
-					else if( color == '^') tile = new Switch(gr, pathsint, 1, 0);
-					else if( color == 'v') tile = new Switch(gr, pathsint, 1, 2);
-					else if( color == '<') tile = new Switch(gr, pathsint, 1, 3);
+					if( color == ' ') tile = new Director(this, pathsint, 1);
+					else if( color == '^') tile = new Switch(this, pathsint, 1, 0);
+					else if( color == 'v') tile = new Switch(this, pathsint, 1, 2);
+					else if( color == '<') tile = new Switch(this, pathsint, 1, 3);
 				} else if( type == 'v') {
-					if( color == ' ') tile = new Director(gr, pathsint, 2);
-					else if( color == '^') tile = new Switch(gr, pathsint, 2, 0);
-					else if( color == '>') tile = new Switch(gr, pathsint, 2, 1);
-					else if( color == '<') tile = new Switch(gr, pathsint, 2, 3);
+					if( color == ' ') tile = new Director(this, pathsint, 2);
+					else if( color == '^') tile = new Switch(this, pathsint, 2, 0);
+					else if( color == '>') tile = new Switch(this, pathsint, 2, 1);
+					else if( color == '<') tile = new Switch(this, pathsint, 2, 3);
 				} else if( type == '<') {
-					if( color == ' ') tile = new Director(gr,pathsint, 3);
-					else if( color == '^') tile = new Switch(gr, pathsint, 3, 0);
-					else if( color == '>') tile = new Switch(gr, pathsint, 3, 1);
-					else if( color == 'v') tile = new Switch(gr, pathsint, 3, 2);
+					if( color == ' ') tile = new Director(this,pathsint, 3);
+					else if( color == '^') tile = new Switch(this, pathsint, 3, 0);
+					else if( color == '>') tile = new Switch(this, pathsint, 3, 1);
+					else if( color == 'v') tile = new Switch(this, pathsint, 3, 2);
 				}
 				else if( type == '=') {
 					if( teleporter_names.indexOf(color) >= 0) {
 						Tile other = teleporters.get( teleporter_names.indexOf(color));
-						tile = new Teleporter( gr, pathsint, (Teleporter)other);
+						tile = new Teleporter( this, pathsint, (Teleporter)other);
 					} else {
-						tile = new Teleporter( gr, pathsint, null);
+						tile = new Teleporter( this, pathsint, null);
 						teleporters.addElement( tile);
 						teleporter_names = teleporter_names + color;
 					}

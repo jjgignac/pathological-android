@@ -16,9 +16,9 @@ class Painter extends TunnelTile
 		R.drawable.painter_6_cb, R.drawable.painter_7_cb
 	};
 	
-	public Painter(GameResources gr, int paths, int color)
+	public Painter(Board board, int paths, int color)
 	{
-		super(gr, paths);
+		super(board, paths);
 		Sprite.cache(painter_images);
 		Sprite.cache(painter_images_cb);
 		this.color = color;
@@ -37,7 +37,7 @@ class Painter extends TunnelTile
 			if( marble.color != color) {
 				// Change the color
 				marble.color = color;
-				gr.play_sound( gr.change_color);
+				board.gr.play_sound( board.gr.change_color);
 			}
 		}
 	}

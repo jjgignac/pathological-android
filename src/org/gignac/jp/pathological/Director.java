@@ -8,9 +8,9 @@ class Director extends TunnelTile
 		R.drawable.director_2, R.drawable.director_3
 	};
 
-	public Director(GameResources gr, int paths, int direction)
+	public Director(Board board, int paths, int direction)
 	{
-		super(gr, paths);
+		super(board, paths);
 		this.direction = direction;
 		Sprite.cache(director_images);
 	}
@@ -24,7 +24,7 @@ class Director extends TunnelTile
 	public void affect_marble(Board board, Marble marble, int x, int y) {
 		if(x == tile_size/2 && y == tile_size/2) {
 			marble.direction = direction;
-			gr.play_sound( gr.direct_marble);
+			board.gr.play_sound( board.gr.direct_marble);
 		}
 	}
 }

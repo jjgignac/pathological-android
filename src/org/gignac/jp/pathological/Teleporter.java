@@ -5,9 +5,9 @@ class Teleporter extends TunnelTile
 	private int image;
 	private Teleporter other;
 
-	public Teleporter(GameResources gr, int paths, Teleporter other)
+	public Teleporter(Board board, int paths, Teleporter other)
 	{
-		super(gr, paths);
+		super(board, paths);
 		image = ((paths & 5) == 0) ?
 			R.drawable.teleporter_h :
 			R.drawable.teleporter_v;
@@ -29,7 +29,7 @@ class Teleporter extends TunnelTile
 		if( x == tile_size/2 && y == tile_size/2) {
 			marble.pos.left = other.pos.left + (tile_size-Marble.marble_size)/2;
 			marble.pos.top = other.pos.top + (tile_size-Marble.marble_size)/2;
-			gr.play_sound( gr.teleport);
+			board.gr.play_sound( board.gr.teleport);
 		}
 	}
 }

@@ -7,8 +7,8 @@ class Wheel extends Tile {
 	private Wheel self;
 	private boolean completed;
 	
-	public Wheel( GameResources gr, int paths) {
-		super(gr, paths); // Call base class intializer
+	public Wheel( Board board, int paths) {
+		super(board, paths); // Call base class intializer
 		self = this;
 		self.spinpos = 0;
 		self.completed = false;
@@ -32,6 +32,7 @@ class Wheel extends Tile {
 	public void draw_back(Blitter b)
 	{
 		super.draw_back(b);
+		GameResources gr = board.gr;
 
 		if( self.spinpos != 0) {
 			b.blit( completed ?
@@ -82,8 +83,8 @@ class Wheel extends Tile {
 			if( marbles[i] == -1 || marbles[i] == -2) return;
 
 		// Start the wheel spinning
-		spinpos = gr.wheel_steps - 1;
-		gr.play_sound( gr.wheel_turn);
+		spinpos = board.gr.wheel_steps - 1;
+		board.gr.play_sound( board.gr.wheel_turn);
 
 		// Reposition the marbles
 		int t = self.marbles[0];
@@ -105,6 +106,8 @@ class Wheel extends Tile {
 
 	private void eject(int i, Board board, int tile_x, int tile_y)
 	{
+		GameResources gr = board.gr;
+
 		// Determine the neighboring tile
 		Tile neighbor = board.tiles
 			[(tile_y+Marble.dy[i]+Board.vert_tiles) % Board.vert_tiles]
@@ -150,6 +153,8 @@ class Wheel extends Tile {
 	@Override
 	public void affect_marble(Board board, Marble marble, int rposx, int rposy)
 	{
+		GameResources gr = board.gr;
+
 		// Watch for marbles entering
 		if( rposx+Marble.marble_size/2 == gr.wheel_margin ||
 			rposx-Marble.marble_size/2 == tile_size - gr.wheel_margin ||
@@ -179,7 +184,7 @@ class Wheel extends Tile {
 		// Complete the wheel
 		for( int i=0; i<4; ++i) self.marbles[i] = -3;
 		completed = true;
-		gr.play_sound( gr.wheel_completed);
+		board.gr.play_sound( board.gr.wheel_completed);
 		invalidate();
 	}
 

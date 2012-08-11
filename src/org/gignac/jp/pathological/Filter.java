@@ -16,8 +16,8 @@ class Filter extends TunnelTile
 		R.drawable.filter_6_cb, R.drawable.filter_7_cb
 	};
 	
-	public Filter(GameResources gr, int paths, int color) {
-		super(gr, paths);
+	public Filter(Board board, int paths, int color) {
+		super(board, paths);
 		Sprite.cache(filter_images);
 		Sprite.cache(filter_images_cb);
 		this.color = color;
@@ -29,6 +29,7 @@ class Filter extends TunnelTile
 
 	public void affect_marble(Board board, Marble marble, int x, int y)
 	{
+		GameResources gr = board.gr;
 		if( x == tile_size/2 && y == tile_size/2) {
 			// If the color is wrong, bounce the marble
 			if( marble.color != color && marble.color != 8) {

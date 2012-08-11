@@ -2,8 +2,8 @@ package org.gignac.jp.pathological;
 
 class Shredder extends TunnelTile
 {
-	public Shredder(GameResources gr, int paths) {
-		super(gr, paths);
+	public Shredder(Board board, int paths) {
+		super(board, paths);
 		Sprite.cache(R.drawable.shredder);
 	}
 
@@ -15,7 +15,7 @@ class Shredder extends TunnelTile
 	{
 		if( x == tile_size/2 && y == tile_size/2) {
 			board.deactivateMarble( marble);
-			gr.play_sound( gr.shredder);
+			board.gr.play_sound( board.gr.shredder);
 		}
 	}
 }

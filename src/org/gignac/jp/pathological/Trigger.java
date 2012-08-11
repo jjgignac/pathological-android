@@ -7,8 +7,8 @@ class Trigger extends Tile
 	public String marbles;
 	private int countdown;
 
-	public Trigger(GameResources gr, String colors) {
-		super(gr,0); // Call base class intializer
+	public Trigger(Board board, String colors) {
+		super(board,0); // Call base class intializer
 		this.marbles = null;
 		this.setup( colors);
 		Sprite.cache(R.drawable.trigger);
@@ -17,6 +17,7 @@ class Trigger extends Tile
 	}
 
 	private void setup(String colors) {
+		GameResources gr = board.gr;
 		this.countdown = 0;
 		this.marbles = ""+
 			colors.charAt(gr.random.nextInt(colors.length())) +
@@ -28,6 +29,7 @@ class Trigger extends Tile
 
 	@Override
 	public void update(Board board) {
+		GameResources gr = board.gr;
 		if( countdown > 0) {
 			countdown -= 1;
 			if( countdown == 0) {
@@ -40,6 +42,7 @@ class Trigger extends Tile
 	@Override
 	public void draw_back(Blitter b) {
 		super.draw_back(b);
+		GameResources gr = board.gr;
 		b.blit( R.drawable.trigger, pos.left, pos.top, tile_size, tile_size);
 		if( marbles != null) {
 			for(int i=0; i<4; ++i) {

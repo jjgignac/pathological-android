@@ -5,8 +5,8 @@ class Buffer extends TunnelTile
 	private int marble;
 	private Marble entering;
 
-	public Buffer(GameResources gr, int paths, int color) {
-		super(gr, paths);
+	public Buffer(Board board, int paths, int color) {
+		super(board, paths);
 		marble = color;
 		entering = null;
 		Sprite.cache(R.drawable.buffer);
@@ -31,6 +31,8 @@ class Buffer extends TunnelTile
 
 	public void affect_marble(Board board, Marble marble, int x, int y)
 	{
+		GameResources gr = board.gr;
+
 		// Watch for marbles entering
 		if((x+Marble.marble_size == tile_size/2 && marble.direction == 1) ||
 		   (x-Marble.marble_size == tile_size/2 && marble.direction == 3) ||

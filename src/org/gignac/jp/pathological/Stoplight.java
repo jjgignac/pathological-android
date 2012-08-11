@@ -6,8 +6,8 @@ class Stoplight extends Tile {
 	public int[] marbles;
 	private static final int stoplight_marble_size = 28;
 
-	public Stoplight(GameResources gr, String colors) {
-		super(gr, 0); // Call base class intializer
+	public Stoplight(Board board, String colors) {
+		super(board, 0); // Call base class intializer
 		marbles = new int[3];
 		for(int i=0; i<3; ++i)
 			marbles[i] = colors.charAt(i)-'0';

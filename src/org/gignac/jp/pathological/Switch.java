@@ -15,9 +15,9 @@ class Switch extends TunnelTile
 		R.drawable.switch_32
 	};
 
-	public Switch(GameResources gr, int paths, int dir1, int dir2)
+	public Switch(Board board, int paths, int dir1, int dir2)
 	{
-		super(gr, paths);
+		super(board, paths);
 		curdir = dir1;
 		otherdir = dir2;
 		Sprite.cache(switch_images);
@@ -28,7 +28,7 @@ class Switch extends TunnelTile
 		int t = curdir;
 		curdir = otherdir;
 		otherdir = t;
-		gr.play_sound( gr.switched);
+		board.gr.play_sound( board.gr.switched);
 	}
 
 	public void draw_fore(Blitter surface)

@@ -8,7 +8,7 @@ class Tile
 	public Rect pos;  // Only left & top are maintained
 	public int tile_x, tile_y;
 	public boolean completed;
-	protected GameResources gr;
+	protected Board board;
 	public boolean dirty;
 	private static final int[] plain_tiles = {
 		R.drawable.path_0, R.drawable.path_1, R.drawable.path_2,
@@ -19,8 +19,8 @@ class Tile
 		R.drawable.path_15
 	};
 	
-	public Tile( GameResources gr, int paths, int cx, int cy, int x, int y) {
-		this.gr = gr;
+	public Tile( Board board, int paths, int cx, int cy, int x, int y) {
+		this.board = board;
 		this.paths = paths;
 		this.pos = new Rect(cx - tile_size/2, cy - tile_size/2, 0, 0);
 		this.completed = false;
@@ -30,8 +30,8 @@ class Tile
 		Sprite.cache(plain_tiles);
 	}
 	
-	public Tile( GameResources gr, int paths) {
-		this(gr,paths,0,0, 0, 0);
+	public Tile( Board board, int paths) {
+		this(board,paths,0,0, 0, 0);
 	}
 
 	public void draw_back(Blitter b) {

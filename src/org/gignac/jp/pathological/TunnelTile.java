@@ -11,8 +11,8 @@ public class TunnelTile extends Tile
 		R.drawable.tunnel_15
 	};
 
-	public TunnelTile( GameResources gr, int paths) {
-		super(gr,paths);
+	public TunnelTile( Board board, int paths) {
+		super(board,paths);
 		Sprite.cache(tunnel_images);
 	}
 
