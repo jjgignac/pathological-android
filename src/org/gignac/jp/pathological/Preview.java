@@ -1,17 +1,54 @@
 package org.gignac.jp.pathological;
 import android.graphics.*;
+import android.content.*;
+import java.io.*;
 
 public class Preview
 {
-	public static Bitmap create( GameResources gr,
-		SpriteCache sc, int level, float scale)
+	private static Bitmap create( GameResources gr,
+		SpriteCache s, int level, float scale)
 	{
 		Bitmap preview = Bitmap.createBitmap(
 			Math.round(Board.screen_width * scale),
 			Math.round(Board.screen_height * scale),
 			Bitmap.Config.ARGB_8888);
-		Blitter b = new BitmapBlitter(sc, preview);
-		new Board(gr,sc,level,null).paint(b);
+		Blitter b = new BitmapBlitter(s,preview);
+		new Board(gr,s,level,null).paint(b);
 		return preview;
+	}
+
+	public static void cache( Context c, SpriteCache s,
+		GameResources gr, int level, float scale)
+	{
+		long uniq = 0x200000000l + level;
+		InputStream in = null;
+		OutputStream out = null;
+		Bitmap preview = s.getBitmap(uniq);
+		if( preview != null) return;
+		try {
+			try {
+				String name = "preview-"+level+".png";
+
+				// Is the preview already cached?
+				try {
+					in = c.openFileInput(name);
+					preview = BitmapFactory.decodeStream(in);
+				} catch(FileNotFoundException e) {
+					preview = create(gr,s,level,scale);
+
+					// Cache the image
+					out = c.openFileOutput(name, Context.MODE_PRIVATE);
+					preview.compress(Bitmap.CompressFormat.PNG, 90, out);
+				}
+
+				s.cache(uniq, preview);
+			} finally {
+				try {
+					if( in != null) in.close();
+				} finally {
+					if( out != null) out.close();
+				}
+			}
+		} catch( IOException e) {}
 	}
 }

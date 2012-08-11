@@ -19,10 +19,10 @@ public class LevelSelectView extends GLSurfaceView
 	private BlitterRenderer renderer;
 	private GestureDetector g;
 	private float xOffset = 0.0f;
-	private Bitmap[] preview;
 	private float vel;
 	private long prevTime;
 	private int width, height;
+	private int nUnlocked;
 	private SpriteCache sc;
 
 	public LevelSelectView( Context context, AttributeSet a)
@@ -38,9 +38,12 @@ public class LevelSelectView extends GLSurfaceView
 		this.gr = gr;
 		g = new GestureDetector(new LevelSelectGestureListener(this));
 		renderer.setPaintable(this);
-		preview = new Bitmap[gr.numlevels];
-		for( int i=0; i < gr.numlevels; ++i)
-			sc.cache(0x200000000l+i, Preview.create(gr,sc,i,0.5f));
+		nUnlocked = getContext().getSharedPreferences(
+			"org.gignac.jp.pathological.Pathological", Context.MODE_PRIVATE).
+			getInt("nUnlocked",1);
+		
+		for( int i=0; i < nUnlocked; ++i)
+			Preview.cache(getContext(),sc,gr,i,0.5f);
 		sc.cache(R.drawable.intro);
 	}
 
@@ -93,8 +96,14 @@ public class LevelSelectView extends GLSurfaceView
 				for( int i=0; i < cols; ++i) {
 					int level = (page*rows+j)*cols+i;
 					if(level >= gr.numlevels) continue;
-					b.blit( 0x200000000l+level, page*width+hmargin+i*hSpacing, vmargin+j*vSpacing,
-						previewWidth, previewHeight);
+					int x = page*width+hmargin+i*hSpacing;
+					int y = vmargin+j*vSpacing;
+					if(level < nUnlocked)
+						b.blit( 0x200000000l+level, x, y,
+							previewWidth, previewHeight);
+					else
+						b.fill(0xfff080a0, x, y,
+							previewWidth, previewHeight);
 				}
 			}
 		}
