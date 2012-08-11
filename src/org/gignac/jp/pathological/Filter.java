@@ -18,8 +18,8 @@ class Filter extends TunnelTile
 	
 	public Filter(Board board, int paths, int color) {
 		super(board, paths);
-		Sprite.cache(filter_images);
-		Sprite.cache(filter_images_cb);
+		board.sc.cache(filter_images);
+		board.sc.cache(filter_images_cb);
 		this.color = color;
 	}
 

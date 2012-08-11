@@ -11,9 +11,9 @@ class Trigger extends Tile
 		super(board,0); // Call base class intializer
 		this.marbles = null;
 		this.setup( colors);
-		Sprite.cache(R.drawable.trigger);
-		Sprite.cache(Marble.marble_images);
-		Sprite.cache(Marble.marble_images_cb);
+		board.sc.cache(R.drawable.trigger);
+		board.sc.cache(Marble.marble_images);
+		board.sc.cache(Marble.marble_images_cb);
 	}
 
 	private void setup(String colors) {

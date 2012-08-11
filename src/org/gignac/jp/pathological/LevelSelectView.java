@@ -23,11 +23,13 @@ public class LevelSelectView extends GLSurfaceView
 	private float vel;
 	private long prevTime;
 	private int width, height;
+	private SpriteCache sc;
 
 	public LevelSelectView( Context context, AttributeSet a)
 	{
 		super(context,a);
-		renderer = new BlitterRenderer();
+		sc = new SpriteCache(getResources());
+		renderer = new BlitterRenderer(sc);
 		setRenderer(renderer);
 		setRenderMode(RENDERMODE_CONTINUOUSLY);
 	}
@@ -38,8 +40,8 @@ public class LevelSelectView extends GLSurfaceView
 		renderer.setPaintable(this);
 		preview = new Bitmap[gr.numlevels];
 		for( int i=0; i < gr.numlevels; ++i)
-			Sprite.cache(0x200000000l+i, Preview.create(gr,i,0.5f));
-		Sprite.cache(R.drawable.intro);
+			sc.cache(0x200000000l+i, Preview.create(gr,sc,i,0.5f));
+		sc.cache(R.drawable.intro);
 	}
 
 	private void update()

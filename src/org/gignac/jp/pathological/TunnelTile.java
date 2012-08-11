@@ -13,7 +13,7 @@ public class TunnelTile extends Tile
 
 	public TunnelTile( Board board, int paths) {
 		super(board,paths);
-		Sprite.cache(tunnel_images);
+		board.sc.cache(tunnel_images);
 	}
 
 	@Override

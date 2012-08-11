@@ -20,7 +20,7 @@ class Switch extends TunnelTile
 		super(board, paths);
 		curdir = dir1;
 		otherdir = dir2;
-		Sprite.cache(switch_images);
+		board.sc.cache(switch_images);
 	}
 
 	private void switch_()

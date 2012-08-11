@@ -27,8 +27,9 @@ public class BlitterRenderer
     private FloatBuffer vertexBuffer;
 	private Rect rect;
 	private GL10 gl;
+	private SpriteCache sc;
 
-	BlitterRenderer()
+	BlitterRenderer(SpriteCache sc)
 	{
 		vertices = new float[12];
    		ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertices.length * 4);
@@ -43,6 +44,7 @@ public class BlitterRenderer
 		textureBuffer.position(0);
 
 		rect = new Rect();
+		this.sc = sc;
 	}
 
 	public void setPaintable( Paintable painter)
@@ -71,7 +73,7 @@ public class BlitterRenderer
         gl.glLoadIdentity();
 		gl.glOrthof(-1.0f, 1.0f, -1.0f, 1.0f, -10.0f, 10.0f);
         gl.glMatrixMode(GL10.GL_MODELVIEW);
-		Sprite.regenerateTextures();
+		sc.regenerateTextures();
 	}
 
 	@Override
@@ -112,7 +114,7 @@ public class BlitterRenderer
 	@Override	
 	public void blit(long uniq, int x, int y, int w, int h) {
 	    gl.glEnable(GL10.GL_TEXTURE_2D);
-		Sprite.bind(gl, uniq);
+		sc.bind(gl, uniq);
 		blit(x,y,w,h);		
 	}
 
@@ -124,8 +126,8 @@ public class BlitterRenderer
 	@Override
 	public void blit( long uniq, int x, int y) {
 	    gl.glEnable(GL10.GL_TEXTURE_2D);
-		Sprite.bind(gl, uniq);
-		Bitmap b = Sprite.getBitmap(uniq);
+		sc.bind(gl, uniq);
+		Bitmap b = sc.getBitmap(uniq);
 		blit(x, y, b.getWidth(), b.getHeight());
 	}
 

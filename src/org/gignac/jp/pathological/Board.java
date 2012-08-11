@@ -47,8 +47,10 @@ class Board implements Paintable
 	private Bitmap bg;
 	private BitmapBlitter bgBlitter;
 	private Runnable onPainted;
+	public SpriteCache sc;
 
-	public Board(GameResources gr, int level, Runnable onPainted)
+	public Board(GameResources gr, SpriteCache sc,
+		int level, Runnable onPainted)
 	{
 		self = this;
 		this.gr = gr;
@@ -63,6 +65,7 @@ class Board implements Paintable
 		this.board_timeout = -1;
 		this.colors = default_colors;
 		this.onPainted = onPainted;
+		this.sc = sc;
 
 		down = new HashMap<Integer,Point>();
 
@@ -100,11 +103,11 @@ class Board implements Paintable
 			Bitmap.Config.ARGB_8888);
 		liveCounterCanvas = new Canvas(liveCounter);
 
-		Sprite.cache( R.drawable.backdrop);
-		Sprite.cache( R.drawable.launcher_corner);
-		Sprite.cache( 0x100000001l, entrance);
-		Sprite.cache( Marble.marble_images);
-		Sprite.cache( 0x100000002l, liveCounter);
+		sc.cache( R.drawable.backdrop);
+		sc.cache( R.drawable.launcher_corner);
+		sc.cache( 0x100000001l, entrance);
+		sc.cache( Marble.marble_images);
+		sc.cache( 0x100000002l, liveCounter);
 
 		// Load the level
 		try {
@@ -261,7 +264,7 @@ class Board implements Paintable
 				}
 			}
 		}
-		if(dirty) Sprite.cache(0x500000000l,bg);
+		if(dirty) sc.cache(0x500000000l,bg);
 	}
 
 	private void cache_background(int w,int h)
@@ -282,11 +285,11 @@ class Board implements Paintable
 		}
 
 		bg = Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888);
-		bgBlitter = new BitmapBlitter(bg);
+		bgBlitter = new BitmapBlitter(sc, bg);
 		draw_backdrop(bgBlitter);
 		bgBlitter.transform(1f,w-px,0f);
 		draw_back(bgBlitter);
-		Sprite.cache(0x500000000l,bg);
+		sc.cache(0x500000000l,bg);
 	}
 
 	public synchronized void paint(Blitter b)
@@ -365,7 +368,7 @@ class Board implements Paintable
 		if( live > live_marbles_limit) live = live_marbles_limit;
 		String s = live+" / "+live_marbles_limit;
 		liveCounterCanvas.drawText( s, 0, Marble.marble_size*4/5, paint);
-		Sprite.cache( 0x100000002l, liveCounter);
+		sc.cache( 0x100000002l, liveCounter);
 	}
 
 	public void launch_marble() {

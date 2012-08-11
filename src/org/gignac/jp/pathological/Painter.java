@@ -19,8 +19,8 @@ class Painter extends TunnelTile
 	public Painter(Board board, int paths, int color)
 	{
 		super(board, paths);
-		Sprite.cache(painter_images);
-		Sprite.cache(painter_images_cb);
+		board.sc.cache(painter_images);
+		board.sc.cache(painter_images_cb);
 		this.color = color;
 	}
 

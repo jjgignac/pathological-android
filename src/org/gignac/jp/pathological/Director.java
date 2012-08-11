@@ -12,7 +12,7 @@ class Director extends TunnelTile
 	{
 		super(board, paths);
 		this.direction = direction;
-		Sprite.cache(director_images);
+		board.sc.cache(director_images);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ class Teleporter extends TunnelTile
 			R.drawable.teleporter_h :
 			R.drawable.teleporter_v;
 		if( other != null) connect( other);
-		Sprite.cache(image);
+		board.sc.cache(image);
 	}
 
 	public void draw_fore(Blitter surface) {

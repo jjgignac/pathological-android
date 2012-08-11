@@ -12,7 +12,7 @@ class Stoplight extends Tile {
 		for(int i=0; i<3; ++i)
 			marbles[i] = colors.charAt(i)-'0';
 		current = 0;
-		Sprite.cache(R.drawable.stoplight);
+		board.sc.cache(R.drawable.stoplight);
 	}
 
 	@Override

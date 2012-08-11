@@ -62,7 +62,7 @@ public class Game extends Activity
 
 	public void playLevel(int level) {
 		this.level = level;
-		board = new Board(gr, level, new Runnable() {
+		board = new Board(gr, gv.sc, level, new Runnable() {
 			public void run() {
 				gv.getHandler().post(gameLoop);
 			}

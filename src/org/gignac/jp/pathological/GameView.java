@@ -19,11 +19,12 @@ public class GameView extends GLSurfaceView
 {
 	private BlitterRenderer renderer;
 	private Board board;
+	public SpriteCache sc;
 
 	public GameView(Context c,AttributeSet a) {
 		super(c,a);
-		Sprite.setResources(getResources());
-		renderer = new BlitterRenderer();
+		sc = new SpriteCache(getResources());
+		renderer = new BlitterRenderer(sc);
 		setRenderer(renderer);
 		setRenderMode(RENDERMODE_WHEN_DIRTY);
 	}

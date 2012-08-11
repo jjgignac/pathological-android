@@ -14,7 +14,7 @@ class Replicator extends TunnelTile
 	{
 		super(board, paths);
 		this.count = count;
-		Sprite.cache(R.drawable.replicator);
+		board.sc.cache(R.drawable.replicator);
 		pending_col = new int[10];
 		pending_dir = new int[10];
 		pending_count = new int[10];

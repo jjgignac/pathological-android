@@ -27,7 +27,7 @@ class Tile
 		this.tile_x = x;
 		this.tile_y = y;
 		this.dirty = true;
-		Sprite.cache(plain_tiles);
+		board.sc.cache(plain_tiles);
 	}
 	
 	public Tile( Board board, int paths) {

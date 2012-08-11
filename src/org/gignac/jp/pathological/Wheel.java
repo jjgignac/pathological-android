@@ -18,14 +18,14 @@ class Wheel extends Tile {
 		self.marbles[2] = -3;
 		self.marbles[3] = -3;
 
-		Sprite.cache(R.drawable.moving_hole);
-		Sprite.cache(R.drawable.moving_hole_dark);
-		Sprite.cache(R.drawable.blank_wheel);
-		Sprite.cache(R.drawable.blank_wheel_dark);
-		Sprite.cache(R.drawable.wheel);
-		Sprite.cache(R.drawable.wheel_dark);
-		Sprite.cache(Marble.marble_images);
-		Sprite.cache(Marble.marble_images_cb);
+		board.sc.cache(R.drawable.moving_hole);
+		board.sc.cache(R.drawable.moving_hole_dark);
+		board.sc.cache(R.drawable.blank_wheel);
+		board.sc.cache(R.drawable.blank_wheel_dark);
+		board.sc.cache(R.drawable.wheel);
+		board.sc.cache(R.drawable.wheel_dark);
+		board.sc.cache(Marble.marble_images);
+		board.sc.cache(Marble.marble_images_cb);
 	}
 
 	@Override

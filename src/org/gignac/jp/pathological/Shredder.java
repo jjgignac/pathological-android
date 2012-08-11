@@ -4,7 +4,7 @@ class Shredder extends TunnelTile
 {
 	public Shredder(Board board, int paths) {
 		super(board, paths);
-		Sprite.cache(R.drawable.shredder);
+		board.sc.cache(R.drawable.shredder);
 	}
 
 	public void draw_fore(Blitter surface) {

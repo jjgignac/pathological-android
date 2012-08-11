@@ -9,8 +9,8 @@ class Buffer extends TunnelTile
 		super(board, paths);
 		marble = color;
 		entering = null;
-		Sprite.cache(R.drawable.buffer);
-		Sprite.cache(R.drawable.buffer_top);
+		board.sc.cache(R.drawable.buffer);
+		board.sc.cache(R.drawable.buffer_top);
 	}
 
 	public void draw_back(Blitter surface) {
