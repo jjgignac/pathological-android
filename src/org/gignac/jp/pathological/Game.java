@@ -61,6 +61,15 @@ public class Game extends Activity
 	}
 
 	public void playLevel(int level) {
+		// If applicable, synchronize on the previous board
+		// to ensure that we don't load new sprites while
+		// rendering is in progress.
+		synchronized(board==null?this:board) {
+			loadLevel(level);
+		}
+	}
+
+	private void loadLevel(int level) {
 		this.level = level;
 		board = new Board(gr, gv.sc, level, new Runnable() {
 			public void run() {
