@@ -10,6 +10,7 @@ import android.view.*;
 import java.util.concurrent.*;
 import android.widget.*;
 import android.content.pm.*;
+import android.content.*;
 
 public class Game extends Activity
 {
@@ -90,10 +91,20 @@ public class Game extends Activity
 	public void onResume()
 	{
 		super.onResume();
+		gv.onResume();
 
 		Runnable update = new Runnable() {
 			public void run() {
-				board.update();
+				switch(board.update()) {
+				case Board.COMPLETE:
+					gameLoop.stop();
+					if(level == gr.shp.getInt("nUnlocked",1)-1) {
+						SharedPreferences.Editor e = gr.shp.edit();
+						e.putInt("nUnlocked",level+2);
+						e.apply();
+					}
+					break;
+				}
 			}
 		};
 		Runnable render = new Runnable() {
@@ -116,6 +127,7 @@ public class Game extends Activity
 	protected void onPause()
 	{
 		super.onPause();
+		gv.onPause();
 		gameLoop.stop();
 	}
 

@@ -8,6 +8,8 @@ import android.content.pm.*;
 
 public class MainActivity extends Activity
 {
+	private LevelSelectView v;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -16,7 +18,18 @@ public class MainActivity extends Activity
         setContentView(R.layout.main);
 		setRequestedOrientation(
 			ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-		GameResources gr = GameResources.getInstance(this);
-		((LevelSelectView)findViewById(R.id.levelSelect)).setup(gr);
+		v = (LevelSelectView)findViewById(R.id.levelSelect);
     }
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		v.onPause();		
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		v.onResume();
+	}
 }

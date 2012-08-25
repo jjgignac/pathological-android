@@ -32,19 +32,17 @@ public class LevelSelectView extends GLSurfaceView
 		renderer = new BlitterRenderer(sc);
 		setRenderer(renderer);
 		setRenderMode(RENDERMODE_CONTINUOUSLY);
-	}
-
-	public void setup(GameResources gr) {
-		this.gr = gr;
 		g = new GestureDetector(new LevelSelectGestureListener(this));
 		renderer.setPaintable(this);
-		nUnlocked = getContext().getSharedPreferences(
-			"org.gignac.jp.pathological.Pathological", Context.MODE_PRIVATE).
-			getInt("nUnlocked",1);
-		
+	}
+
+	public void onResume() {
+		gr = GameResources.getInstance(getContext());
+		nUnlocked = gr.shp.getInt("nUnlocked",1);
 		for( int i=0; i < nUnlocked; ++i)
 			Preview.cache(getContext(),sc,gr,i,0.5f);
 		sc.cache(R.drawable.intro);
+		super.onResume();
 	}
 
 	private void update()
