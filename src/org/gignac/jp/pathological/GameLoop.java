@@ -10,39 +10,21 @@ public class GameLoop
 	private Runnable render;
 	private long delayMillis;
 	private long targetTime;
-	private boolean stop;
-	private boolean stopped = true;
 	private boolean rendering = false;
 
 	public GameLoop(Runnable update, Runnable render, int delayMillis) {
 		this.update = update;
 		this.render = render;
 		this.delayMillis = delayMillis;
-		go();
+		targetTime = SystemClock.uptimeMillis()+delayMillis;
+		handler.postAtTime(this, targetTime);
 	}
 
 	public void stop() {
-		stop = true;
-	}
-
-	public void go() {
-		targetTime = SystemClock.uptimeMillis()+delayMillis;
-		stop = false;
-		if(stopped) {
-			stopped = false;
-			handler.postAtTime(this, targetTime);
-		}
-	}
-
-	public boolean isStopped() {
-		return stop;
+		handler.removeCallbacks(this);
 	}
 
 	public void run() {
-		if(stop) {
-			stopped = true;
-			return;
-		}
 		long curTime = SystemClock.uptimeMillis();
 		if(rendering) {
 			if( curTime < targetTime) {

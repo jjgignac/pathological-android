@@ -127,9 +127,6 @@ public class Game extends Activity
 	}
 	
 	public void pause() {
-		if(gameLoop.isStopped())
-			gameLoop.go();
-		else
-			gameLoop.stop();
+		board.setPaused(!board.isPaused());
 	}
 }

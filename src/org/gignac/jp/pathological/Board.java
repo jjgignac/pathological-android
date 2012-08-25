@@ -210,7 +210,7 @@ class Board implements Paintable
 
 	public synchronized int update()
 	{
-		if(board_state != INCOMPLETE) return board_state;
+		if(paused || board_state != INCOMPLETE) return board_state;
 
 		// Animate the marbles
 		marblesCopy = marbles.toArray(marblesCopy);
@@ -461,6 +461,7 @@ class Board implements Paintable
 
 	public synchronized void downEvent(int pointerId, float x, float y)
 	{
+		if(paused) return;
 		if(scale == 0f) return;
 		int posx = Math.round((x - offsetx) / scale);
 		int posy = Math.round(y / scale);
@@ -475,6 +476,7 @@ class Board implements Paintable
 
 	public synchronized void upEvent(int pointerId, float x, float y)
 	{
+		if(paused) return;
 		if(scale == 0f) return;
 		int posx = Math.round((x - offsetx) / scale);
 		int posy = Math.round(y / scale);
@@ -642,6 +644,14 @@ class Board implements Paintable
 		this.set_board_timer( boardtimer);
 		f.close();
 		return true;
+	}
+
+	public boolean isPaused() {
+		return paused;
+	}
+
+	public void setPaused(boolean paused) {
+		this.paused = paused;
 	}
 }
 
