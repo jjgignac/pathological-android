@@ -7,6 +7,10 @@ import android.content.res.*;
 
 class Board implements Paintable
 {
+	public static final int INCOMPLETE = 0;
+	public static final int COMPLETE = 1;
+	public static final int LAUNCH_TIMEOUT = -1;
+	public static final int BOARD_TIMEOUT = -2;
 	private static final String default_colors = "2346";
 	private static final String default_stoplight = "643";
 	private static final int default_launch_timer = 6;
@@ -24,7 +28,7 @@ class Board implements Paintable
 	public Vector<Marble> marbles;
 	public Tile[][] tiles;
 	private int[] launch_queue;
-	private int board_complete;
+	private int board_state;
 	private boolean paused;
 	public String name;
 	public int live_marbles_limit;
@@ -58,7 +62,7 @@ class Board implements Paintable
 		this.trigger = null;
 		this.stoplight = null;
 		this.launch_queue = new int[screen_height * 3 / Marble.marble_size];
-		this.board_complete = 0;
+		this.board_state = INCOMPLETE;
 		this.paused = false;
 		this.live_marbles_limit = 10;
 		this.launch_timeout = -1;
@@ -204,7 +208,10 @@ class Board implements Paintable
 				tile.draw_fore(b);
 	}
 
-	public synchronized void update() {
+	public synchronized int update()
+	{
+		if(board_state != INCOMPLETE) return board_state;
+
 		// Animate the marbles
 		marblesCopy = marbles.toArray(marblesCopy);
 		for(Marble marble : marblesCopy) {
@@ -228,27 +235,30 @@ class Board implements Paintable
 		}
 
 		// Check if the board is complete
-		self.board_complete = 1;
+		board_state = COMPLETE;
 		for(Tile[] row : self.tiles)
 			for(Tile tile : row)
 				if(tile instanceof Wheel)
-					if(!tile.completed) self.board_complete = 0;
+					if(!tile.completed)
+						board_state = INCOMPLETE;
 
 		// Decrement the launch timer
-		if(self.launch_timeout > 0) {
-			self.launch_timeout -= 1;
-			if(self.launch_timeout == 0) self.board_complete = -1;
+		if(board_state == INCOMPLETE && launch_timeout > 0) {
+			launch_timeout -= 1;
+			if(launch_timeout == 0) board_state = LAUNCH_TIMEOUT;
 		}
 
 		// Decrement the board timer
-		if( self.board_timeout > 0) {
-			self.board_timeout -= 1;
-			if(self.board_timeout == 0) self.board_complete = -2;
+		if( board_state == INCOMPLETE && board_timeout > 0) {
+			board_timeout -= 1;
+			if(board_timeout == 0) board_state = BOARD_TIMEOUT;
 		}
 
 		// Animate the launch queue
 		if( launch_queue_offset > 0)
 			--launch_queue_offset;
+
+		return board_state;
 	}
 
 	private void refresh_bg_cache()
@@ -632,37 +642,6 @@ class Board implements Paintable
 		this.set_board_timer( boardtimer);
 		f.close();
 		return true;
-	}
-
-	// Return values for this function:
-	// -4: User closed the application window
-	// -3: User aborted the level
-	// -2: Board timer expired
-	// -1: Launch timer expired
-	//  1: Level completed successfully
-	//  2: User requested a skip to the next level
-	//  3: User requested a skip to the previous level
-	public int play_level()
-	{
-		// Perform the first render
-		this.update();
-
-		// Play the start sound
-		//play_sound( levelbegin)
-
-		// Launch the first marble
-		self.launch_marble();
-
-		// Do the first update
-//		pygame.display.update();
-
-		// Play the end sound
-		if( self.board_complete > 0)
-			gr.play_sound( gr.levelfinish);
-		else
-			gr.play_sound( gr.die);
-
-		return self.board_complete;
 	}
 }
 
