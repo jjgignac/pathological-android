@@ -7,7 +7,6 @@ class Tile
 	public int paths;
 	public Rect pos;  // Only left & top are maintained
 	public int tile_x, tile_y;
-	public boolean completed;
 	protected Board board;
 	public boolean dirty;
 	private static final int[] plain_tiles = {
@@ -23,7 +22,6 @@ class Tile
 		this.board = board;
 		this.paths = paths;
 		this.pos = new Rect(cx - tile_size/2, cy - tile_size/2, 0, 0);
-		this.completed = false;
 		this.tile_x = x;
 		this.tile_y = y;
 		this.dirty = true;

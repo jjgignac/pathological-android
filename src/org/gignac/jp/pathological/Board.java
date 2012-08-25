@@ -239,7 +239,7 @@ class Board implements Paintable
 		for(Tile[] row : self.tiles)
 			for(Tile tile : row)
 				if(tile instanceof Wheel)
-					if(!tile.completed)
+					if(!((Wheel)tile).completed)
 						board_state = INCOMPLETE;
 
 		// Decrement the launch timer

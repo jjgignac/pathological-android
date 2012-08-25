@@ -5,7 +5,7 @@ class Wheel extends Tile {
 	public int[] marbles;
 	public int spinpos;
 	private Wheel self;
-	private boolean completed;
+	public boolean completed;
 	
 	public Wheel( Board board, int paths) {
 		super(board, paths); // Call base class intializer
