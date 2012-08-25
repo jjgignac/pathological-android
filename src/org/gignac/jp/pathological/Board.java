@@ -461,7 +461,7 @@ class Board implements Paintable
 
 	public synchronized void downEvent(int pointerId, float x, float y)
 	{
-		if(paused) return;
+		if(paused || board_state != INCOMPLETE) return;
 		if(scale == 0f) return;
 		int posx = Math.round((x - offsetx) / scale);
 		int posy = Math.round(y / scale);
@@ -476,7 +476,7 @@ class Board implements Paintable
 
 	public synchronized void upEvent(int pointerId, float x, float y)
 	{
-		if(paused) return;
+		if(paused || board_state != INCOMPLETE) return;
 		if(scale == 0f) return;
 		int posx = Math.round((x - offsetx) / scale);
 		int posy = Math.round(y / scale);
