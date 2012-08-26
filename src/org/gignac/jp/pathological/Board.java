@@ -210,7 +210,10 @@ class Board implements Paintable
 
 	public synchronized int update()
 	{
-		if(paused || board_state != INCOMPLETE) return board_state;
+		// Return INCOMPLETE even if the board is complete.
+		// This ensures that the end of level signal is only
+		// sent once.
+		if(paused || board_state != INCOMPLETE) return INCOMPLETE;
 
 		// Animate the marbles
 		marblesCopy = marbles.toArray(marblesCopy);

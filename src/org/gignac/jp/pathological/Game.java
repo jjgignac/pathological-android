@@ -21,9 +21,24 @@ public class Game extends Activity
 	private GameResources gr;
 	private GameLoop gameLoop;
 	private GameView gv;
+	private DialogInterface.OnClickListener clicker;
 	
 	public Game()
 	{
+		// Button listener for failure dialogs
+		clicker = new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface p1, int p2)
+			{
+				switch(p2) {
+				case DialogInterface.BUTTON_POSITIVE:
+					playLevel(level);
+					break;
+				case DialogInterface.BUTTON_NEGATIVE:
+					finish();
+					break;
+				}
+			}
+		};
 	}
 	
 	@Override
@@ -96,7 +111,14 @@ public class Game extends Activity
 		Runnable update = new Runnable() {
 			public void run() {
 				switch(board.update()) {
+				case Board.LAUNCH_TIMEOUT:
+					onLaunchTimeout();
+					break;
+				case Board.BOARD_TIMEOUT:
+					onBoardTimeout();
+					break;
 				case Board.COMPLETE:
+					gr.play_sound(gr.levelfinish);
 					gameLoop.stop();
 					if(level == gr.shp.getInt("nUnlocked",1)-1) {
 						SharedPreferences.Editor e = gr.shp.edit();
@@ -137,7 +159,27 @@ public class Game extends Activity
 		super.onDestroy();
 		gr.destroy();
 	}
-	
+
+	private void onLaunchTimeout()
+	{
+		gr.play_sound(gr.die);
+		AlertDialog.Builder b = new AlertDialog.Builder(Game.this);
+		b.setTitle("Failed").
+			setMessage("The launch timer has expired.").
+			setPositiveButton("Retry", clicker).
+			setNegativeButton("Quit", clicker).show();
+	}
+
+	private void onBoardTimeout()
+	{
+		gr.play_sound(gr.die);
+		AlertDialog.Builder b = new AlertDialog.Builder(Game.this);
+		b.setTitle("Failed").
+			setMessage("The board timer has expired.").
+			setPositiveButton("Retry", clicker).
+			setNegativeButton("Quit", clicker).show();
+	}
+
 	public void pause() {
 		board.setPaused(!board.isPaused());
 	}
