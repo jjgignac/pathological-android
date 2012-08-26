@@ -26,6 +26,9 @@ public class ButtonListener
 		case R.id.pause:
 			game.pause();
 			break;
+		case R.id.quit:
+			game.finish();
+			break;
 		}
 	}
 }
