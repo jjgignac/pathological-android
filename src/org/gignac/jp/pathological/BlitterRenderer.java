@@ -25,7 +25,7 @@ public class BlitterRenderer
 	};
 	private FloatBuffer textureBuffer;
     private FloatBuffer vertexBuffer;
-	private Rect rect;
+	private int width, height;
 	private GL10 gl;
 	private SpriteCache sc;
 
@@ -43,7 +43,6 @@ public class BlitterRenderer
 		textureBuffer.put(texture);
 		textureBuffer.position(0);
 
-		rect = new Rect();
 		this.sc = sc;
 	}
 
@@ -65,8 +64,8 @@ public class BlitterRenderer
 	
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
-		rect.right = width;
-		rect.bottom = height;
+		this.width = width;
+		this.height = height;
 
 		gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL10.GL_PROJECTION);
@@ -82,7 +81,7 @@ public class BlitterRenderer
 //		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		gl.glTranslatef(-1f,1f,-5f);
-		gl.glScalef(2f/rect.right,-2f/rect.bottom,1f);
+		gl.glScalef(2f/width,-2f/height,1f);
 
 		this.gl = gl;
 		painter.paint(this);
@@ -132,8 +131,13 @@ public class BlitterRenderer
 	}
 
 	@Override
-	public Rect getVisibleArea() {
-		return rect;
+	public int getWidth() {
+		return width;
+	}
+
+	@Override
+	public int getHeight() {
+		return height;
 	}
 
 	private void blit( float x, float y, float w, float h)

@@ -8,6 +8,7 @@ public interface Blitter
 	public void blit( long uniq, int x, int y);
 	public void blit( long uniq, int x, int y, int w, int h);
 	public void fill( int color, int x, int y, int w, int h);
-	public Rect getVisibleArea();
+	public int getWidth();
+	public int getHeight();
 	public void transform(float scale, float dx, float dy);
 }

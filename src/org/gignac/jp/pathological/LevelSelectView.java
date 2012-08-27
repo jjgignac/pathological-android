@@ -75,9 +75,8 @@ public class LevelSelectView extends GLSurfaceView
 	@Override
 	public synchronized void paint( Blitter b)
 	{
-		Rect v = b.getVisibleArea();
-		width = v.right - v.left;
-		height = v.bottom - v.top;
+		width = b.getWidth();
+		height = b.getHeight();
 		update();
 
 		int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);

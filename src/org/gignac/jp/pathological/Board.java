@@ -128,9 +128,8 @@ class Board implements Paintable
 	}
 
 	private void draw_backdrop(Blitter b) {
-		Rect v = b.getVisibleArea();
 		b.blit( R.drawable.backdrop,
-			0, 0, v.right, v.bottom);
+			0, 0, b.getWidth(), b.getHeight());
 	}
 
 	private void draw_back(Blitter b)
@@ -160,8 +159,7 @@ class Board implements Paintable
 
 	private void draw_mid( Blitter b)
 	{
-		Rect v = b.getVisibleArea();
-		int fullHeight = (int)Math.ceil(v.bottom/scale);
+		int fullHeight = (int)Math.ceil(b.getHeight()/scale);
 
 		// Draw the launch timer
 		int timerColor = 0x40404040;
@@ -222,16 +220,15 @@ class Board implements Paintable
 
 		int borderColor = ((intensity/2)<<24)|0x000000;
 		int color = (intensity<<24)|0xd0d0d0;
-		Rect r = b.getVisibleArea();
 		
-		int thickness = r.width()/30;
+		int thickness = b.getWidth()/30;
 		int spacing = thickness * 4/5;
 		int height = thickness * 4;
-		int x = ((int)(r.width()/scale) -
+		int x = ((int)(b.getWidth()/scale) -
 			2*thickness - spacing) / 2 - (int)(offsetx/scale);
-		int y = ((int)(r.height()/scale) - height) / 2;
+		int y = ((int)(b.getHeight()/scale) - height) / 2;
 		b.fill(borderColor, (int)Math.floor(-offsetx/scale), 0,
-			(int)(r.width()/scale)+2, (int)(r.height()/scale)+2);
+			(int)(b.getWidth()/scale)+2, (int)(b.getHeight()/scale)+2);
 		b.fill(color, x, y, thickness, height);
 		b.fill(color, x+thickness+spacing, y,
 			   thickness, height);		
@@ -322,8 +319,8 @@ class Board implements Paintable
 		}
 
 		if( bgBlitter != null) {
-			Rect v = bgBlitter.getVisibleArea();
-			if( v.right == w && v.bottom == h) return;
+			if( bgBlitter.getWidth() == w &&
+				bgBlitter.getHeight() == h) return;
 		}
 
 		bg = Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888);
@@ -337,17 +334,16 @@ class Board implements Paintable
 	public synchronized void paint(Blitter b)
 	{
 		int px = Board.screen_width + Board.timer_width;
-		Rect r = b.getVisibleArea();
-		float width = r.right - r.left;
-		float height = r.bottom - r.top;
+		int width = b.getWidth();
+		int height = b.getHeight();
 		scale = width * Board.screen_height < height * px ?
-			width / px : height / Board.screen_height;
+			(float)width / px : (float)height / Board.screen_height;
 		offsetx = width - px*scale;
 		
 		// Draw the background
-		cache_background(r.right, r.bottom);
+		cache_background(width, height);
 		refresh_bg_cache();
-		b.blit(0x500000000l,0,0,r.right,r.bottom);
+		b.blit(0x500000000l,0,0,width,height);
 
 		b.transform( scale, offsetx, 0.0f);
 

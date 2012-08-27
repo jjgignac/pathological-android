@@ -8,16 +8,15 @@ public class BitmapBlitter
 	private Canvas c;
 	private Rect rect;
 	private Paint paint;
-	private Rect visibleArea;
 	private SpriteCache sc;
+	private Bitmap dest;
 
 	public BitmapBlitter( SpriteCache sc, Bitmap dest) {
 		this.c = new Canvas(dest);
 		rect = new Rect();
 		paint = new Paint();
-		visibleArea = new Rect( 0, 0,
-			dest.getWidth(), dest.getHeight());
 		this.sc = sc;
+		this.dest = dest;
 	}
 
 	public void transform(float scale, float dx, float dy)
@@ -63,8 +62,13 @@ public class BitmapBlitter
 		c.drawRect(x,y,x+w,y+h,paint);
 	}
 
-	public Rect getVisibleArea()
+	public int getWidth()
 	{
-		return visibleArea;
+		return dest.getWidth();
+	}
+
+	public int getHeight()
+	{
+		return dest.getHeight();
 	}
 }
