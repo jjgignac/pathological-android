@@ -21,24 +21,10 @@ public class Game extends Activity
 	private GameResources gr;
 	private GameLoop gameLoop;
 	private GameView gv;
-	private DialogInterface.OnClickListener clicker;
+	private ActionListener bl;
 	
 	public Game()
 	{
-		// Button listener for failure dialogs
-		clicker = new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface p1, int p2)
-			{
-				switch(p2) {
-				case DialogInterface.BUTTON_POSITIVE:
-					playLevel(level);
-					break;
-				case DialogInterface.BUTTON_NEGATIVE:
-					finish();
-					break;
-				}
-			}
-		};
 	}
 	
 	@Override
@@ -63,7 +49,7 @@ public class Game extends Activity
 			level = extras.getInt("level");
 		}
 
-		ButtonListener bl = new ButtonListener(this);
+		bl = new ActionListener(this);
 		((Button)findViewById(R.id.prevlevel)).setOnClickListener(bl);
 		((Button)findViewById(R.id.nextlevel)).setOnClickListener(bl);
 		((Button)findViewById(R.id.quit)).setOnClickListener(bl);
@@ -118,13 +104,7 @@ public class Game extends Activity
 					onBoardTimeout();
 					break;
 				case Board.COMPLETE:
-					gr.play_sound(gr.levelfinish);
-					gameLoop.stop();
-					if(level == gr.shp.getInt("nUnlocked",1)-1) {
-						SharedPreferences.Editor e = gr.shp.edit();
-						e.putInt("nUnlocked",level+2);
-						e.apply();
-					}
+					onBoardComplete();
 					break;
 				}
 			}
@@ -166,8 +146,9 @@ public class Game extends Activity
 		AlertDialog.Builder b = new AlertDialog.Builder(Game.this);
 		b.setTitle("Failed").
 			setMessage("The launch timer has expired.").
-			setPositiveButton("Retry", clicker).
-			setNegativeButton("Quit", clicker).show();
+			setCancelable(false).
+			setPositiveButton("Retry", bl).
+			setNegativeButton("Quit", bl).show();
 	}
 
 	private void onBoardTimeout()
@@ -176,8 +157,27 @@ public class Game extends Activity
 		AlertDialog.Builder b = new AlertDialog.Builder(Game.this);
 		b.setTitle("Failed").
 			setMessage("The board timer has expired.").
-			setPositiveButton("Retry", clicker).
-			setNegativeButton("Quit", clicker).show();
+			setCancelable(false).
+			setPositiveButton("Retry", bl).
+			setNegativeButton("Quit", bl).show();
+	}
+
+	private void onBoardComplete()
+	{
+		gr.play_sound(gr.levelfinish);
+		gameLoop.stop();
+		if(level == gr.shp.getInt("nUnlocked",1)-1) {
+			SharedPreferences.Editor e = gr.shp.edit();
+			e.putInt("nUnlocked",level+2);
+			e.apply();
+		}
+		AlertDialog.Builder b = new AlertDialog.Builder(this);
+		b.setTitle("Level Complete!").
+		    setMessage("Bonus for 50% time remaining: 100\n"+
+				"Bonus for 25% empty holes: 50\n").
+			setCancelable(false).
+			setPositiveButton("Retry", bl).
+			setNeutralButton("Continue", bl).show();
 	}
 
 	public void pause() {
