@@ -4,6 +4,7 @@ import java.util.*;
 import android.graphics.*;
 import android.util.*;
 import android.content.res.*;
+import android.os.*;
 
 class Board implements Paintable
 {
@@ -52,6 +53,7 @@ class Board implements Paintable
 	private BitmapBlitter bgBlitter;
 	private Runnable onPainted;
 	public SpriteCache sc;
+	private long pause_changed;
 
 	public Board(GameResources gr, SpriteCache sc,
 		int level, Runnable onPainted)
@@ -70,6 +72,7 @@ class Board implements Paintable
 		this.colors = default_colors;
 		this.onPainted = onPainted;
 		this.sc = sc;
+		this.pause_changed = SystemClock.uptimeMillis()-10000;
 
 		down = new HashMap<Integer,Point>();
 
@@ -206,6 +209,32 @@ class Board implements Paintable
 		for(Tile[] row : self.tiles)
 			for(Tile tile : row)
 				tile.draw_fore(b);
+
+		drawPauseButton(b);
+	}
+
+	private void drawPauseButton(Blitter b)
+	{
+		int intensity = (int)((SystemClock.uptimeMillis() - pause_changed) / 2);
+		if( intensity > 255) intensity = 255;
+		if(!paused) intensity ^= 0xff;
+		if(intensity == 0) return;
+
+		int borderColor = ((intensity/2)<<24)|0x000000;
+		int color = (intensity<<24)|0xd0d0d0;
+		Rect r = b.getVisibleArea();
+		
+		int thickness = r.width()/30;
+		int spacing = thickness * 4/5;
+		int height = thickness * 4;
+		int x = ((int)(r.width()/scale) -
+			2*thickness - spacing) / 2 - (int)(offsetx/scale);
+		int y = ((int)(r.height()/scale) - height) / 2;
+		b.fill(borderColor, (int)Math.floor(-offsetx/scale), 0,
+			(int)(r.width()/scale)+2, (int)(r.height()/scale)+2);
+		b.fill(color, x, y, thickness, height);
+		b.fill(color, x+thickness+spacing, y,
+			   thickness, height);		
 	}
 
 	public synchronized int update()
@@ -464,7 +493,7 @@ class Board implements Paintable
 
 	public synchronized void downEvent(int pointerId, float x, float y)
 	{
-		if(paused || board_state != INCOMPLETE) return;
+		if(board_state != INCOMPLETE) return;
 		if(scale == 0f) return;
 		int posx = Math.round((x - offsetx) / scale);
 		int posy = Math.round(y / scale);
@@ -479,24 +508,29 @@ class Board implements Paintable
 
 	public synchronized void upEvent(int pointerId, float x, float y)
 	{
-		if(paused || board_state != INCOMPLETE) return;
+		if(board_state != INCOMPLETE) return;
 		if(scale == 0f) return;
 		int posx = Math.round((x - offsetx) / scale);
 		int posy = Math.round(y / scale);
 		final Point dpos = down.get(pointerId);
 		if(dpos == null) return;
 		final int downx = dpos.x, downy = dpos.y;
+		int dx = posx - downx;
+		int dy = posy - downy;
+		int dx2 = dx*dx;
+		int dy2 = dy*dy;
+		boolean isClick = (dx2+dy2 <= Marble.marble_size*Marble.marble_size);
+		if(paused) {
+			if(isClick) setPaused(false);
+			return;
+		}
 		Tile downtile = whichTile(downx,downy);
 		if(downtile == null) return;
 		int downtile_x = downx / Tile.tile_size;
 		int downtile_y = (downy - Marble.marble_size) / Tile.tile_size;
 		int tile_xr = downx-(downtile_x*Tile.tile_size);
 		int tile_yr = downx-Marble.marble_size-(downtile_y*Tile.tile_size);
-		int dx = posx - downx;
-		int dy = posy - downy;
-		int dx2 = dx*dx;
-		int dy2 = dy*dy;
-		if(dx2 + dy2 <= Marble.marble_size * Marble.marble_size) {
+		if(isClick) {
 			downtile.click(this, tile_xr, tile_yr);
 		} else {
 			int dir = (dx2>dy2)?(dx>0?1:3):(dy>0?2:0);
@@ -654,6 +688,8 @@ class Board implements Paintable
 	}
 
 	public void setPaused(boolean paused) {
+		if(paused == this.paused) return;
+		pause_changed = SystemClock.uptimeMillis();
 		this.paused = paused;
 	}
 }
