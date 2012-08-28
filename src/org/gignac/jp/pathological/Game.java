@@ -129,6 +129,7 @@ public class Game extends Activity
 	protected void onPause()
 	{
 		super.onPause();
+		board.setPaused(true);
 		gv.onPause();
 		gameLoop.stop();
 	}
