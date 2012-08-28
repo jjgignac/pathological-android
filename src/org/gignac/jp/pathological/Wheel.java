@@ -6,19 +6,17 @@ class Wheel extends Tile
 	public int[] marbles;
 	private Marble[] entering = new Marble[4];
 	public int spinpos;
-	private Wheel self;
 	public boolean completed;
 	
 	public Wheel( Board board, int paths) {
 		super(board, paths); // Call base class intializer
-		self = this;
-		self.spinpos = 0;
-		self.completed = false;
-		self.marbles = new int[4];
-		self.marbles[0] = -3;
-		self.marbles[1] = -3;
-		self.marbles[2] = -3;
-		self.marbles[3] = -3;
+		spinpos = 0;
+		completed = false;
+		marbles = new int[4];
+		marbles[0] = -3;
+		marbles[1] = -3;
+		marbles[2] = -3;
+		marbles[3] = -3;
 
 		board.sc.cache(R.drawable.moving_hole);
 		board.sc.cache(R.drawable.moving_hole_dark);
@@ -36,13 +34,13 @@ class Wheel extends Tile
 		super.draw_back(b);
 		GameResources gr = board.gr;
 
-		if( self.spinpos != 0) {
+		if( spinpos != 0) {
 			b.blit( completed ?
 				R.drawable.blank_wheel_dark : R.drawable.blank_wheel,
 				pos.left, pos.top, tile_size, tile_size);
 			for(int i=0; i<4; ++i) {
-				int holecenter_x = gr.holecenters_x[self.spinpos][i];
-				int holecenter_y = gr.holecenters_y[self.spinpos][i];
+				int holecenter_x = gr.holecenters_x[spinpos][i];
+				int holecenter_y = gr.holecenters_y[spinpos][i];
 				b.blit( completed ?
 					R.drawable.moving_hole_dark : R.drawable.moving_hole,
 					holecenter_x-Marble.marble_size/2+pos.left,
@@ -55,10 +53,10 @@ class Wheel extends Tile
 		}
 
 		for( int i=0; i < 4; ++i) {
-			int color = self.marbles[i];
+			int color = marbles[i];
 			if( color >= 0) {
-				int holecenter_x = gr.holecenters_x[self.spinpos][i];
-				int holecenter_y = gr.holecenters_y[self.spinpos][i];
+				int holecenter_x = gr.holecenters_x[spinpos][i];
+				int holecenter_y = gr.holecenters_y[spinpos][i];
 				b.blit( Marble.marble_images[color],
 					holecenter_x-Marble.marble_size/2+pos.left,
 					holecenter_y-Marble.marble_size/2+pos.top);
@@ -68,8 +66,8 @@ class Wheel extends Tile
 
 	@Override
 	public void update( Board board) {
-		if( self.spinpos > 0) {
-			self.spinpos -= 1;
+		if( spinpos > 0) {
+			spinpos -= 1;
 			invalidate();
 		}
 	}
@@ -98,11 +96,11 @@ class Wheel extends Tile
 		board.gr.play_sound( board.gr.wheel_turn);
 
 		// Reposition the marbles
-		int t = self.marbles[0];
-		self.marbles[0] = self.marbles[1];
-		self.marbles[1] = self.marbles[2];
-		self.marbles[2] = self.marbles[3];
-		self.marbles[3] = t;
+		int t = marbles[0];
+		marbles[0] = marbles[1];
+		marbles[1] = marbles[2];
+		marbles[2] = marbles[3];
+		marbles[3] = t;
 
 		invalidate();
 	}
@@ -129,7 +127,7 @@ class Wheel extends Tile
 			(tile_y == 0 && i==0) ||
 
 			// If there is no way out here, skip it
-			((self.paths & (1 << i)) == 0) ||
+			((paths & (1 << i)) == 0) ||
 
 			// If the neighbor is a wheel that is either turning
 			// or has a marble already in the hole, disallow
@@ -151,11 +149,11 @@ class Wheel extends Tile
 
 			// Eject the marble
 			board.activateMarble(
-				new Marble( gr, self.marbles[i],
+				new Marble( gr, marbles[i],
 					gr.holecenters_x[0][i]+pos.left,
 					gr.holecenters_y[0][i]+pos.top,
 					i));
-			self.marbles[i] = -3;
+			marbles[i] = -3;
 			gr.play_sound( gr.marble_release);
 			invalidate();
 		}
@@ -176,7 +174,7 @@ class Wheel extends Tile
 				marble.direction = marble.direction ^ 2;
 				gr.play_sound( gr.ping);
 			} else {
-				self.marbles[marble.direction^2] = -1;
+				marbles[marble.direction^2] = -1;
 				entering[marble.direction^2] = marble;
 			}
 		}
@@ -186,7 +184,7 @@ class Wheel extends Tile
 				rposy == gr.holecenters_y[0][i]) {
 				// Accept the marble
 				board.deactivateMarble( marble);
-				self.marbles[marble.direction^2] = marble.color;
+				marbles[marble.direction^2] = marble.color;
 				entering[marble.direction^2] = null;
 				invalidate();
 				break;
@@ -196,24 +194,24 @@ class Wheel extends Tile
 
 	public void complete(Board board) {
 		// Complete the wheel
-		for( int i=0; i<4; ++i) self.marbles[i] = -3;
+		for( int i=0; i<4; ++i) marbles[i] = -3;
 		completed = true;
 		board.gr.play_sound( board.gr.wheel_completed);
 		invalidate();
 	}
 
 	public boolean maybe_complete(Board board) {
-		if( self.spinpos > 0) return false;
+		if( spinpos > 0) return false;
 
 		// Is there a trigger?
 		if(board.trigger != null &&
 		   board.trigger.marbles != null) {
 			// Compare against the trigger
 			for( int i=0; i<4; ++i) {
-				if( self.marbles[i] != board.trigger.marbles.charAt(i)-'0' &&
-					self.marbles[i] != 8) return false;
+				if( marbles[i] != board.trigger.marbles.charAt(i)-'0' &&
+					marbles[i] != 8) return false;
 			}
-			self.complete( board);
+			complete( board);
 			board.trigger.complete( board);
 			return true;
 		}
