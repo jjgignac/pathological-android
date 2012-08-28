@@ -18,15 +18,15 @@ class Buffer extends TunnelTile
 		int color = marble;
 		if( color >= 0) {
 			surface.blit( Marble.marble_images[color],
-				pos.left + (tile_size-Marble.marble_size)/2,
-				pos.top + (tile_size-Marble.marble_size)/2);
+				left + (tile_size-Marble.marble_size)/2,
+				top + (tile_size-Marble.marble_size)/2);
 		} else {
-			surface.blit( R.drawable.buffer, pos.left, pos.top);
+			surface.blit( R.drawable.buffer, left, top);
 		}
 	}
 
 	protected void draw_cap(Blitter surface) {
-		surface.blit( R.drawable.buffer_top, pos.left, pos.top);
+		surface.blit( R.drawable.buffer_top, left, top);
 	}
 
 	public void affect_marble(Board board, Marble marble, int x, int y)
@@ -42,8 +42,8 @@ class Buffer extends TunnelTile
 			if( entering != null) {
 				// Bump the marble that is currently entering
 				Marble newmarble = entering;
-				newmarble.left = pos.left + (tile_size-Marble.marble_size)/2;
-				newmarble.top = pos.top + (tile_size-Marble.marble_size)/2;
+				newmarble.left = left + (tile_size-Marble.marble_size)/2;
+				newmarble.top = top + (tile_size-Marble.marble_size)/2;
 				newmarble.direction = marble.direction;
 
 				gr.play_sound( gr.ping);
@@ -54,7 +54,7 @@ class Buffer extends TunnelTile
 			} else if( this.marble >= 0) {
 				// Bump the marble that is currently caught
 				Marble newmarble = new Marble(gr, this.marble,
-					pos.left + tile_size/2, pos.top + tile_size/2,
+					left + tile_size/2, top + tile_size/2,
 					marble.direction);
 
 				board.activateMarble( newmarble);

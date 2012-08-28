@@ -17,7 +17,7 @@ class Director extends TunnelTile
 
 	@Override
 	protected void draw_cap(Blitter surface) {
-		surface.blit( director_images[direction], pos.left, pos.top);
+		surface.blit( director_images[direction], left, top);
 	}
 
 	@Override

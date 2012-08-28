@@ -25,13 +25,13 @@ public abstract class TunnelTile extends Tile
 	public void setxy(int x, int y) {
 		super.setxy(x,y);
 		board.sc.cache(tunnel_images[paths]);
-		uniq = 0x700000000l+(pos.left<<16)+pos.top;
+		uniq = 0x700000000l+(left<<16)+top;
 		fore = Bitmap.createBitmap(
 			tunnel_size,tunnel_size,Bitmap.Config.ARGB_8888);
 		b = new BitmapBlitter(board.sc,fore);
 		final int offset = (tile_size - tunnel_size)/2;
 		b.blit(tunnel_images[paths],-offset,-offset);
-		b.transform(1f,-pos.left-offset,-pos.top-offset);
+		b.transform(1f,-left-offset,-top-offset);
 		fore_dirty = true;
 	}
 
@@ -43,7 +43,7 @@ public abstract class TunnelTile extends Tile
 			board.sc.cache(uniq,fore);
 			fore_dirty = false;
 		}
-		b.blit(uniq, pos.left+offset, pos.top+offset);
+		b.blit(uniq, left+offset, top+offset);
 	}
 
 	protected abstract void draw_cap(Blitter b);

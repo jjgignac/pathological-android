@@ -37,19 +37,19 @@ class Wheel extends Tile
 		if( spinpos != 0) {
 			b.blit( completed ?
 				R.drawable.blank_wheel_dark : R.drawable.blank_wheel,
-				pos.left, pos.top, tile_size, tile_size);
+				left, top, tile_size, tile_size);
 			for(int i=0; i<4; ++i) {
 				int holecenter_x = gr.holecenters_x[spinpos][i];
 				int holecenter_y = gr.holecenters_y[spinpos][i];
 				b.blit( completed ?
 					R.drawable.moving_hole_dark : R.drawable.moving_hole,
-					holecenter_x-Marble.marble_size/2+pos.left,
-					holecenter_y-Marble.marble_size/2+pos.top);
+					holecenter_x-Marble.marble_size/2+left,
+					holecenter_y-Marble.marble_size/2+top);
 			}
 		} else {
 			b.blit( completed ?
 				R.drawable.wheel_dark : R.drawable.wheel,
-				pos.left, pos.top);
+				left, top);
 		}
 
 		for( int i=0; i < 4; ++i) {
@@ -58,8 +58,8 @@ class Wheel extends Tile
 				int holecenter_x = gr.holecenters_x[spinpos][i];
 				int holecenter_y = gr.holecenters_y[spinpos][i];
 				b.blit( Marble.marble_images[color],
-					holecenter_x-Marble.marble_size/2+pos.left,
-					holecenter_y-Marble.marble_size/2+pos.top);
+					holecenter_x-Marble.marble_size/2+left,
+					holecenter_y-Marble.marble_size/2+top);
 			}
 		}
 	}
@@ -150,8 +150,8 @@ class Wheel extends Tile
 			// Eject the marble
 			board.activateMarble(
 				new Marble( gr, marbles[i],
-					gr.holecenters_x[0][i]+pos.left,
-					gr.holecenters_y[0][i]+pos.top,
+					gr.holecenters_x[0][i]+left,
+					gr.holecenters_y[0][i]+top,
 					i));
 			marbles[i] = -3;
 			gr.play_sound( gr.marble_release);

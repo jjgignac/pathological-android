@@ -43,12 +43,12 @@ class Trigger extends Tile
 	public void draw_back(Blitter b) {
 		super.draw_back(b);
 		GameResources gr = board.gr;
-		b.blit( R.drawable.trigger, pos.left, pos.top, tile_size, tile_size);
+		b.blit( R.drawable.trigger, left, top, tile_size, tile_size);
 		if( marbles != null) {
 			for(int i=0; i<4; ++i) {
 				b.blit( Marble.marble_images[marbles.charAt(i)-'0'],
-					gr.holecenters_x[0][i]+pos.left-Marble.marble_size/2,
-					gr.holecenters_y[0][i]+pos.top-Marble.marble_size/2,
+					gr.holecenters_x[0][i]+left-Marble.marble_size/2,
+					gr.holecenters_y[0][i]+top-Marble.marble_size/2,
 					Marble.marble_size, Marble.marble_size);
 			}
 		}

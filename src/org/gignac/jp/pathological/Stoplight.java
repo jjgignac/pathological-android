@@ -18,11 +18,11 @@ class Stoplight extends Tile {
 	@Override
 	public void draw_back( Blitter b) {
 		super.draw_back(b);
-		b.blit( R.drawable.stoplight, pos.left, pos.top, tile_size, tile_size);
+		b.blit( R.drawable.stoplight, left, top, tile_size, tile_size);
 		for(int i=current; i < 3; ++i) {
 			b.blit( Marble.marble_images[marbles[i]],
-				pos.left + Tile.tile_size/2 - 14,
-				pos.top + 3 + (29*i),
+				left + Tile.tile_size/2 - 14,
+				top + 3 + (29*i),
 				stoplight_marble_size,
 				stoplight_marble_size);
 		}

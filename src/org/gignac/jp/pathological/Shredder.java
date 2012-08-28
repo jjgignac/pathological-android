@@ -8,7 +8,7 @@ class Shredder extends TunnelTile
 	}
 
 	protected void draw_cap(Blitter surface) {
-		surface.blit( R.drawable.shredder, pos.left, pos.top);
+		surface.blit( R.drawable.shredder, left, top);
 	}
 
 	public void affect_marble(Board board, Marble marble, int x, int y)

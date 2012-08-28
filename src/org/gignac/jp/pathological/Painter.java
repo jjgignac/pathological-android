@@ -26,7 +26,7 @@ class Painter extends TunnelTile
 
 	@Override
 	protected void draw_cap(Blitter surface) {
-		surface.blit( painter_images[color], pos.left, pos.top);
+		surface.blit( painter_images[color], left, top);
 	}
 
 	@Override

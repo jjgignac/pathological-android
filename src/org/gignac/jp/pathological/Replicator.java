@@ -24,7 +24,7 @@ class Replicator extends TunnelTile
 
 	@Override
 	protected void draw_cap(Blitter surface) {
-		surface.blit( R.drawable.replicator, pos.left, pos.top);
+		surface.blit( R.drawable.replicator, left, top);
 	}
 
 	@Override
@@ -45,8 +45,8 @@ class Replicator extends TunnelTile
 
 				// Add the new marble
 				board.activateMarble( new Marble( board.gr,
-					pending_col[i], pos.left + tile_size/2,
-					pos.top + tile_size/2, pending_dir[i]));
+					pending_col[i], left + tile_size/2,
+					top + tile_size/2, pending_dir[i]));
 				board.gr.play_sound( board.gr.replicator);
 
 				pending_count[i] -= 1;

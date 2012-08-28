@@ -35,7 +35,7 @@ class Switch extends TunnelTile
 	protected void draw_cap(Blitter surface)
 	{
 		surface.blit( switch_images[curdir*4+otherdir],
-			pos.left, pos.top);
+			left, top);
 	}
 
 	public void affect_marble(Board board, Marble marble, int x, int y)

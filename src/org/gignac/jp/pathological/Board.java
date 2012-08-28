@@ -663,8 +663,8 @@ class Board implements Paintable
 					else if( color == 'v') direction = 2;
 					else direction = 3;
 					activateMarble( new Marble(gr, type-'0',
-						tile.pos.left + Tile.tile_size/2,
-						tile.pos.top + Tile.tile_size/2,
+						tile.left + Tile.tile_size/2,
+						tile.top + Tile.tile_size/2,
 						direction));
 				}
 			}

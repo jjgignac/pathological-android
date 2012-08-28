@@ -24,7 +24,7 @@ class Filter extends TunnelTile
 	}
 
 	protected void draw_cap(Blitter surface) {
-		surface.blit( filter_images[color], pos.left, pos.top);
+		surface.blit( filter_images[color], left, top);
 	}
 
 	public void affect_marble(Board board, Marble marble, int x, int y)
