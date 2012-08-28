@@ -1,8 +1,10 @@
 package org.gignac.jp.pathological;
 import android.graphics.*;
 
-class Wheel extends Tile {
+class Wheel extends Tile
+{
 	public int[] marbles;
+	private Marble[] entering = new Marble[4];
 	public int spinpos;
 	private Wheel self;
 	public boolean completed;
@@ -80,7 +82,16 @@ class Wheel extends Tile {
 
 		// First, make sure that no marbles are currently entering
 		for( int i=0; i < 4; ++i)
-			if( marbles[i] == -1 || marbles[i] == -2) return;
+			if( marbles[i] == -2) return;
+
+		// Suck in any marbles that are entering
+		for( int i=0; i < 4; ++i) {
+			if( marbles[i] == -1) {
+				marbles[i] = entering[i].color;
+				board.deactivateMarble(entering[i]);
+				entering[i] = null;
+			}
+		}
 
 		// Start the wheel spinning
 		spinpos = board.gr.wheel_steps - 1;
@@ -164,8 +175,10 @@ class Wheel extends Tile {
 				// Reject the marble
 				marble.direction = marble.direction ^ 2;
 				gr.play_sound( gr.ping);
-			} else
+			} else {
 				self.marbles[marble.direction^2] = -1;
+				entering[marble.direction^2] = marble;
+			}
 		}
 
 		for( int i=0; i<4; ++i) {
@@ -174,6 +187,7 @@ class Wheel extends Tile {
 				// Accept the marble
 				board.deactivateMarble( marble);
 				self.marbles[marble.direction^2] = marble.color;
+				entering[marble.direction^2] = null;
 				invalidate();
 				break;
 			}
