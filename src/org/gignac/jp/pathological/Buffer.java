@@ -42,8 +42,8 @@ class Buffer extends TunnelTile
 			if( entering != null) {
 				// Bump the marble that is currently entering
 				Marble newmarble = entering;
-				newmarble.pos.left = pos.left + (tile_size-Marble.marble_size)/2;
-				newmarble.pos.top = pos.top + (tile_size-Marble.marble_size)/2;
+				newmarble.left = pos.left + (tile_size-Marble.marble_size)/2;
+				newmarble.top = pos.top + (tile_size-Marble.marble_size)/2;
 				newmarble.direction = marble.direction;
 
 				gr.play_sound( gr.ping);

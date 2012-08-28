@@ -419,8 +419,8 @@ class Board implements Paintable
 
 	public void affect_marble( Marble marble)
 	{
-		int cx = marble.pos.left + Marble.marble_size/2;
-		int cy = marble.pos.top - Marble.marble_size/2;
+		int cx = marble.left + Marble.marble_size/2;
+		int cy = marble.top - Marble.marble_size/2;
 
 		// Bounce marbles off of the top
 		if( cy == Marble.marble_size/2) {
