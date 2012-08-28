@@ -211,6 +211,7 @@ class Board implements Paintable
 
 	private void drawPauseButton(Blitter b)
 	{
+		if(board_state != INCOMPLETE) return;
 		int intensity = (int)((SystemClock.uptimeMillis() - pause_changed) / 2);
 		if( intensity > 255) intensity = 255;
 		if(!paused) intensity ^= 0xff;
