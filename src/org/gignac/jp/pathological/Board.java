@@ -39,7 +39,6 @@ class Board implements Paintable
 	private int board_timeout;
 	private int board_timeout_start;
 	public String colors;
-	private Board self;
 	public int launch_timer;
 	private Marble[] marblesCopy = new Marble[20];
 	private HashMap<Integer,Point> down;
@@ -58,7 +57,6 @@ class Board implements Paintable
 	public Board(GameResources gr, SpriteCache sc,
 		int level, Runnable onPainted)
 	{
-		self = this;
 		this.gr = gr;
 		this.marbles = new Vector<Marble>();
 		this.trigger = null;
@@ -152,7 +150,7 @@ class Board implements Paintable
 			   Marble.marble_size-1, Tile.tile_size,
 			   board_height*3);
 		
-		for( Tile[] row : self.tiles)
+		for( Tile[] row : tiles)
 			for( Tile tile : row)
 				tile.draw_back(b);
 	}
@@ -198,13 +196,13 @@ class Board implements Paintable
 			timer_height-y, timer_width-3, y);
 
 		// Draw the marble queue
-		for(int i=0; i < self.launch_queue.length; ++i)
-			b.blit(Marble.marble_images[self.launch_queue[i]],
+		for(int i=0; i < launch_queue.length; ++i)
+			b.blit(Marble.marble_images[launch_queue[i]],
 				board_width, launch_queue_offset + i * Marble.marble_size);
 	}
 
 	private void draw_fore( Blitter b) {
-		for(Tile[] row : self.tiles)
+		for(Tile[] row : tiles)
 			for(Tile tile : row)
 				tile.draw_fore(b);
 
@@ -249,7 +247,7 @@ class Board implements Paintable
 		}
 
 		// Animate the tiles
-		for(Tile[] row : self.tiles)
+		for(Tile[] row : tiles)
 			for(Tile tile : row)
 				tile.update(this);
 
@@ -257,7 +255,7 @@ class Board implements Paintable
 		boolean try_again = true;
 		while(try_again) {
 			try_again = false;
-			for(Tile[] row : self.tiles)
+			for(Tile[] row : tiles)
 				for(Tile tile : row)
 					if( tile instanceof Wheel)
 						try_again |= ((Wheel)tile).maybe_complete(this);
@@ -265,7 +263,7 @@ class Board implements Paintable
 
 		// Check if the board is complete
 		board_state = COMPLETE;
-		for(Tile[] row : self.tiles)
+		for(Tile[] row : tiles)
 			for(Tile tile : row)
 				if(tile instanceof Wheel)
 					if(!((Wheel)tile).completed)
@@ -294,7 +292,7 @@ class Board implements Paintable
 	{
 		// Refresh the background
 		boolean dirty = false;
-		for( Tile[] row : self.tiles) {
+		for( Tile[] row : tiles) {
 			for( Tile tile : row) {
 				if( tile.dirty) {
 					tile.draw_back(bgBlitter);
@@ -348,43 +346,43 @@ class Board implements Paintable
 		b.transform( scale, offsetx, 0.0f);
 
 		// Draw the middle
-		self.draw_mid(b);
+		draw_mid(b);
 
 		// Draw all of the marbles
-		for(Marble marble : self.marbles)
+		for(Marble marble : marbles)
 			marble.draw(b);
 
 		// Draw the foreground
-		self.draw_fore(b);
+		draw_fore(b);
 
 		// Trigger the update step		
 		if(onPainted != null) onPainted.run();
 	}
 
 	public void set_tile( int x, int y, Tile tile) {
-		self.tiles[y][x] = tile;
+		tiles[y][x] = tile;
 		tile.setxy(x,y);
 
 		// If it's a trigger, keep track of it
 		if( tile instanceof Trigger)
-			self.trigger = (Trigger)tile;
+			trigger = (Trigger)tile;
 
 		// If it's a stoplight, keep track of it
 		if( tile instanceof Stoplight)
-			self.stoplight = (Stoplight)tile;
+			stoplight = (Stoplight)tile;
 	}
 
 	public void set_launch_timer( int passes) {
-		self.launch_timer = passes;
-		self.launch_timeout_start = (Marble.marble_size +
+		launch_timer = passes;
+		launch_timeout_start = (Marble.marble_size +
 			(horiz_tiles * Tile.tile_size - Marble.marble_size)
 				* passes) / Marble.marble_speed;
 	}
 
 	public void set_board_timer(int seconds) {
-		self.board_timer = seconds;
-		self.board_timeout_start = seconds * Game.frames_per_sec;
-		self.board_timeout = self.board_timeout_start;
+		board_timer = seconds;
+		board_timeout_start = seconds * Game.frames_per_sec;
+		board_timeout = board_timeout_start;
 	}
 
 	public void activateMarble( Marble m) {
@@ -408,14 +406,14 @@ class Board implements Paintable
 
 	public void launch_marble() {
 		activateMarble( new Marble(
-			gr, self.launch_queue[0],
+			gr, launch_queue[0],
 			board_width+Marble.marble_size/2,
 			Marble.marble_size/2, 3));
 		for( int i=0; i < launch_queue.length-1; ++i)
 			launch_queue[i] = launch_queue[i+1];
-		self.launch_queue[launch_queue.length-1] =
+		launch_queue[launch_queue.length-1] =
 			colors.charAt(gr.random.nextInt(colors.length()))-'0';
-		self.launch_timeout = self.launch_timeout_start;
+		launch_timeout = launch_timeout_start;
 		launch_queue_offset = Marble.marble_size;
 	}
 
@@ -456,7 +454,7 @@ class Board implements Paintable
 
 		if( tile_x >= horiz_tiles) return;
 
-		Tile tile = self.tiles[tile_y][tile_x];
+		Tile tile = tiles[tile_y][tile_x];
 
 		if( cy < 0 && marble.direction != 2) {
 			// The special case of new marbles at the top
@@ -467,7 +465,7 @@ class Board implements Paintable
 					w.marbles[0] = -2;
 					marble.direction = 2;
 					this.launch_marble();
-				} else if( this.marbles.size() < self.live_marbles_limit) {
+				} else if( this.marbles.size() < live_marbles_limit) {
 					marble.direction = 2;
 					this.launch_marble();
 				}
@@ -482,7 +480,7 @@ class Board implements Paintable
 		int tile_y = (posy - Marble.marble_size) / Tile.tile_size;
 		if( tile_x >= 0 && tile_x < horiz_tiles &&
 			tile_y >= 0 && tile_y < vert_tiles) {
-			return self.tiles[tile_y][tile_x];
+			return tiles[tile_y][tile_x];
 		}
 		return null;
 	}
@@ -566,23 +564,23 @@ class Board implements Paintable
 
 			if( line.charAt(0) != '|') {
 				if( line.startsWith("name="))
-					self.name = line.substring(5);
+					name = line.substring(5);
 				else if( line.startsWith("maxmarbles="))
-					self.live_marbles_limit = Integer.parseInt(line.substring(11));
+					live_marbles_limit = Integer.parseInt(line.substring(11));
 				else if( line.startsWith("launchtimer="))
-					self.set_launch_timer( Integer.parseInt(line.substring(12)));
+					set_launch_timer( Integer.parseInt(line.substring(12)));
 				else if( line.startsWith("boardtimer="))
 					boardtimer = Integer.parseInt(line.substring(11));
 				else if( line.startsWith("colors=")) {
-					self.colors = "";
+					colors = "";
 					for( char c : line.substring(7).toCharArray()) {
 						if( c >= '0' && c <= '7') {
-							self.colors = self.colors + c;
-							self.colors = self.colors + c;
-							self.colors = self.colors + c;
+							colors = colors + c;
+							colors = colors + c;
+							colors = colors + c;
 						} else if( c == '8') {
 							// Crazy marbles are one-third as common
-							self.colors = self.colors + c;
+							colors = colors + c;
 						}
 					}
 				} else if( line.startsWith("stoplight=")) {
@@ -612,7 +610,7 @@ class Board implements Paintable
 				if( type == 'O') {
 					tile = new Wheel(this, pathsint);
 					numwheels += 1;
-				} else if( type == '%') tile = new Trigger(this, self.colors);
+				} else if( type == '%') tile = new Trigger(this, colors);
 				else if( type == '!') tile = new Stoplight(this, stoplight);
 				else if( type == '&') tile = new Painter(this, pathsint, colorint);
 				else if( type == '#') tile = new Filter(this, pathsint, colorint);
