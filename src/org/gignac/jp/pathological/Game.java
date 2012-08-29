@@ -77,7 +77,7 @@ public class Game extends Activity
 			public void run() {
 				gv.getHandler().post(gameLoop);
 			}
-		});
+		}, true);
 		((TextView)findViewById(R.id.board_name)).setText(board.name);
 		board.launch_marble();
 		gv.setBoard(board);

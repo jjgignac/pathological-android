@@ -10,10 +10,10 @@ public class Preview
 	{
 		Bitmap preview = Bitmap.createBitmap(
 			Math.round(Board.screen_width * scale),
-			Math.round(Board.screen_height * scale),
+			Math.round((Board.screen_height+Marble.marble_size) * scale),
 			Bitmap.Config.ARGB_8888);
 		Blitter b = new BitmapBlitter(s,preview);
-		new Board(gr,s,level,null).paint(b);
+		new Board(gr,s,level,null,false).paint(b);
 		return preview;
 	}
 

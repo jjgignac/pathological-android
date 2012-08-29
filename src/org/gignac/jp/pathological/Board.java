@@ -22,7 +22,7 @@ class Board implements Paintable
 	public static final int board_height = vert_tiles * Tile.tile_size;
 	public static final int screen_width = board_width + Marble.marble_size;
 	public static final int screen_height = board_height + Marble.marble_size;
-	public static final int timer_width = Marble.marble_size*3/4;
+	private int timer_width = Marble.marble_size*3/4;
 	public GameResources gr;
 	public Trigger trigger;
 	public Stoplight stoplight;
@@ -55,7 +55,7 @@ class Board implements Paintable
 	private long pause_changed;
 
 	public Board(GameResources gr, SpriteCache sc,
-		int level, Runnable onPainted)
+		int level, Runnable onPainted, boolean showTimer)
 	{
 		this.gr = gr;
 		this.marbles = new Vector<Marble>();
@@ -71,6 +71,7 @@ class Board implements Paintable
 		this.onPainted = onPainted;
 		this.sc = sc;
 		this.pause_changed = SystemClock.uptimeMillis()-10000;
+		if(!showTimer) timer_width = 0;
 
 		down = new HashMap<Integer,Point>();
 
@@ -307,7 +308,7 @@ class Board implements Paintable
 
 	private void cache_background(int w,int h)
 	{
-		int px = Board.screen_width + Board.timer_width;
+		int px = Board.screen_width + timer_width;
 		int py = Board.screen_height;
 		if( w * py > h * px) {
 			w = (py * w + h/2) / h;
@@ -332,7 +333,7 @@ class Board implements Paintable
 
 	public synchronized void paint(Blitter b)
 	{
-		int px = Board.screen_width + Board.timer_width;
+		int px = Board.screen_width + timer_width;
 		int width = b.getWidth();
 		int height = b.getHeight();
 		scale = width * Board.screen_height < height * px ?
