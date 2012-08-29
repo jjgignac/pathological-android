@@ -41,7 +41,7 @@ public class LevelSelectView extends GLSurfaceView
 		nUnlocked = gr.shp.getInt("nUnlocked",1);
 		for( int i=0; i < nUnlocked; ++i)
 			Preview.cache(getContext(),sc,gr,i,0.5f);
-		sc.cache(R.drawable.intro);
+		IntroScreen.setup(sc);
 		super.onResume();
 	}
 
@@ -80,7 +80,7 @@ public class LevelSelectView extends GLSurfaceView
 		update();
 
 		int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
-		b.blit(R.drawable.intro, 0, 0, width, height);
+		IntroScreen.paint(gr,b);
 		b.transform( 1f, -xOffset, 0f);
 
 		int previewWidth = Math.round(Board.screen_width * previewScale);
@@ -95,10 +95,13 @@ public class LevelSelectView extends GLSurfaceView
 					if(level >= gr.numlevels) continue;
 					int x = page*width+hmargin+i*hSpacing;
 					int y = vmargin+j*vSpacing;
-					if(level < nUnlocked)
+					if(level < nUnlocked) {
+						b.fill(0xff000000, x-previewWidth/48,
+							y-previewHeight/48, previewWidth*50/48,
+							previewHeight*50/48);
 						b.blit( 0x200000000l+level, x, y,
 							previewWidth, previewHeight);
-					else
+					} else
 						b.fill(0xfff080a0, x, y,
 							previewWidth, previewHeight);
 				}
