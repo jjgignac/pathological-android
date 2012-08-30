@@ -80,7 +80,7 @@ public class LevelSelectView extends GLSurfaceView
 		update();
 
 		int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
-		IntroScreen.paint(gr,b);
+		IntroScreen.draw_back(gr,b);
 		b.transform( 1f, -xOffset, 0f);
 
 		int previewWidth = Math.round(Board.screen_width * previewScale);
@@ -107,6 +107,8 @@ public class LevelSelectView extends GLSurfaceView
 				}
 			}
 		}
+		b.transform( 1f, xOffset, 0f);
+		IntroScreen.draw_fore(gr,b);
 		notify();
 	}
 

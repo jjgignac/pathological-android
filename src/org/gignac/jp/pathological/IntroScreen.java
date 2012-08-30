@@ -21,10 +21,13 @@ public class IntroScreen
 		for(int i : pyramid) sc.cache(i);
 	}
 
-	public static void paint(GameResources gr, Blitter b)
+	public static void draw_back(GameResources gr, Blitter b)
 	{
 		b.blit(R.drawable.intro_bg,0,0,b.getWidth(),b.getHeight());
-		
+	}
+
+	public static void draw_fore(GameResources gr, Blitter b)
+	{
 		int logo_w = 343;
 		int logo_h = 55;
 		b.blit(R.drawable.pathological_logo,
