@@ -24,6 +24,7 @@ public class LevelSelectView extends GLSurfaceView
 	private int width, height;
 	private int nUnlocked;
 	private SpriteCache sc;
+	private final Paint paint = new Paint();
 
 	public LevelSelectView( Context context, AttributeSet a)
 	{
@@ -39,8 +40,23 @@ public class LevelSelectView extends GLSurfaceView
 	public void onResume() {
 		gr = GameResources.getInstance(getContext());
 		nUnlocked = gr.shp.getInt("nUnlocked",1);
-		for( int i=0; i < nUnlocked; ++i)
+		paint.setTextSize(Board.board_width*previewScale*0.1f);
+		paint.setAntiAlias(true);
+		Paint.FontMetrics fm = paint.getFontMetrics();
+		int up = (int)Math.ceil(Math.max(-fm.ascent,-fm.top)+fm.leading);
+		int down = (int)Math.ceil(Math.max(fm.descent,fm.bottom));
+		Canvas c = new Canvas();
+		for( int i=0; i < nUnlocked; ++i) {
 			Preview.cache(getContext(),sc,gr,i,0.5f);
+			String label = (i+1)+". "+gr.boardNames.elementAt(i);
+			int txtWid = (int)Math.ceil(paint.measureText(label));
+			int txtHei = up+down;
+			Bitmap text = Bitmap.createBitmap(
+				txtWid, txtHei, Bitmap.Config.ARGB_8888);
+			c.setBitmap(text);
+			c.drawText(label,0,up,paint);
+			sc.cache(0x5700000000l+i,text);
+		}
 		IntroScreen.setup(sc);
 		super.onResume();
 	}
@@ -96,11 +112,16 @@ public class LevelSelectView extends GLSurfaceView
 					int x = page*width+hmargin+i*hSpacing;
 					int y = vmargin+j*vSpacing;
 					if(level < nUnlocked) {
-						b.fill(0xff000000, x-previewWidth/48,
-							y-previewHeight/48, previewWidth*50/48,
-							previewHeight*50/48);
+						b.fill(0xff000000, x-1,
+							y-1, previewWidth+2,
+							previewHeight+2);
 						b.blit( 0x200000000l+level, x, y,
 							previewWidth, previewHeight);
+						Bitmap text = sc.getBitmap(0x5700000000l+level);
+						if(text!=null)
+						b.blit( 0x5700000000l+level,
+							x + (previewWidth-text.getWidth())/2,
+							y + previewHeight + 1);
 					} else
 						b.fill(0xfff080a0, x, y,
 							previewWidth, previewHeight);
