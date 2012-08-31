@@ -52,6 +52,7 @@ public class GameResources
 	public int[][] holecenters_y;
 
 	public int numlevels;
+	public Vector<String> boardNames;
 	
 	public static synchronized GameResources getInstance(Context context) {
 		if(instance == null) instance = new GameResources(context);
@@ -61,20 +62,8 @@ public class GameResources
 	private GameResources(Context context) {
 		this.context = context;
 
-		try {
-			// Count the number of levels
-			BufferedReader f = new BufferedReader(
-				new InputStreamReader(openRawResource(R.raw.all_boards)));
-			int j = 0;
-			while(true) {
-				String line = f.readLine();
-				if( line == null) break;
-				if( line.isEmpty()) continue;
-				if( line.charAt(0) == '|') j += 1;
-			}
-			f.close();
-			numlevels = j / Board.vert_tiles;
-		} catch(IOException e) {}
+		getBoardNames();
+		numlevels = boardNames.size();
 
 		random = new Random();
 
@@ -131,5 +120,27 @@ public class GameResources
 
 	public InputStream openRawResource( int resid) {
 		return context.getResources().openRawResource(resid);
+	}
+
+	private void getBoardNames()
+	{
+		boardNames = new Vector<String>();
+		BufferedReader f = null;
+
+		try {
+			f = new BufferedReader( new InputStreamReader(
+				openRawResource( R.raw.all_boards)));
+			while( true) {
+				String line = f.readLine();
+				if( line==null) break;
+				if( line.startsWith("name="))
+					boardNames.add(line.substring(5));
+			}
+		} catch(IOException e) {
+		} finally {
+			try {
+				if(f != null) f.close();
+			} catch(IOException e) {}
+		}
 	}
 }
