@@ -5,6 +5,7 @@ import android.os.*;
 import android.view.*;
 import android.widget.*;
 import android.content.pm.*;
+import android.content.*;
 
 public class MainActivity extends Activity
 {
@@ -15,6 +16,18 @@ public class MainActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
 	{
         super.onCreate(savedInstanceState);
+
+		// Prevent multiple instances of the app
+		if (!isTaskRoot()) {
+			final Intent intent = getIntent();
+			final String intentAction = intent.getAction(); 
+			if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) &&
+				intentAction != null && intentAction.equals(Intent.ACTION_MAIN)) {
+				finish();
+				return;       
+			}
+		}
+
         setContentView(R.layout.main);
 		setRequestedOrientation(
 			ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
