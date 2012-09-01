@@ -14,6 +14,10 @@ public class LevelSelectView extends GLSurfaceView
 	private static final float previewScale = 0.28f;
 	private static final int hmargin = Board.board_width/4;
 	private static final int vmargin = Board.board_width/4;
+	private static final int previewWidth =
+		Math.round(Board.screen_width * previewScale);
+	private static final int previewHeight =
+		Math.round(Board.screen_height * previewScale);
 	
 	private GameResources gr;
 	private BlitterRenderer renderer;
@@ -40,8 +44,10 @@ public class LevelSelectView extends GLSurfaceView
 	public void onResume() {
 		gr = GameResources.getInstance(getContext());
 		nUnlocked = gr.shp.getInt("nUnlocked",1);
-		paint.setTextSize(Board.board_width*previewScale*0.1f);
+		paint.setTextSize(previewWidth*0.1f);
 		paint.setAntiAlias(true);
+		paint.setMaskFilter(null);
+		paint.setColor(0xff000000);
 		Paint.FontMetrics fm = paint.getFontMetrics();
 		int up = (int)Math.ceil(Math.max(-fm.ascent,-fm.top)+fm.leading);
 		int down = (int)Math.ceil(Math.max(fm.descent,fm.bottom));
@@ -57,6 +63,13 @@ public class LevelSelectView extends GLSurfaceView
 			c.drawText(label,0,up,paint);
 			sc.cache(0x5700000000l+i,text);
 		}
+		Bitmap shadow = Bitmap.createBitmap( previewWidth+10,
+			previewHeight+10, Bitmap.Config.ARGB_8888);
+		c.setBitmap(shadow);
+		paint.setMaskFilter(new BlurMaskFilter(5,BlurMaskFilter.Blur.NORMAL));
+		paint.setColor(0x30000000);
+		c.drawRect(5,5,previewWidth+5,previewHeight+5,paint);
+		sc.cache(0x5800000000l,shadow);
 		IntroScreen.setup(sc);
 		super.onResume();
 	}
@@ -97,10 +110,9 @@ public class LevelSelectView extends GLSurfaceView
 
 		int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
 		IntroScreen.draw_back(gr,b);
+		IntroScreen.draw_fore(gr,b);
 		b.transform( 1f, -xOffset, 0f);
 
-		int previewWidth = Math.round(Board.screen_width * previewScale);
-		int previewHeight = Math.round(Board.screen_height * previewScale);
 		int hSpacing = (width - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
 		int vSpacing = (height - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;
 		
@@ -112,6 +124,7 @@ public class LevelSelectView extends GLSurfaceView
 					int x = page*width+hmargin+i*hSpacing;
 					int y = vmargin+j*vSpacing;
 					if(level < nUnlocked) {
+						b.blit(0x5800000000l, x+5, y+5);
 						b.fill(0xff000000, x-1,
 							y-1, previewWidth+2,
 							previewHeight+2);
@@ -128,8 +141,6 @@ public class LevelSelectView extends GLSurfaceView
 				}
 			}
 		}
-		b.transform( 1f, xOffset, 0f);
-		IntroScreen.draw_fore(gr,b);
 		notify();
 	}
 
