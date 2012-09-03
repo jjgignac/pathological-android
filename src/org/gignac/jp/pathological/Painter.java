@@ -37,7 +37,7 @@ class Painter extends TunnelTile
 			if( marble.color != color) {
 				// Change the color
 				marble.color = color;
-				board.gr.play_sound( board.gr.change_color);
+				board.gr.play_sound( GameResources.change_color);
 			}
 		}
 	}

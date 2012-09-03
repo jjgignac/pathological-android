@@ -24,7 +24,7 @@ class Director extends TunnelTile
 	public void affect_marble(Board board, Marble marble, int x, int y) {
 		if(x == tile_size/2 && y == tile_size/2) {
 			marble.direction = direction;
-			board.gr.play_sound( board.gr.direct_marble);
+			board.gr.play_sound( GameResources.direct_marble);
 		}
 	}
 }

@@ -1,19 +1,9 @@
 package org.gignac.jp.pathological;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 import android.content.*;
-import javax.microedition.khronos.opengles.*;
-import javax.microedition.khronos.egl.*;
 import android.util.*;
-import android.graphics.*;
 
 public class GameView extends GLSurfaceView
 {

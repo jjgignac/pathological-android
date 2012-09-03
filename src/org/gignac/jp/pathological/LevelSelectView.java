@@ -2,7 +2,6 @@ package org.gignac.jp.pathological;
 import android.view.*;
 import android.content.*;
 import android.util.*;
-import android.graphics.*;
 import android.opengl.*;
 import android.os.*;
 
@@ -43,7 +42,7 @@ public class LevelSelectView extends GLSurfaceView
 
 	public void onResume() {
 		gr = GameResources.getInstance(getContext());
-		nUnlocked = gr.shp.getInt("nUnlocked",1);
+		nUnlocked = GameResources.shp.getInt("nUnlocked",1);
 		paint.setTextSize(previewWidth*0.1f);
 		paint.setAntiAlias(true);
 		paint.setMaskFilter(null);

@@ -1,5 +1,4 @@
 package org.gignac.jp.pathological;
-import android.graphics.*;
 
 class Tile
 {

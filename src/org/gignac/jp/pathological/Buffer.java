@@ -46,7 +46,7 @@ class Buffer extends TunnelTile
 				newmarble.top = top + (tile_size-Marble.marble_size)/2;
 				newmarble.direction = marble.direction;
 
-				gr.play_sound( gr.ping);
+				gr.play_sound( GameResources.ping);
 
 				// Let the base class affect the marble
 				super.affect_marble(board, newmarble,
@@ -59,7 +59,7 @@ class Buffer extends TunnelTile
 
 				board.activateMarble( newmarble);
 
-				gr.play_sound( gr.ping);
+				gr.play_sound( GameResources.ping);
 
 				// Let the base class affect the marble
 				super.affect_marble(board, newmarble,

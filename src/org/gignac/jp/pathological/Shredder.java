@@ -15,7 +15,7 @@ class Shredder extends TunnelTile
 	{
 		if( x == tile_size/2 && y == tile_size/2) {
 			board.deactivateMarble( marble);
-			board.gr.play_sound( board.gr.shredder);
+			board.gr.play_sound( GameResources.shredder);
 		}
 	}
 }

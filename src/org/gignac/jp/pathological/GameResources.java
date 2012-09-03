@@ -2,7 +2,6 @@ package org.gignac.jp.pathological;
 import android.graphics.*;
 import android.media.*;
 import android.content.*;
-import android.content.res.*;
 import java.util.*;
 import java.io.*;
 

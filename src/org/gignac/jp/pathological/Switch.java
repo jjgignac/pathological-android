@@ -28,7 +28,7 @@ class Switch extends TunnelTile
 		int t = curdir;
 		curdir = otherdir;
 		otherdir = t;
-		board.gr.play_sound( board.gr.switched);
+		board.gr.play_sound( GameResources.switched);
 		invalidate_fore();
 	}
 

@@ -34,10 +34,10 @@ class Filter extends TunnelTile
 			// If the color is wrong, bounce the marble
 			if( marble.color != color && marble.color != 8) {
 				marble.direction = marble.direction ^ 2;
-				gr.play_sound( gr.ping);
+				gr.play_sound( GameResources.ping);
 			} else {
 				super.affect_marble( board, marble, x, y);
-				gr.play_sound( gr.filter_admit);
+				gr.play_sound( GameResources.filter_admit);
 			}
 		}
 	}

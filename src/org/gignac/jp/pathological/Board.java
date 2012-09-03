@@ -2,8 +2,6 @@ package org.gignac.jp.pathological;
 import java.io.*;
 import java.util.*;
 import android.graphics.*;
-import android.util.*;
-import android.content.res.*;
 import android.os.*;
 
 class Board implements Paintable
@@ -35,7 +33,6 @@ class Board implements Paintable
 	public int live_marbles_limit;
 	private int launch_timeout;
 	private int launch_timeout_start;
-	private int board_timer;
 	private int board_timeout;
 	private int board_timeout_start;
 	public String colors;
@@ -382,7 +379,6 @@ class Board implements Paintable
 	}
 
 	public void set_board_timer(int seconds) {
-		board_timer = seconds;
 		board_timeout_start = seconds * Game.frames_per_sec;
 		board_timeout = board_timeout_start;
 	}

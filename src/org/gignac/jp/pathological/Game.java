@@ -1,13 +1,7 @@
 package org.gignac.jp.pathological;
-import java.io.*;
-import android.graphics.*;
+
 import android.app.*;
 import android.os.*;
-import android.media.*;
-import android.content.res.*;
-import java.util.*;
-import android.view.*;
-import java.util.concurrent.*;
 import android.widget.*;
 import android.content.pm.*;
 import android.content.*;
@@ -148,7 +142,7 @@ public class Game extends Activity
 
 	private void onLaunchTimeout()
 	{
-		gr.play_sound(gr.die);
+		gr.play_sound(GameResources.die);
 		AlertDialog.Builder b = new AlertDialog.Builder(Game.this);
 		b.setTitle("Failed").
 			setMessage("The launch timer has expired.").
@@ -159,7 +153,7 @@ public class Game extends Activity
 
 	private void onBoardTimeout()
 	{
-		gr.play_sound(gr.die);
+		gr.play_sound(GameResources.die);
 		AlertDialog.Builder b = new AlertDialog.Builder(Game.this);
 		b.setTitle("Failed").
 			setMessage("The board timer has expired.").
@@ -170,10 +164,10 @@ public class Game extends Activity
 
 	private void onBoardComplete()
 	{
-		gr.play_sound(gr.levelfinish);
+		gr.play_sound(GameResources.levelfinish);
 		gameLoop.stop();
-		if(level == gr.shp.getInt("nUnlocked",1)-1) {
-			SharedPreferences.Editor e = gr.shp.edit();
+		if(level == GameResources.shp.getInt("nUnlocked",1)-1) {
+			SharedPreferences.Editor e = GameResources.shp.edit();
 			e.putInt("nUnlocked",level+2);
 			e.apply();
 		}

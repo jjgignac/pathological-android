@@ -1,5 +1,4 @@
 package org.gignac.jp.pathological;
-import android.graphics.*;
 
 class Trigger extends Tile
 {
@@ -34,7 +33,7 @@ class Trigger extends Tile
 			countdown -= 1;
 			if( countdown == 0) {
 				setup( board.colors);
-				gr.play_sound( gr.trigger_setup);
+				gr.play_sound( GameResources.trigger_setup);
 			}
 		}
 	}

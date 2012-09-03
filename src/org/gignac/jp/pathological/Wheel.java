@@ -1,5 +1,4 @@
 package org.gignac.jp.pathological;
-import android.graphics.*;
 
 class Wheel extends Tile
 {
@@ -92,8 +91,8 @@ class Wheel extends Tile
 		}
 
 		// Start the wheel spinning
-		spinpos = board.gr.wheel_steps - 1;
-		board.gr.play_sound( board.gr.wheel_turn);
+		spinpos = GameResources.wheel_steps - 1;
+		board.gr.play_sound( GameResources.wheel_turn);
 
 		// Reposition the marbles
 		int t = marbles[0];
@@ -136,14 +135,14 @@ class Wheel extends Tile
 			(((Wheel)neighbor).spinpos != 0 ||
 			 ((Wheel)neighbor).marbles[i^2] != -3))
 			)
-			gr.play_sound( gr.incorrect);
+			gr.play_sound( GameResources.incorrect);
 		else {
 			// If the neighbor is a wheel, apply a special lock
 			if( neighbor instanceof Wheel)
 				((Wheel)neighbor).marbles[i^2] = -2;
 			else if( board.marbles.size() >= board.live_marbles_limit) {
 				// Impose the live marbles limit
-				gr.play_sound( gr.incorrect);
+				gr.play_sound( GameResources.incorrect);
 				return;
 			}
 
@@ -154,7 +153,7 @@ class Wheel extends Tile
 					gr.holecenters_y[0][i]+top,
 					i));
 			marbles[i] = -3;
-			gr.play_sound( gr.marble_release);
+			gr.play_sound( GameResources.marble_release);
 			invalidate();
 		}
 	}
@@ -165,14 +164,14 @@ class Wheel extends Tile
 		GameResources gr = board.gr;
 
 		// Watch for marbles entering
-		if( rposx+Marble.marble_size/2 == gr.wheel_margin ||
-			rposx-Marble.marble_size/2 == tile_size - gr.wheel_margin ||
-			rposy+Marble.marble_size/2 == gr.wheel_margin ||
-			rposy-Marble.marble_size/2 == tile_size - gr.wheel_margin) {
+		if( rposx+Marble.marble_size/2 == GameResources.wheel_margin ||
+			rposx-Marble.marble_size/2 == tile_size - GameResources.wheel_margin ||
+			rposy+Marble.marble_size/2 == GameResources.wheel_margin ||
+			rposy-Marble.marble_size/2 == tile_size - GameResources.wheel_margin) {
 			if( spinpos != 0 || marbles[marble.direction^2] >= -1) {
 				// Reject the marble
 				marble.direction = marble.direction ^ 2;
-				gr.play_sound( gr.ping);
+				gr.play_sound( GameResources.ping);
 			} else {
 				marbles[marble.direction^2] = -1;
 				entering[marble.direction^2] = marble;
@@ -196,7 +195,7 @@ class Wheel extends Tile
 		// Complete the wheel
 		for( int i=0; i<4; ++i) marbles[i] = -3;
 		completed = true;
-		board.gr.play_sound( board.gr.wheel_completed);
+		board.gr.play_sound( GameResources.wheel_completed);
 		invalidate();
 	}
 

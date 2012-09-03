@@ -1,6 +1,5 @@
 package org.gignac.jp.pathological;
 import android.os.*;
-import android.util.*;
 
 public class GameLoop
 	implements Runnable

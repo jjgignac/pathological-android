@@ -1,6 +1,5 @@
 package org.gignac.jp.pathological;
 import android.graphics.*;
-import android.util.*;
 
 public class BitmapBlitter
 	implements Blitter

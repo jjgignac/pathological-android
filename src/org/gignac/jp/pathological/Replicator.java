@@ -47,7 +47,7 @@ class Replicator extends TunnelTile
 				board.activateMarble( new Marble( board.gr,
 					pending_col[i], left + tile_size/2,
 					top + tile_size/2, pending_dir[i]));
-				board.gr.play_sound( board.gr.replicator);
+				board.gr.play_sound( GameResources.replicator);
 
 				pending_count[i] -= 1;
 				if( pending_count[i] <= 0) {
@@ -89,7 +89,7 @@ class Replicator extends TunnelTile
 			pending_count[npending] = count - 1;
 			pending_delay[npending] = replicator_delay;
 			++npending;
-			board.gr.play_sound( board.gr.replicator);
+			board.gr.play_sound( GameResources.replicator);
 		}
 	}
 }

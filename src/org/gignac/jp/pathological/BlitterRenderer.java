@@ -9,10 +9,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
-import android.opengl.GLU;
-import android.opengl.GLUtils;
-import android.view.*;
-import android.graphics.*;
 
 public class BlitterRenderer
 	implements GLSurfaceView.Renderer, Blitter

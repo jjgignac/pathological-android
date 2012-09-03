@@ -1,5 +1,4 @@
 package org.gignac.jp.pathological;
-import android.graphics.*;
 
 class Marble {
 	public static final int marble_size = 28;
@@ -9,7 +8,6 @@ class Marble {
 	public int color;
 	public int left, top;
 	public int direction;
-	private GameResources gr;
 	public static final int[] marble_images = {
 		R.drawable.marble_0, R.drawable.marble_1,
 		R.drawable.marble_2, R.drawable.marble_3,
@@ -26,7 +24,6 @@ class Marble {
 	};
 	
 	public Marble(GameResources gr, int color, int cx, int cy, int direction) {
-		this.gr = gr;
 		this.color = color;
 		this.left = cx-marble_size/2;
 		this.top = cy-marble_size/2;

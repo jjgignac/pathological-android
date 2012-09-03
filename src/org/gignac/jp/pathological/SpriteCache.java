@@ -37,14 +37,12 @@ public class SpriteCache
 
 	private class Sprite
 	{
-		public long uniq;
 		public int glName;
 		public Bitmap bitmap;
 		public boolean needsPrep;
 
 		public Sprite(long uniq, Bitmap b) {
 			this.bitmap = b;
-			this.uniq = uniq;
 		}
 
 		public void prep(GL10 gl) {

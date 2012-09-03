@@ -29,7 +29,7 @@ class Teleporter extends TunnelTile
 		if( x == tile_size/2 && y == tile_size/2) {
 			marble.left = other.left + (tile_size-Marble.marble_size)/2;
 			marble.top = other.top + (tile_size-Marble.marble_size)/2;
-			board.gr.play_sound( board.gr.teleport);
+			board.gr.play_sound( GameResources.teleport);
 		}
 	}
 }
