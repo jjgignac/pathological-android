@@ -3,30 +3,19 @@ package org.gignac.jp.pathological;
 class Painter extends TunnelTile
 {
 	private int color;
-	private static int[] painter_images = {
-		R.drawable.painter_0, R.drawable.painter_1,
-		R.drawable.painter_2, R.drawable.painter_3,
-		R.drawable.painter_4, R.drawable.painter_5,
-		R.drawable.painter_6, R.drawable.painter_7
-	};
-	private static int[] painter_images_cb = {
-		R.drawable.painter_0_cb, R.drawable.painter_1_cb,
-		R.drawable.painter_2_cb, R.drawable.painter_3_cb,
-		R.drawable.painter_4_cb, R.drawable.painter_5_cb,
-		R.drawable.painter_6_cb, R.drawable.painter_7_cb
-	};
 	
 	public Painter(Board board, int paths, int color)
 	{
 		super(board, paths);
-		board.sc.cache(painter_images);
-		board.sc.cache(painter_images_cb);
+		board.sc.cache(R.drawable.misc);
 		this.color = color;
 	}
 
 	@Override
 	protected void draw_cap(Blitter surface) {
-		surface.blit( painter_images[color], left, top);
+		surface.blit( R.drawable.misc,
+            38*color+(color<6?266:-228), color<6?242:280, 38, 38,
+            left+27, top+27);
 	}
 
 	@Override

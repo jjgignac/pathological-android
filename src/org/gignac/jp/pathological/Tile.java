@@ -8,14 +8,6 @@ class Tile
 	public int tile_x, tile_y;
 	protected Board board;
 	public boolean dirty;
-	private static final int[] plain_tiles = {
-		R.drawable.path_0, R.drawable.path_1, R.drawable.path_2,
-		R.drawable.path_3, R.drawable.path_4, R.drawable.path_5,
-		R.drawable.path_6, R.drawable.path_7, R.drawable.path_8,
-		R.drawable.path_9, R.drawable.path_10, R.drawable.path_11,
-		R.drawable.path_12, R.drawable.path_13, R.drawable.path_14,
-		R.drawable.path_15
-	};
 	
 	public Tile( Board board, int paths, int cx, int cy, int x, int y) {
 		this.board = board;
@@ -25,7 +17,7 @@ class Tile
 		this.tile_x = x;
 		this.tile_y = y;
 		this.dirty = true;
-		board.sc.cache(plain_tiles);
+		board.sc.cache(R.drawable.misc);
 	}
 	
 	public Tile( Board board, int paths) {
@@ -41,7 +33,8 @@ class Tile
 
 	public void draw_back(Blitter b) {
 		if(paths > 0) {
-			b.blit( plain_tiles[paths],
+			b.blit( R.drawable.misc,
+                92*(paths%5), 386+92*(paths/5), 92, 92,
 				left, top, tile_size, tile_size);
 			if( (paths & 1) > 0 && tile_y == 0) {
 				b.blit( 0x100000001l,

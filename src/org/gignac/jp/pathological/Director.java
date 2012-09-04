@@ -3,21 +3,18 @@ package org.gignac.jp.pathological;
 class Director extends TunnelTile
 {
 	private int direction;
-	private static final int[] director_images = {
-		R.drawable.director_0, R.drawable.director_1,
-		R.drawable.director_2, R.drawable.director_3
-	};
 
 	public Director(Board board, int paths, int direction)
 	{
 		super(board, paths);
 		this.direction = direction;
-		board.sc.cache(director_images);
+		board.sc.cache(R.drawable.misc);
 	}
 
 	@Override
 	protected void draw_cap(Blitter surface) {
-		surface.blit( director_images[direction], left, top);
+		surface.blit( R.drawable.misc,
+            38*direction, 204, 38, 38, left+27, top+27);
 	}
 
 	@Override

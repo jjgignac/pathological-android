@@ -3,14 +3,6 @@ import android.graphics.*;
 
 public abstract class TunnelTile extends Tile
 {
-	private static final int[] tunnel_images = {
-		R.drawable.tunnel_0, R.drawable.tunnel_1, R.drawable.tunnel_2,
-		R.drawable.tunnel_3, R.drawable.tunnel_4, R.drawable.tunnel_5,
-		R.drawable.tunnel_6, R.drawable.tunnel_7, R.drawable.tunnel_8,
-		R.drawable.tunnel_9, R.drawable.tunnel_10, R.drawable.tunnel_11,
-		R.drawable.tunnel_12, R.drawable.tunnel_13, R.drawable.tunnel_14,
-		R.drawable.tunnel_15
-	};
 	private static final int tunnel_size = 58;
 	private long uniq;
 	private Bitmap fore;
@@ -24,13 +16,14 @@ public abstract class TunnelTile extends Tile
 	@Override
 	public void setxy(int x, int y) {
 		super.setxy(x,y);
-		board.sc.cache(tunnel_images[paths]);
+		board.sc.cache(R.drawable.misc);
 		uniq = 0x700000000l+(left<<16)+top;
 		fore = Bitmap.createBitmap(
 			tunnel_size,tunnel_size,Bitmap.Config.ARGB_8888);
 		b = new BitmapBlitter(board.sc,fore);
 		final int offset = (tile_size - tunnel_size)/2;
-		b.blit(tunnel_images[paths],-offset,-offset);
+		b.blit( R.drawable.misc,
+            56*(paths%9), 92+56*(paths/9), 56, 56, 18-offset, 18-offset);
 		b.transform(1f,-left-offset,-top-offset);
 		fore_dirty = true;
 	}

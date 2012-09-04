@@ -14,7 +14,7 @@ class Replicator extends TunnelTile
 	{
 		super(board, paths);
 		this.count = count;
-		board.sc.cache(R.drawable.replicator);
+		board.sc.cache(R.drawable.misc);
 		pending_col = new int[10];
 		pending_dir = new int[10];
 		pending_count = new int[10];
@@ -24,7 +24,7 @@ class Replicator extends TunnelTile
 
 	@Override
 	protected void draw_cap(Blitter surface) {
-		surface.blit( R.drawable.replicator, left, top);
+		surface.blit( R.drawable.misc, 380, 280, 38, 38, left+27, top+27);
 	}
 
 	@Override

@@ -8,15 +8,13 @@ class Teleporter extends TunnelTile
 	public Teleporter(Board board, int paths, Teleporter other)
 	{
 		super(board, paths);
-		image = ((paths & 5) == 0) ?
-			R.drawable.teleporter_h :
-			R.drawable.teleporter_v;
+		image = ((paths & 5) == 0) ? 418 : 456;
 		if( other != null) connect( other);
-		board.sc.cache(image);
+		board.sc.cache(R.drawable.misc);
 	}
 
 	protected void draw_cap(Blitter surface) {
-		surface.blit( image, left, top);
+		surface.blit( R.drawable.misc, image, 318, 38, 38, left+27, top+27);
 	}
 
 	private void connect(Teleporter other) {

@@ -107,9 +107,8 @@ class Board implements Paintable
 		liveCounterCanvas = new Canvas(liveCounter);
 
 		sc.cache( R.drawable.backdrop);
-		sc.cache( R.drawable.launcher_corner);
+		sc.cache( R.drawable.misc);
 		sc.cache( 0x100000001l, entrance);
-		sc.cache( Marble.marble_images);
 		sc.cache( 0x100000002l, liveCounter);
 
 		// Load the level
@@ -132,18 +131,18 @@ class Board implements Paintable
 	{
 		// Black-out the right edge of the backdrop
 		b.fill( 0xff000000, screen_width - Marble.marble_size*3/4,
-			0, Marble.marble_size*3/4+timer_width, screen_height);
+			0, Marble.marble_size*3/4+timer_width, screen_height*2);
 
 		// Draw the launcher
-		b.blit( R.drawable.path_10,
+		b.blit( R.drawable.misc, 0, 570, 92, 92,
 			Marble.marble_size, (Marble.marble_size-Tile.tile_size)/2,
 			board_width - Marble.marble_size, Tile.tile_size);
-		b.blit( R.drawable.path_2,
+		b.blit( R.drawable.misc, 184, 386, 92, 92,
 			(Marble.marble_size-Tile.tile_size)/2,
 			(Marble.marble_size-Tile.tile_size)/2);
-		b.blit( R.drawable.launcher_corner,
+		b.blit( R.drawable.misc, 274, 662, 60, 28,
 			board_width-(Tile.tile_size-Marble.marble_size)/2, 0);
-		b.blit(R.drawable.path_5,
+		b.blit(R.drawable.misc, 0, 478, 92, 92,
 			   board_width+(Marble.marble_size-Tile.tile_size)/2,
 			   Marble.marble_size-1, Tile.tile_size,
 			   board_height*3);
@@ -194,8 +193,9 @@ class Board implements Paintable
 			timer_height-y, timer_width-3, y);
 
 		// Draw the marble queue
+//		b.fill(0xff000000, board_width, launch_queue_offset, 28, launch_queue.length*28);
 		for(int i=0; i < launch_queue.length; ++i)
-			b.blit(Marble.marble_images[launch_queue[i]],
+			b.blit(R.drawable.misc, 28*launch_queue[i], 357, 28, 28,
 				board_width, launch_queue_offset + i * Marble.marble_size);
 	}
 

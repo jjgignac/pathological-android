@@ -10,9 +10,7 @@ class Trigger extends Tile
 		super(board,0); // Call base class intializer
 		this.marbles = null;
 		this.setup( colors);
-		board.sc.cache(R.drawable.trigger);
-		board.sc.cache(Marble.marble_images);
-		board.sc.cache(Marble.marble_images_cb);
+		board.sc.cache(R.drawable.misc);
 	}
 
 	private void setup(String colors) {
@@ -42,13 +40,13 @@ class Trigger extends Tile
 	public void draw_back(Blitter b) {
 		super.draw_back(b);
 		GameResources gr = board.gr;
-		b.blit( R.drawable.trigger, left, top, tile_size, tile_size);
+		b.blit( R.drawable.misc, 368, 0, 92, 92, left, top);
 		if( marbles != null) {
 			for(int i=0; i<4; ++i) {
-				b.blit( Marble.marble_images[marbles.charAt(i)-'0'],
+				b.blit( R.drawable.misc,
+                    28*(marbles.charAt(i)-'0'), 357, 28, 28,
 					gr.holecenters_x[0][i]+left-Marble.marble_size/2,
-					gr.holecenters_y[0][i]+top-Marble.marble_size/2,
-					Marble.marble_size, Marble.marble_size);
+					gr.holecenters_y[0][i]+top-Marble.marble_size/2);
 			}
 		}
 	}

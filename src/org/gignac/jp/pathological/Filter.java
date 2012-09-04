@@ -3,28 +3,16 @@ package org.gignac.jp.pathological;
 class Filter extends TunnelTile
 {
 	private int color;
-	private static int[] filter_images = {
-		R.drawable.filter_0, R.drawable.filter_1,
-		R.drawable.filter_2, R.drawable.filter_3,
-		R.drawable.filter_4, R.drawable.filter_5,
-		R.drawable.filter_6, R.drawable.filter_7
-	};
-	private static int[] filter_images_cb = {
-		R.drawable.filter_0_cb, R.drawable.filter_1_cb,
-		R.drawable.filter_2_cb, R.drawable.filter_3_cb,
-		R.drawable.filter_4_cb, R.drawable.filter_5_cb,
-		R.drawable.filter_6_cb, R.drawable.filter_7_cb
-	};
 	
 	public Filter(Board board, int paths, int color) {
 		super(board, paths);
-		board.sc.cache(filter_images);
-		board.sc.cache(filter_images_cb);
+		board.sc.cache(R.drawable.misc);
 		this.color = color;
 	}
 
 	protected void draw_cap(Blitter surface) {
-		surface.blit( filter_images[color], left, top);
+		surface.blit( R.drawable.misc,
+            152+color*38, 204, 38, 38, left+27, top+27);
 	}
 
 	public void affect_marble(Board board, Marble marble, int x, int y)

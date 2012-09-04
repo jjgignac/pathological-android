@@ -4,23 +4,12 @@ class Switch extends TunnelTile
 {
 	private int curdir;
 	private int otherdir;
-	private static int[] switch_images = {
-		R.drawable.switch_01, R.drawable.switch_01,
-		R.drawable.switch_02, R.drawable.switch_03,
-		R.drawable.switch_10, R.drawable.switch_01,
-		R.drawable.switch_12, R.drawable.switch_13,
-		R.drawable.switch_20, R.drawable.switch_21,
-		R.drawable.switch_01, R.drawable.switch_23,
-		R.drawable.switch_30, R.drawable.switch_31,
-		R.drawable.switch_32
-	};
 
 	public Switch(Board board, int paths, int dir1, int dir2)
 	{
 		super(board, paths);
 		curdir = dir1;
 		otherdir = dir2;
-		board.sc.cache(switch_images);
 	}
 
 	private void switch_()
@@ -34,8 +23,10 @@ class Switch extends TunnelTile
 
 	protected void draw_cap(Blitter surface)
 	{
-		surface.blit( switch_images[curdir*4+otherdir],
-			left, top);
+        final int i = (curdir*4+otherdir)*4/5;
+		surface.blit( R.drawable.misc,
+            38*i + (i<1?456:-38), i<1?280:318, 38, 38,
+			left+27, top+27);
 	}
 
 	public void affect_marble(Board board, Marble marble, int x, int y)

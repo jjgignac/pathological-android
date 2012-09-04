@@ -9,24 +9,23 @@ class Buffer extends TunnelTile
 		super(board, paths);
 		marble = color;
 		entering = null;
-		board.sc.cache(R.drawable.buffer);
-		board.sc.cache(R.drawable.buffer_top);
+		board.sc.cache(R.drawable.misc);
 	}
 
 	public void draw_back(Blitter surface) {
 		super.draw_back(surface);
 		int color = marble;
 		if( color >= 0) {
-			surface.blit( Marble.marble_images[color],
+			surface.blit( R.drawable.misc, color*28, 357, 28, 28,
 				left + (tile_size-Marble.marble_size)/2,
 				top + (tile_size-Marble.marble_size)/2);
 		} else {
-			surface.blit( R.drawable.buffer, left, top);
+			surface.blit( R.drawable.misc, 418, 166, 38, 38, left+27, top+27);
 		}
 	}
 
 	protected void draw_cap(Blitter surface) {
-		surface.blit( R.drawable.buffer_top, left, top);
+		surface.blit( R.drawable.misc, 456, 166, 38, 38, left+27, top+27);
 	}
 
 	public void affect_marble(Board board, Marble marble, int x, int y)

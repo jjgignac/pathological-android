@@ -15,10 +15,7 @@ public class BlitterRenderer
 {
 	private Paintable painter;
 	private float[] vertices;
-	private static final float[] texture = {
-		0.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 1.0f, 1.0f
-	};
+	private final float[] texture = new float[8];
 	private FloatBuffer textureBuffer;
     private FloatBuffer vertexBuffer;
 	private int width, height;
@@ -35,9 +32,6 @@ public class BlitterRenderer
    		byteBuffer = ByteBuffer.allocateDirect(texture.length * 4);
    		byteBuffer.order(ByteOrder.nativeOrder());
    		textureBuffer = byteBuffer.asFloatBuffer();
-
-		textureBuffer.put(texture);
-		textureBuffer.position(0);
 
 		this.sc = sc;
 	}
@@ -97,7 +91,7 @@ public class BlitterRenderer
 	    gl.glDisable(GL10.GL_TEXTURE_2D);
 		gl.glColor4f(((color>>16)&0xff)*s,((color>>8)&0xff)*s,
 			(color&0xff)*s,((color>>24)&0xff)*s);
-		blit(x,y,w,h);		
+		blit(0f,0f,1f,1f,x,y,w,h);
 		gl.glColor4f(1f,1f,1f,1f);
 	}
 
@@ -107,10 +101,16 @@ public class BlitterRenderer
 	}
 
 	@Override	
+    public void blit(int resid, int sx, int sy,
+        int sw, int sh, int x, int y, int w, int h) {
+        blit(resid&0xffffffffl, sx, sy, sw, sh, x, y, w, h);
+    }
+
+	@Override
 	public void blit(long uniq, int x, int y, int w, int h) {
 	    gl.glEnable(GL10.GL_TEXTURE_2D);
 		sc.bind(gl, uniq);
-		blit(x,y,w,h);		
+		blit(0f,0f,1f,1f,x,y,w,h);
 	}
 
 	@Override
@@ -119,11 +119,30 @@ public class BlitterRenderer
 	}
 
 	@Override
+    public void blit( int resid, int sx, int sy,
+        int sw, int sh, int x, int y) {
+        blit(resid&0xffffffffl, sx, sy, sw, sh, x, y, sw, sh);
+    }
+
+	@Override
 	public void blit( long uniq, int x, int y) {
 	    gl.glEnable(GL10.GL_TEXTURE_2D);
 		sc.bind(gl, uniq);
 		Bitmap b = sc.getBitmap(uniq);
-		blit(x, y, b.getWidth(), b.getHeight());
+		blit(0f, 0f, 1f, 1f,
+		    x, y, b.getWidth(), b.getHeight());
+	}
+
+    private void blit( long uniq, int sx, int sy,
+        int sw, int sh, int x, int y, int w, int h) {
+        gl.glEnable(GL10.GL_TEXTURE_2D);
+        sc.bind(gl, uniq);
+        Bitmap b = sc.getBitmap(uniq);
+        int bw = b.getWidth();
+        int bh = b.getHeight();
+        blit((float)sx*(1f/bw), (float)sy*(1f/bh),
+            (float)(sx+sw)*(1f/bw), (float)(sy+sh)*(1f/bh),
+            x, y, w, h);
 	}
 
 	@Override
@@ -136,8 +155,17 @@ public class BlitterRenderer
 		return height;
 	}
 
-	private void blit( float x, float y, float w, float h)
+    private void blit( float x0, float y0, float x1, float y1,
+            float x, float y, float w, float h)
 	{
+        texture[0] = texture[4] = x0;
+        texture[1] = texture[3] = y0;
+        texture[2] = texture[6] = x1;
+        texture[5] = texture[7] = y1;
+
+        textureBuffer.put(texture);
+        textureBuffer.position(0);
+
 		vertices[0] = vertices[6] = x;
 		vertices[1] = vertices[4] = y;
 		vertices[3] = vertices[9] = x + w;

@@ -17,14 +17,7 @@ class Wheel extends Tile
 		marbles[2] = -3;
 		marbles[3] = -3;
 
-		board.sc.cache(R.drawable.moving_hole);
-		board.sc.cache(R.drawable.moving_hole_dark);
-		board.sc.cache(R.drawable.blank_wheel);
-		board.sc.cache(R.drawable.blank_wheel_dark);
-		board.sc.cache(R.drawable.wheel);
-		board.sc.cache(R.drawable.wheel_dark);
-		board.sc.cache(Marble.marble_images);
-		board.sc.cache(Marble.marble_images_cb);
+		board.sc.cache(R.drawable.misc);
 	}
 
 	@Override
@@ -34,21 +27,16 @@ class Wheel extends Tile
 		GameResources gr = board.gr;
 
 		if( spinpos != 0) {
-			b.blit( completed ?
-				R.drawable.blank_wheel_dark : R.drawable.blank_wheel,
-				left, top, tile_size, tile_size);
+			b.blit(R.drawable.misc, completed?0:92, 0, 92, 92, left, top);
 			for(int i=0; i<4; ++i) {
 				int holecenter_x = gr.holecenters_x[spinpos][i];
 				int holecenter_y = gr.holecenters_y[spinpos][i];
-				b.blit( completed ?
-					R.drawable.moving_hole_dark : R.drawable.moving_hole,
+				b.blit( R.drawable.misc, completed?362:334, 662, 28, 28,
 					holecenter_x-Marble.marble_size/2+left,
 					holecenter_y-Marble.marble_size/2+top);
 			}
 		} else {
-			b.blit( completed ?
-				R.drawable.wheel_dark : R.drawable.wheel,
-				left, top);
+			b.blit(R.drawable.misc, completed?184:276, 0, 92, 92, left, top);
 		}
 
 		for( int i=0; i < 4; ++i) {
@@ -56,7 +44,7 @@ class Wheel extends Tile
 			if( color >= 0) {
 				int holecenter_x = gr.holecenters_x[spinpos][i];
 				int holecenter_y = gr.holecenters_y[spinpos][i];
-				b.blit( Marble.marble_images[color],
+				b.blit( R.drawable.misc, 28*color, 357, 28, 28,
 					holecenter_x-Marble.marble_size/2+left,
 					holecenter_y-Marble.marble_size/2+top);
 			}
