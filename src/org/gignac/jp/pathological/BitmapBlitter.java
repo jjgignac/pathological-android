@@ -9,14 +9,20 @@ public class BitmapBlitter
 	private Paint paint;
 	private SpriteCache sc;
 	private Bitmap dest;
+    private int w,h;
 
-	public BitmapBlitter( SpriteCache sc, Bitmap dest) {
-		this.c = new Canvas(dest);
+	public BitmapBlitter( SpriteCache sc, int w, int h)
+    {
+        dest = Bitmap.createBitmap( SpriteCache.powerOfTwo(w),
+            SpriteCache.powerOfTwo(h), Bitmap.Config.ARGB_8888);
+        this.w = w;
+        this.h = h;
+		c = new Canvas(dest);
+        c.clipRect(0,0,w,h);
 		src = new Rect();
 		rect = new Rect();
 		paint = new Paint();
 		this.sc = sc;
-		this.dest = dest;
 	}
 
 	public void transform(float scale, float dx, float dy)
@@ -59,7 +65,7 @@ public class BitmapBlitter
 		blit(b, x, y, w, h);
 	}
 
-    private void blit(long uniq, int sx, int sy,
+    public void blit(long uniq, int sx, int sy,
         int sw, int sh, int x, int y, int w, int h)
     {
         Bitmap b = sc.getBitmap(uniq);
@@ -97,11 +103,16 @@ public class BitmapBlitter
 
 	public int getWidth()
 	{
-		return dest.getWidth();
+		return w;
 	}
 
 	public int getHeight()
 	{
-		return dest.getHeight();
+		return h;
 	}
+
+    public Bitmap getDest()
+    {
+        return dest;
+    }
 }

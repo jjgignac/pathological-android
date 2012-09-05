@@ -13,11 +13,9 @@ public class LevelSelectView extends GLSurfaceView
 	private static final float previewScale = 0.28f;
 	private static final int hmargin = Board.board_width/4;
 	private static final int vmargin = Board.board_width/4;
-	private static final int previewWidth =
-		Math.round(Board.screen_width * previewScale);
-	private static final int previewHeight =
-		Math.round(Board.screen_height * previewScale);
-	
+	private static final int previewWidth = Preview.getWidth(previewScale);
+	private static final int previewHeight = Preview.getHeight(previewScale);
+
 	private GameResources gr;
 	private BlitterRenderer renderer;
 	private GestureDetector g;
@@ -26,6 +24,7 @@ public class LevelSelectView extends GLSurfaceView
 	private long prevTime;
 	private int width, height;
 	private int nUnlocked;
+	private int[] textWidth;
 	private SpriteCache sc;
 	private final Paint paint = new Paint();
 
@@ -38,10 +37,11 @@ public class LevelSelectView extends GLSurfaceView
 		setRenderMode(RENDERMODE_CONTINUOUSLY);
 		g = new GestureDetector(new LevelSelectGestureListener(this));
 		renderer.setPaintable(this);
+        gr = GameResources.getInstance(getContext());
+        textWidth = new int[gr.numlevels];
 	}
 
 	public void onResume() {
-		gr = GameResources.getInstance(getContext());
 		nUnlocked = GameResources.shp.getInt("nUnlocked",1);
 		paint.setTextSize(previewWidth*0.1f);
 		paint.setAntiAlias(true);
@@ -57,13 +57,18 @@ public class LevelSelectView extends GLSurfaceView
 			int txtWid = (int)Math.ceil(paint.measureText(label));
 			int txtHei = up+down;
 			Bitmap text = Bitmap.createBitmap(
-				txtWid, txtHei, Bitmap.Config.ARGB_8888);
+				SpriteCache.powerOfTwo(txtWid),
+                SpriteCache.powerOfTwo(txtHei),
+                Bitmap.Config.ARGB_8888);
 			c.setBitmap(text);
 			c.drawText(label,0,up,paint);
 			sc.cache(0x5700000000l+i,text);
+			textWidth[i] = txtWid;
 		}
-		Bitmap shadow = Bitmap.createBitmap( previewWidth+10,
-			previewHeight+10, Bitmap.Config.ARGB_8888);
+		Bitmap shadow = Bitmap.createBitmap(
+            SpriteCache.powerOfTwo(previewWidth+10),
+			SpriteCache.powerOfTwo(previewHeight+10),
+            Bitmap.Config.ARGB_8888);
 		c.setBitmap(shadow);
 		paint.setMaskFilter(new BlurMaskFilter(5,BlurMaskFilter.Blur.NORMAL));
 		paint.setColor(0x30000000);
@@ -127,12 +132,13 @@ public class LevelSelectView extends GLSurfaceView
 						b.fill(0xff000000, x-1,
 							y-1, previewWidth+2,
 							previewHeight+2);
-						b.blit( 0x200000000l+level, x, y,
-							previewWidth, previewHeight);
+						b.blit( 0x200000000l+level,
+						    0, 0, Preview.getWidth(0.5f), Preview.getHeight(0.5f),
+						    x, y, previewWidth, previewHeight);
 						Bitmap text = sc.getBitmap(0x5700000000l+level);
 						if(text!=null)
 						b.blit( 0x5700000000l+level,
-							x + (previewWidth-text.getWidth())/2,
+							x + (previewWidth-textWidth[level])/2,
 							y + previewHeight + 1);
 					} else
 						b.fill(0xfff080a0, x, y,

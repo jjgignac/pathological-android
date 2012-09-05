@@ -8,13 +8,10 @@ public class Preview
 	private static Bitmap create( GameResources gr,
 		SpriteCache s, int level, float scale)
 	{
-		Bitmap preview = Bitmap.createBitmap(
-			Math.round(Board.screen_width * scale),
-			Math.round((Board.screen_height+Marble.marble_size) * scale),
-			Bitmap.Config.ARGB_8888);
-		Blitter b = new BitmapBlitter(s,preview);
+		BitmapBlitter b = new BitmapBlitter(s,
+            getWidth(scale), getHeight(scale));
 		new Board(gr,s,level,null,false).paint(b);
-		return preview;
+		return b.getDest();
 	}
 
 	public static void cache( Context c, SpriteCache s,
@@ -50,5 +47,13 @@ public class Preview
 				}
 			}
 		} catch( IOException e) {}
+	}
+
+	public static int getWidth( float scale) {
+        return Math.round(Board.screen_width * scale);
+	}
+
+	public static int getHeight( float scale) {
+        return Math.round((Board.screen_height+Marble.marble_size) * scale);
 	}
 }

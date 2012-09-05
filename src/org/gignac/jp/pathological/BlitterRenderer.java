@@ -133,7 +133,7 @@ public class BlitterRenderer
 		    x, y, b.getWidth(), b.getHeight());
 	}
 
-    private void blit( long uniq, int sx, int sy,
+    public void blit( long uniq, int sx, int sy,
         int sw, int sh, int x, int y, int w, int h) {
         gl.glEnable(GL10.GL_TEXTURE_2D);
         sc.bind(gl, uniq);

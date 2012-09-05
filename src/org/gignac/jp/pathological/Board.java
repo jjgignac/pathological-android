@@ -93,8 +93,8 @@ class Board implements Paintable
 			tiles[j] = new Tile[horiz_tiles];
 
 		// prepare the entrance image
-		Bitmap entrance = Bitmap.createBitmap( Tile.tile_size/2,
-			Tile.tile_size/2, Bitmap.Config.ARGB_8888);
+        int pot = SpriteCache.powerOfTwo(Tile.tile_size/2);
+		Bitmap entrance = Bitmap.createBitmap(pot,pot,Bitmap.Config.ARGB_8888);
 		Canvas c = new Canvas(entrance);
 		c.drawBitmap( gr.loadBitmap(R.drawable.path_14), null,
 			new Rect(-Tile.tile_size/4, -Tile.tile_size/4,
@@ -102,8 +102,9 @@ class Board implements Paintable
 
 		// Prepare the live marbles counter image
 		liveCounter = Bitmap.createBitmap(
-			Marble.marble_size * 5, Marble.marble_size,
-			Bitmap.Config.ARGB_8888);
+            SpriteCache.powerOfTwo(Marble.marble_size * 5),
+            SpriteCache.powerOfTwo(Marble.marble_size),
+            Bitmap.Config.ARGB_8888);
 		liveCounterCanvas = new Canvas(liveCounter);
 
 		sc.cache( R.drawable.backdrop);
@@ -320,8 +321,8 @@ class Board implements Paintable
 				bgBlitter.getHeight() == h) return;
 		}
 
-		bg = Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888);
-		bgBlitter = new BitmapBlitter(sc, bg);
+		bgBlitter = new BitmapBlitter(sc, w, h);
+		bg = bgBlitter.getDest();
 		draw_backdrop(bgBlitter);
 		bgBlitter.transform(1f,w-px,0f);
 		draw_back(bgBlitter);
@@ -340,7 +341,9 @@ class Board implements Paintable
 		// Draw the background
 		cache_background(width, height);
 		refresh_bg_cache();
-		b.blit(0x500000000l,0,0,width,height);
+		b.blit(0x500000000l,
+		    0,0,bgBlitter.getWidth(),bgBlitter.getHeight(),
+		    0,0,width,height);
 
 		b.transform( scale, offsetx, 0.0f);
 
