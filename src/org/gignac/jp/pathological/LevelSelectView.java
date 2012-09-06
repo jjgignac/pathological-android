@@ -125,7 +125,9 @@ public class LevelSelectView extends GLSurfaceView
 		int vSpacing = (height - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;
 		int lockSize = previewHeight * 3 / 4;
 
-		for( int page=0; page < npages; ++page) {
+		int fromPage = Math.max(0, Math.round(xOffset) / width);
+		int toPage = Math.min(npages, fromPage+2);
+		for( int page=fromPage; page < toPage; ++page) {
 			for( int j=0; j < rows; ++j) {
 				for( int i=0; i < cols; ++i) {
 					int level = (page*rows+j)*cols+i;
