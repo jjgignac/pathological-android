@@ -25,6 +25,7 @@ public class LevelSelectView extends GLSurfaceView
 	private int width, height;
 	private int nUnlocked;
 	private int[] textWidth;
+	private int textHeight;
 	private SpriteCache sc;
 	private final Paint paint = new Paint();
 
@@ -50,21 +51,22 @@ public class LevelSelectView extends GLSurfaceView
 		Paint.FontMetrics fm = paint.getFontMetrics();
 		int up = (int)Math.ceil(Math.max(-fm.ascent,-fm.top)+fm.leading);
 		int down = (int)Math.ceil(Math.max(fm.descent,fm.bottom));
-		Canvas c = new Canvas();
-		for( int i=0; i < nUnlocked; ++i) {
-			Preview.cache(getContext(),sc,gr,i,0.5f);
-			String label = (i+1)+". "+gr.boardNames.elementAt(i);
+        textHeight = up+down;
+        int maxTxtWid = SpriteCache.powerOfTwo(previewWidth*5/4);
+        Bitmap text = Bitmap.createBitmap( maxTxtWid,
+            SpriteCache.powerOfTwo(gr.numlevels*textHeight),
+            Bitmap.Config.ARGB_8888);
+		Canvas c = new Canvas(text);
+		for( int i=0; i < gr.numlevels; ++i) {
+			if( i < nUnlocked) Preview.cache(getContext(),sc,gr,i,0.5f);
+			String label = (i+1) + (i < nUnlocked ?
+			    ". "+gr.boardNames.elementAt(i) : "");
 			int txtWid = (int)Math.ceil(paint.measureText(label));
-			int txtHei = up+down;
-			Bitmap text = Bitmap.createBitmap(
-				SpriteCache.powerOfTwo(txtWid),
-                SpriteCache.powerOfTwo(txtHei),
-                Bitmap.Config.ARGB_8888);
-			c.setBitmap(text);
-			c.drawText(label,0,up,paint);
-			sc.cache(0x5700000000l+i,text);
+			if(txtWid > maxTxtWid) txtWid = maxTxtWid;
+			c.drawText(label,0,up+textHeight*i,paint);
 			textWidth[i] = txtWid;
 		}
+        sc.cache(0x5700000000l,text);
 		Bitmap shadow = Bitmap.createBitmap(
             SpriteCache.powerOfTwo(previewWidth+10),
 			SpriteCache.powerOfTwo(previewHeight+10),
@@ -74,6 +76,8 @@ public class LevelSelectView extends GLSurfaceView
 		paint.setColor(0x30000000);
 		c.drawRect(5,5,previewWidth+5,previewHeight+5,paint);
 		sc.cache(0x5800000000l,shadow);
+		sc.cache(R.drawable.lock);
+        sc.cache(R.drawable.lock_shadow);
 		IntroScreen.setup(sc);
 		super.onResume();
 	}
@@ -119,7 +123,8 @@ public class LevelSelectView extends GLSurfaceView
 
 		int hSpacing = (width - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
 		int vSpacing = (height - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;
-		
+		int lockSize = previewHeight * 3 / 4;
+
 		for( int page=0; page < npages; ++page) {
 			for( int j=0; j < rows; ++j) {
 				for( int i=0; i < cols; ++i) {
@@ -135,14 +140,24 @@ public class LevelSelectView extends GLSurfaceView
 						b.blit( 0x200000000l+level,
 						    0, 0, Preview.getWidth(0.5f), Preview.getHeight(0.5f),
 						    x, y, previewWidth, previewHeight);
-						Bitmap text = sc.getBitmap(0x5700000000l+level);
-						if(text!=null)
-						b.blit( 0x5700000000l+level,
-							x + (previewWidth-textWidth[level])/2,
-							y + previewHeight + 1);
-					} else
-						b.fill(0xfff080a0, x, y,
-							previewWidth, previewHeight);
+					} else {
+                        b.blit(R.drawable.lock_shadow,
+                            x+(previewWidth-lockSize)/2+10,
+                            y+(previewHeight-lockSize)/2+10,
+                            lockSize, lockSize);
+                        b.blit(R.drawable.lock,
+                            x+(previewWidth-lockSize)/2,
+                            y+(previewHeight-lockSize)/2,
+                            lockSize, lockSize);
+                        y -= previewHeight*4/9;
+					}
+
+					Bitmap text = sc.getBitmap(0x5700000000l);
+                    if(text!=null)
+                        b.blit( 0x5700000000l,
+                            0,textHeight*level,textWidth[level],textHeight,
+                            x + (previewWidth-textWidth[level])/2,
+                            y + previewHeight + 1,textWidth[level],textHeight);
 				}
 			}
 		}
