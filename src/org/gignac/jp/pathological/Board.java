@@ -39,7 +39,7 @@ class Board implements Paintable
 	public int launch_timer;
 	private Marble[] marblesCopy = new Marble[20];
 	private HashMap<Integer,Point> down;
-	private int launch_queue_offset;
+	private float launch_queue_offset;
 	private Bitmap liveCounter;
 	private Canvas liveCounterCanvas;
 	private final Paint paint = new Paint();
@@ -195,9 +195,10 @@ class Board implements Paintable
 
 		// Draw the marble queue
 //		b.fill(0xff000000, board_width, launch_queue_offset, 28, launch_queue.length*28);
+		int iOffset = Math.round(launch_queue_offset);
 		for(int i=0; i < launch_queue.length; ++i)
 			b.blit(R.drawable.misc, 28*launch_queue[i], 357, 28, 28,
-				board_width, launch_queue_offset + i * Marble.marble_size);
+				board_width, iOffset + i * Marble.marble_size);
 	}
 
 	private void draw_fore( Blitter b) {
@@ -282,8 +283,23 @@ class Board implements Paintable
 		}
 
 		// Animate the launch queue
-		if( launch_queue_offset > 0)
-			--launch_queue_offset;
+		if( launch_queue_offset > 0) {
+		    float speed = Marble.marble_speed*0.2f;  // Nice and slow
+		    // If we expect the marble to drop into the
+		    // top-right tile, accelerate the animation so
+		    // the launch queue doesn't have to jump.  But
+		    // wait for 10% of the marble height before we
+		    // accelerate, so the marbles don't appear to
+		    // overlap.
+		    Tile topRight = tiles[0][horiz_tiles-1];
+		    if( launch_queue_offset < Marble.marble_size * 0.9f &&
+		        (topRight.paths & 1) == 1 &&
+		       (!(topRight instanceof Wheel) ||
+		        ((Wheel)topRight).marbles[0] < 0))
+		        speed = Marble.marble_speed*0.7f;
+		    launch_queue_offset -= speed;
+		    if(launch_queue_offset < 0) launch_queue_offset = 0;
+		}
 
 		return board_state;
 	}
