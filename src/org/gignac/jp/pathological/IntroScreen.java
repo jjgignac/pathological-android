@@ -26,8 +26,8 @@ public class IntroScreen
 
 		int pipe_w = 30;
 		int pipe_x = (Tile.tile_size-30)/2;
-		int pipe_y = b.getHeight()-Tile.tile_size*5/2;
-		
+		int pipe_y = b.getHeight()-227;
+
 		b.blit(R.drawable.misc,391,663,30,1,pipe_x,0,pipe_w,pipe_y+2);
 		b.blit(R.drawable.misc,391,665,30,10,pipe_x,pipe_y);
 		
@@ -37,15 +37,15 @@ public class IntroScreen
 		b.blit(R.drawable.misc,391,663,30,1,pipe_x,0,pipe_w,pipe_y+2);
 		b.blit(R.drawable.misc,92,662,90,30,pipe_x+pipe_w-pipe_br_w,pipe_y);
 
-		b.blit(R.drawable.misc,276,0,92,92,0,b.getHeight()-2*Tile.tile_size);
+		b.blit(R.drawable.misc,277,1,90,90,0,b.getHeight()-180);
 		b.blit(R.drawable.misc,56,357,28,28,
 			gr.holecenters_x[0][0]-Marble.marble_size/2,
-			b.getHeight()-2*Tile.tile_size +
+			b.getHeight()-181 +
 				gr.holecenters_y[0][0]-Marble.marble_size/2);
-		b.blit(R.drawable.misc,184,0,92,92,0,b.getHeight()-Tile.tile_size);
-		b.blit(R.drawable.misc,276,0,92,92,Tile.tile_size*9/4,
-			b.getHeight()-Tile.tile_size);
-		
+		b.blit(R.drawable.misc,185,1,90,90,0,b.getHeight()-90);
+		b.blit(R.drawable.misc,277,1,90,90,200,b.getHeight()-90);
+		b.blit(R.drawable.misc,422,662,90,90,290,b.getHeight()-90);
+
 		// Pyramid
 		int p = 0;
 		int x = b.getWidth()-Tile.tile_size*4;
@@ -59,5 +59,6 @@ public class IntroScreen
 					y-dy*j);
 
 		b.blit(R.drawable.misc,84,357,28,28,x+Marble.marble_size*5,y);
+        b.blit(R.drawable.misc,93,693,49,28,x+Marble.marble_size*8,y);
 	}
 }
