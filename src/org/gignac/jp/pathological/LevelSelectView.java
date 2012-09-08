@@ -43,14 +43,26 @@ public class LevelSelectView extends GLSurfaceView
 	}
 
 	public void onResume() {
-		nUnlocked = GameResources.shp.getInt("nUnlocked",1);
-		paint.setTextSize(previewWidth*0.1f);
-		paint.setAntiAlias(true);
-		paint.setMaskFilter(null);
-		paint.setColor(0xff000000);
-		Paint.FontMetrics fm = paint.getFontMetrics();
-		int up = (int)Math.ceil(Math.max(-fm.ascent,-fm.top)+fm.leading);
-		int down = (int)Math.ceil(Math.max(fm.descent,fm.bottom));
+		nUnlocked = GameResources.shp.getInt("nUnlocked",1);		
+
+		this.queueEvent(new Runnable() {
+            public void run() {
+                onResumeAsync();
+            }
+        });
+
+        super.onResume();
+	}
+
+	private void onResumeAsync()
+	{
+        paint.setTextSize(previewWidth*0.1f);
+        paint.setAntiAlias(true);
+        paint.setMaskFilter(null);
+        paint.setColor(0xff000000);
+        Paint.FontMetrics fm = paint.getFontMetrics();
+        int up = (int)Math.ceil(Math.max(-fm.ascent,-fm.top)+fm.leading);
+        int down = (int)Math.ceil(Math.max(fm.descent,fm.bottom));
         textHeight = up+down;
         int maxTxtWid = SpriteCache.powerOfTwo(previewWidth*5/4);
         Bitmap text = Bitmap.createBitmap( maxTxtWid,
@@ -79,7 +91,6 @@ public class LevelSelectView extends GLSurfaceView
 		sc.cache(R.drawable.lock);
         sc.cache(R.drawable.lock_shadow);
 		IntroScreen.setup(sc);
-		super.onResume();
 	}
 
 	private void update()

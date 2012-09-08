@@ -74,7 +74,7 @@ public class BlitterRenderer
 		gl.glScalef(2f/width,-2f/height,1f);
 
 		this.gl = gl;
-		painter.paint(this);
+		if(painter != null) painter.paint(this);
 	}
 
 	static final float s = 1.0f / 255.0f;

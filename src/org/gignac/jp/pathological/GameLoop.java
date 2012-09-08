@@ -15,8 +15,12 @@ public class GameLoop
 		this.update = update;
 		this.render = render;
 		this.delayMillis = delayMillis;
-		targetTime = SystemClock.uptimeMillis()+delayMillis;
-		handler.postAtTime(this, targetTime);
+	}
+
+	public void start() {
+        targetTime = SystemClock.uptimeMillis()+delayMillis;
+        handler.removeCallbacks(this);
+        handler.postAtTime(this, targetTime);
 	}
 
 	public void stop() {

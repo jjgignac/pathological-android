@@ -53,16 +53,39 @@ public class Game extends Activity
 
 		gv = (GameView)findViewById(R.id.gameboard);
 
-		playLevel(level);		
+        Runnable update = new Runnable() {
+            public void run() {
+                if(board == null) return;
+                switch(board.update()) {
+                case Board.LAUNCH_TIMEOUT:
+                    onLaunchTimeout();
+                    break;
+                case Board.BOARD_TIMEOUT:
+                    onBoardTimeout();
+                    break;
+                case Board.COMPLETE:
+                    onBoardComplete();
+                    break;
+                }
+            }
+        };
+        Runnable render = new Runnable() {
+            public void run() {
+                gv.requestRender();
+            }
+        };
+        gameLoop = new GameLoop( update, render, 1000 / frames_per_sec);
+
+        playLevel(level);
 	}
 
-	public void playLevel(int level) {
-		// If applicable, synchronize on the previous board
-		// to ensure that we don't load new sprites while
-		// rendering is in progress.
-		synchronized(board==null?this:board) {
-			loadLevel(level);
-		}
+	public void playLevel(final int level) {
+	    // Only do this in the rendering thread
+	    gv.queueEvent(new Runnable() {
+	        public void run() {
+	            loadLevel(level);
+	        }
+	    });
 	}
 
 	private void loadLevel(int level) {
@@ -72,9 +95,15 @@ public class Game extends Activity
 				gv.getHandler().post(gameLoop);
 			}
 		}, true);
-		((TextView)findViewById(R.id.board_name)).setText(board.name);
-		board.launch_marble();
-		gv.setBoard(board);
+
+		gv.getHandler().post( new Runnable() {
+		    public void run() {
+		        ((TextView)findViewById(R.id.board_name)).setText(board.name);
+		        board.launch_marble();
+		        gv.setBoard(board);
+		        gameLoop.start();
+		    }
+		});
 	}
 
 	public void nextLevel() {
@@ -88,29 +117,8 @@ public class Game extends Activity
 		super.onResume();
 		gv.onResume();
 
-		Runnable update = new Runnable() {
-			public void run() {
-				switch(board.update()) {
-				case Board.LAUNCH_TIMEOUT:
-					onLaunchTimeout();
-					break;
-				case Board.BOARD_TIMEOUT:
-					onBoardTimeout();
-					break;
-				case Board.COMPLETE:
-					onBoardComplete();
-					break;
-				}
-			}
-		};
-		Runnable render = new Runnable() {
-			public void run() {
-				gv.requestRender();
-			}
-		};
-
 		// Schedule the updates
-		gameLoop = new GameLoop( update, render, 1000 / frames_per_sec);
+		gameLoop.start();
 	}
 
 	@Override
