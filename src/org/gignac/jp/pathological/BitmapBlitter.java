@@ -13,16 +13,32 @@ public class BitmapBlitter
 
 	public BitmapBlitter( SpriteCache sc, int w, int h)
     {
-        dest = Bitmap.createBitmap( SpriteCache.powerOfTwo(w),
-            SpriteCache.powerOfTwo(h), Bitmap.Config.ARGB_8888);
-        this.w = w;
-        this.h = h;
-		c = new Canvas(dest);
-        c.clipRect(0,0,w,h);
+	    c = new Canvas();
+	    c.save();
 		src = new Rect();
 		rect = new Rect();
 		paint = new Paint();
+        setSize(w,h);
 		this.sc = sc;
+	}
+
+	public void setSize(int w, int h)
+	{
+	    if( this.w == w && this.h == h) return;
+	    int rw = SpriteCache.powerOfTwo(w);
+	    int rh = SpriteCache.powerOfTwo(h);
+	    if( dest == null ||
+	        rw != dest.getWidth() ||
+	        rh != dest.getHeight()) {
+	        dest = Bitmap.createBitmap(
+	            rw, rh, Bitmap.Config.ARGB_8888);
+	    }
+        this.w = w;
+        this.h = h;
+        c.restore();
+        c.setBitmap(dest);
+        c.clipRect(0,0,w,h);
+        c.save();
 	}
 
 	public void transform(float scale, float dx, float dy)

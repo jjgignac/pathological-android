@@ -16,7 +16,8 @@ public class Game extends Activity
 	private GameLoop gameLoop;
 	private GameView gv;
 	private ActionListener bl;
-	
+	public static BitmapBlitter bg;
+
 	public Game()
 	{
 	}

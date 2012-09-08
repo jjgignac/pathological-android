@@ -45,11 +45,10 @@ class Board implements Paintable
 	private final Paint paint = new Paint();
 	private float scale = 0f;
 	private float offsetx;
-	private Bitmap bg;
-	private BitmapBlitter bgBlitter;
 	private Runnable onPainted;
 	public SpriteCache sc;
 	private long pause_changed;
+	private boolean dirty = true;
 
 	public Board(GameResources gr, SpriteCache sc,
 		int level, Runnable onPainted, boolean showTimer)
@@ -311,13 +310,13 @@ class Board implements Paintable
 		for( Tile[] row : tiles) {
 			for( Tile tile : row) {
 				if( tile.dirty) {
-					tile.draw_back(bgBlitter);
+					tile.draw_back(Game.bg);
 					tile.dirty = false;
 					dirty = true;
 				}
 			}
 		}
-		if(dirty) sc.cache(0x500000000l,bg);
+		if(dirty) sc.cache(0x500000000l,Game.bg.getDest());
 	}
 
 	private void cache_background(int w,int h)
@@ -332,17 +331,20 @@ class Board implements Paintable
 			w = px;
 		}
 
-		if( bgBlitter != null) {
-			if( bgBlitter.getWidth() == w &&
-				bgBlitter.getHeight() == h) return;
-		}
+		if( Game.bg == null)
+		    Game.bg = new BitmapBlitter(sc,w,h);
 
-		bgBlitter = new BitmapBlitter(sc, w, h);
-		bg = bgBlitter.getDest();
-		draw_backdrop(bgBlitter);
-		bgBlitter.transform(1f,w-px,0f);
-		draw_back(bgBlitter);
-		sc.cache(0x500000000l,bg);
+		if( w != Game.bg.getWidth() ||
+		    h != Game.bg.getHeight()) dirty = true;
+
+		if( dirty) {
+		    Game.bg.setSize(w, h);
+		    draw_backdrop(Game.bg);
+		    Game.bg.transform(1f,w-px,0f);
+		    draw_back(Game.bg);
+		    sc.cache(0x500000000l,Game.bg.getDest());
+		    dirty = false;
+		}
 	}
 
 	public synchronized void paint(Blitter b)
@@ -358,7 +360,7 @@ class Board implements Paintable
 		cache_background(width, height);
 		refresh_bg_cache();
 		b.blit(0x500000000l,
-		    0,0,bgBlitter.getWidth(),bgBlitter.getHeight(),
+		    0,0,Game.bg.getWidth(),Game.bg.getHeight(),
 		    0,0,width,height);
 
 		b.transform( scale, offsetx, 0.0f);
