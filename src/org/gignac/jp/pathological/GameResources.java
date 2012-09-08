@@ -23,6 +23,7 @@ public class GameResources
 		0.6f, 1.0f, 0.15f, 1.0f, 1.0f, 1.0f, 1.0f, 0.8f, 1.0f};
 	private int[] sound_id = new int[sound_resid.length];
 	private SoundPool sp;
+	public final SpriteCache sc;
 
 	// Sounds
 	public static final int filter_admit = 0;
@@ -60,6 +61,8 @@ public class GameResources
 
 	private GameResources(Context context) {
 		this.context = context;
+
+		sc = new SpriteCache( context.getResources());
 
 		getBoardNames();
 		numlevels = boardNames.size();

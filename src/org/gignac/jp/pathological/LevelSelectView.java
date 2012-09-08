@@ -32,7 +32,7 @@ public class LevelSelectView extends GLSurfaceView
 	public LevelSelectView( Context context, AttributeSet a)
 	{
 		super(context,a);
-		sc = new SpriteCache(getResources());
+		sc = GameResources.getInstance(context).sc;
 		renderer = new BlitterRenderer(sc);
 		setRenderer(renderer);
 		setRenderMode(RENDERMODE_CONTINUOUSLY);

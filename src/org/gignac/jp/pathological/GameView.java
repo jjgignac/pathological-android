@@ -13,7 +13,7 @@ public class GameView extends GLSurfaceView
 
 	public GameView(Context c,AttributeSet a) {
 		super(c,a);
-		sc = new SpriteCache(getResources());
+		sc = GameResources.getInstance(c).sc;
 		renderer = new BlitterRenderer(sc);
 		setRenderer(renderer);
 		setRenderMode(RENDERMODE_WHEN_DIRTY);
