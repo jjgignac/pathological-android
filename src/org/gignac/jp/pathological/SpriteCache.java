@@ -3,6 +3,7 @@ import android.graphics.*;
 import java.util.*;
 import javax.microedition.khronos.opengles.*;
 import android.opengl.*;
+import android.util.Log;
 import android.content.res.*;
 
 public class SpriteCache
@@ -78,7 +79,11 @@ public class SpriteCache
 			sprites.put(uniq, new Sprite(uniq,b));
 			dirty = true;
 		} else {
-			s.bitmap = b;
+		    if( s.bitmap != b) {
+		        Log.e("SpriteCache","Recycling: 0x"+Long.toHexString(uniq));
+		        s.bitmap.recycle();
+		        s.bitmap = b;
+		    }
 			s.needsPrep = true;
 		}
 	}
