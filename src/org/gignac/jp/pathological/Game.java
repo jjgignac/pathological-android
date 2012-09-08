@@ -10,6 +10,7 @@ public class Game extends Activity
 {
 	public static final int frames_per_sec = 50;
 
+	private final Handler h = new Handler();
 	public int level;
 	private Board board;
 	private GameResources gr;
@@ -93,11 +94,11 @@ public class Game extends Activity
 		this.level = level;
 		board = new Board(gr, gv.sc, level, new Runnable() {
 			public void run() {
-				gv.getHandler().post(gameLoop);
+				h.post(gameLoop);
 			}
 		}, true);
 
-		gv.getHandler().post( new Runnable() {
+		h.post( new Runnable() {
 		    public void run() {
 		        ((TextView)findViewById(R.id.board_name)).setText(board.name);
 		        board.launch_marble();
