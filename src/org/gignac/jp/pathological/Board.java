@@ -91,25 +91,19 @@ class Board implements Paintable
 		for( int j=0; j < vert_tiles; ++j)
 			tiles[j] = new Tile[horiz_tiles];
 
-		// prepare the entrance image
-        int pot = SpriteCache.powerOfTwo(Tile.tile_size/2);
-		Bitmap entrance = Bitmap.createBitmap(pot,pot,Bitmap.Config.ARGB_8888);
-		Canvas c = new Canvas(entrance);
-		c.drawBitmap( gr.loadBitmap(R.drawable.path_14), null,
-			new Rect(-Tile.tile_size/4, -Tile.tile_size/4,
-				Tile.tile_size*3/4, Tile.tile_size*3/4), null);
-
 		// Prepare the live marbles counter image
-		liveCounter = Bitmap.createBitmap(
-            SpriteCache.powerOfTwo(Marble.marble_size * 5),
-            SpriteCache.powerOfTwo(Marble.marble_size),
-            Bitmap.Config.ARGB_8888);
-		liveCounterCanvas = new Canvas(liveCounter);
+		liveCounter = sc.getBitmap(0x100000002l);
+		if( liveCounter == null) {
+    		liveCounter = Bitmap.createBitmap(
+                SpriteCache.powerOfTwo(Marble.marble_size * 5),
+                SpriteCache.powerOfTwo(Marble.marble_size),
+                Bitmap.Config.ARGB_8888);
+            sc.cache( 0x100000002l, liveCounter);
+		}
+        liveCounterCanvas = new Canvas(liveCounter);
 
 		sc.cache( R.drawable.backdrop);
 		sc.cache( R.drawable.misc);
-		sc.cache( 0x100000001l, entrance);
-		sc.cache( 0x100000002l, liveCounter);
 
 		// Load the level
 		try {

@@ -37,7 +37,7 @@ class Tile
                 92*(paths%5), 386+92*(paths/5), 92, 92,
 				left, top, tile_size, tile_size);
 			if( (paths & 1) > 0 && tile_y == 0) {
-				b.blit( 0x100000001l,
+                b.blit( R.drawable.misc, 391, 593, 46, 46,
 					left + Tile.tile_size/4,
 					Marble.marble_size/2-Tile.tile_size/4);
 			}
