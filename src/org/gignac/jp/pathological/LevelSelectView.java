@@ -88,8 +88,6 @@ public class LevelSelectView extends GLSurfaceView
 		paint.setColor(0x30000000);
 		c.drawRect(5,5,previewWidth+5,previewHeight+5,paint);
 		sc.cache(0x5800000000l,shadow);
-		sc.cache(R.drawable.lock);
-        sc.cache(R.drawable.lock_shadow);
 		IntroScreen.setup(sc);
 	}
 
@@ -154,11 +152,11 @@ public class LevelSelectView extends GLSurfaceView
 						    0, 0, Preview.getWidth(0.5f), Preview.getHeight(0.5f),
 						    x, y, previewWidth, previewHeight);
 					} else {
-                        b.blit(R.drawable.lock_shadow,
+                        b.blit(R.drawable.misc, 0, 479, 128, 128,
                             x+(previewWidth-lockSize)/2+10,
                             y+(previewHeight-lockSize)/2+10,
                             lockSize, lockSize);
-                        b.blit(R.drawable.lock,
+                        b.blit(R.drawable.misc, 128, 479, 128, 128,
                             x+(previewWidth-lockSize)/2,
                             y+(previewHeight-lockSize)/2,
                             lockSize, lockSize);

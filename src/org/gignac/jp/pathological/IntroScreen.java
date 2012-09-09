@@ -8,7 +8,6 @@ public class IntroScreen
 
 	public static void setup(SpriteCache sc) {
 		sc.cache(R.drawable.misc);
-		sc.cache(R.drawable.pathological_logo);
 	}
 
 	public static void draw_back(GameResources gr, Blitter b)
@@ -18,11 +17,9 @@ public class IntroScreen
 
 	public static void draw_fore(GameResources gr, Blitter b)
 	{
-		int logo_w = 343;
-		int logo_h = 55;
-		b.blit(R.drawable.pathological_logo,
-			(b.getWidth()-logo_w)/2,
-			Marble.marble_size);
+	    // Draw the logo
+		b.blit(R.drawable.misc, 0, 93, 342, 55,
+			(b.getWidth()-342)/2, Marble.marble_size);
 
 		int pipe_w = 30;
 		int pipe_x = (Tile.tile_size-30)/2;
