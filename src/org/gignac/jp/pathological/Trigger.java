@@ -40,7 +40,7 @@ class Trigger extends Tile
 	public void draw_back(Blitter b) {
 		super.draw_back(b);
 		GameResources gr = board.gr;
-		b.blit( R.drawable.misc, 368, 0, 92, 92, left, top);
+		b.blit( R.drawable.misc, 369, 0, 92, 92, left, top);
 		if( marbles != null) {
 			for(int i=0; i<4; ++i) {
 				b.blit( R.drawable.misc,
