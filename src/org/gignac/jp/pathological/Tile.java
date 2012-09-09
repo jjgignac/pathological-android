@@ -33,13 +33,24 @@ class Tile
 
 	public void draw_back(Blitter b) {
 		if(paths > 0) {
+		    if( (paths & 1) != 0)
+		        b.blit( R.drawable.misc,
+		            192, 387, 30, 24, left+31, top);
+		    if( (paths & 2) != 0)
+		        b.blit( R.drawable.misc,
+		            415, 394, 24, 30, left+68, top+31);
+		    if( (paths & 4) != 0)
+		        b.blit( R.drawable.misc,
+		            192, 387, 30, 24, left+31, top+68);
+		    if( (paths & 8) != 0)
+		        b.blit( R.drawable.misc,
+		            415, 394, 24, 30, left, top+31);
 			b.blit( R.drawable.misc,
-                92*(paths%5), 386+92*(paths/5), 92, 92,
-				left, top, tile_size, tile_size);
+                46*((paths+10)%11), 386+46*(paths/11), 46, 46,
+				left+23, top+23);
 			if( (paths & 1) > 0 && tile_y == 0) {
-                b.blit( R.drawable.misc, 391, 593, 46, 46,
-					left + Tile.tile_size/4,
-					Marble.marble_size/2-Tile.tile_size/4);
+                b.blit( R.drawable.misc, 92, 455, 46, 23,
+					left+23,top-14);
 			}
 		}
 	}

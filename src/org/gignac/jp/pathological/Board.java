@@ -128,19 +128,14 @@ class Board implements Paintable
 			0, Marble.marble_size*3/4+timer_width, screen_height*2);
 
 		// Draw the launcher
-		b.blit( R.drawable.misc, 0, 570, 92, 92,
-			Marble.marble_size, (Marble.marble_size-Tile.tile_size)/2,
-			board_width - Marble.marble_size, Tile.tile_size);
-		b.blit( R.drawable.misc, 184, 386, 92, 92,
-			(Marble.marble_size-Tile.tile_size)/2,
-			(Marble.marble_size-Tile.tile_size)/2);
-		b.blit( R.drawable.misc, 274, 662, 60, 28,
-			board_width-(Tile.tile_size-Marble.marble_size)/2, 0);
-		b.blit(R.drawable.misc, 0, 478, 92, 92,
-			   board_width+(Marble.marble_size-Tile.tile_size)/2,
-			   Marble.marble_size-1, Tile.tile_size,
-			   board_height*3);
-		
+		b.blit( R.drawable.misc, 415, 394, 1, 30,
+			28, -1, board_width-28, 30);
+		b.blit( R.drawable.misc, 54, 394, 38, 30, 0, -1);
+        b.blit(R.drawable.misc, 192, 387, 30, 1,
+            board_width-1, 30, 30, board_height*3);
+		b.blit( R.drawable.misc, 0, 440, 38, 38,
+			board_width-9, -1);
+
 		for( Tile[] row : tiles)
 			for( Tile tile : row)
 				tile.draw_back(b);
