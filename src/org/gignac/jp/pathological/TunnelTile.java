@@ -21,8 +21,14 @@ public abstract class TunnelTile extends Tile
 		b = new BitmapBlitter(board.sc,tunnel_size,tunnel_size);
         fore = b.getDest();
 		final int offset = (tile_size - tunnel_size)/2;
-		b.blit( R.drawable.misc,
-            56*(paths%9), 92+56*(paths/9), 56, 56, 18-offset, 18-offset);
+		b.blit( R.drawable.misc, 446, (paths&1)==0?93:113,
+		    56, 9, 18-offset, 18-offset);
+		b.blit( R.drawable.misc, 503, (paths&2)==0?57:171,
+		    9, 56, 65-offset, 18-offset);
+		b.blit( R.drawable.misc, 446, (paths&4)==0?103:123,
+		    56, 9, 18-offset, 65-offset);
+        b.blit( R.drawable.misc, 503, (paths&8)==0?0:114,
+            9, 56, 18-offset, 18-offset);
 		b.transform(1f,-left-offset,-top-offset);
 		fore_dirty = true;
 	}
