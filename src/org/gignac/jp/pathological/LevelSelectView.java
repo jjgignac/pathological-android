@@ -10,11 +10,10 @@ public class LevelSelectView extends GLSurfaceView
 {
 	private static final int rows = 2;
 	private static final int cols = 3;
-	private static final float previewScale = 0.28f;
 	private static final int hmargin = Board.board_width/4;
 	private static final int vmargin = Board.board_width/4;
-	private static final int previewWidth = Preview.getWidth(previewScale);
-	private static final int previewHeight = Preview.getHeight(previewScale);
+	private static final int previewWidth = Preview.width;
+	private static final int previewHeight = Preview.height;
 
 	private GameResources gr;
 	private BlitterRenderer renderer;
@@ -22,7 +21,7 @@ public class LevelSelectView extends GLSurfaceView
 	private float xOffset = 0.0f;
 	private float vel;
 	private long prevTime;
-	private int width, height;
+	private int width=0, height=0;
 	private int nUnlocked;
 	private int[] textWidth;
 	private int textHeight;
@@ -45,16 +44,10 @@ public class LevelSelectView extends GLSurfaceView
 	public void onResume() {
 		nUnlocked = GameResources.shp.getInt("nUnlocked",1);		
 
-		this.queueEvent(new Runnable() {
-            public void run() {
-                onResumeAsync();
-            }
-        });
-
         super.onResume();
 	}
 
-	private void onResumeAsync()
+	private void prepPaint()
 	{
         paint.setTextSize(previewWidth*0.1f);
         paint.setAntiAlias(true);
@@ -69,8 +62,8 @@ public class LevelSelectView extends GLSurfaceView
             SpriteCache.powerOfTwo(gr.numlevels*textHeight),
             Bitmap.Config.ARGB_8888);
 		Canvas c = new Canvas(text);
+		Preview.cache(getContext(),sc,gr,nUnlocked);
 		for( int i=0; i < gr.numlevels; ++i) {
-			if( i < nUnlocked) Preview.cache(getContext(),sc,gr,i,0.5f);
 			String label = (i+1) + (i < nUnlocked ?
 			    ". "+gr.boardNames.elementAt(i) : "");
 			int txtWid = (int)Math.ceil(paint.measureText(label));
@@ -121,8 +114,12 @@ public class LevelSelectView extends GLSurfaceView
 	@Override
 	public synchronized void paint( Blitter b)
 	{
-		width = b.getWidth();
-		height = b.getHeight();
+		if(width != b.getWidth() || height != b.getHeight()) {
+			width = b.getWidth();
+			height = b.getHeight();			
+			prepPaint();
+		}
+		
 		update();
 
 		int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
@@ -148,9 +145,7 @@ public class LevelSelectView extends GLSurfaceView
 						b.fill(0xff000000, x-1,
 							y-1, previewWidth+2,
 							previewHeight+2);
-						b.blit( 0x200000000l+level,
-						    0, 0, Preview.getWidth(0.5f), Preview.getHeight(0.5f),
-						    x, y, previewWidth, previewHeight);
+						Preview.blit(b,level,x,y);
 					} else {
                         b.blit(R.drawable.misc, 0, 479, 128, 128,
                             x+(previewWidth-lockSize)/2+10,
@@ -199,8 +194,6 @@ public class LevelSelectView extends GLSurfaceView
 
 	private void tap( float x, float y)
 	{
-		int previewWidth = Math.round(Board.screen_width * previewScale);
-		int previewHeight = Math.round(Board.screen_height * previewScale);
 		int hSpacing = (width - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
 		int vSpacing = (height - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;
 		x += xOffset;
