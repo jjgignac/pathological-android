@@ -176,7 +176,8 @@ public class Game extends Activity
 	{
 		gr.play_sound(GameResources.levelfinish);
 		gameLoop.stop();
-		if(level == GameResources.shp.getInt("nUnlocked",1)-1) {
+		if(level >= GameResources.shp.getInt("nUnlocked",1)-1
+		    && level < gr.numlevels - 1) {
 			SharedPreferences.Editor e = GameResources.shp.edit();
 			e.putInt("nUnlocked",level+2);
 			e.apply();
