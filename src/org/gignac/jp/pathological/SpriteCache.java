@@ -42,7 +42,7 @@ public class SpriteCache
 		public Bitmap bitmap;
 		public boolean needsPrep;
 
-		public Sprite(long uniq, Bitmap b) {
+		public Sprite(Bitmap b) {
 			this.bitmap = b;
 		}
 
@@ -76,7 +76,7 @@ public class SpriteCache
 	public void cache(long uniq, Bitmap b) {
 		Sprite s = sprites.get(uniq);
 		if( s == null) {
-			sprites.put(uniq, new Sprite(uniq,b));
+			sprites.put(uniq, new Sprite(b));
 			dirty = true;
 		} else {
 		    if( s.bitmap != b) {
