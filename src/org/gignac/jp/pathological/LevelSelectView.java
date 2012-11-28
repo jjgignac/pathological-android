@@ -203,6 +203,15 @@ public class LevelSelectView extends GLSurfaceView
 
 	private void tap( float x, float y)
 	{
+		int level = pickLevel(x,y);
+		if(level == -1) return;
+		Intent intent = new Intent(getContext(),Game.class);
+		intent.putExtra("level",level);
+		getContext().startActivity(intent);
+	}
+
+	private int pickLevel( float x, float y)
+	{
 		int hSpacing = (width - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
 		int vSpacing = (height - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;
 		x += xOffset;
@@ -210,16 +219,14 @@ public class LevelSelectView extends GLSurfaceView
 		x -= page * width;
 		y -= vmargin;
 		int j = (int)Math.floor(y / vSpacing);
-		if( j < 0 || j >= rows) return;
-		if( y - j*vSpacing > previewHeight) return;
+		if( j < 0 || j >= rows) return -1;
+		if( y - j*vSpacing > previewHeight) return -1;
 		x -= hmargin;
 		int i = (int)Math.floor(x / hSpacing);
-		if( i < 0 || i >= cols) return;
-		if( x - i*hSpacing > previewWidth) return;
+		if( i < 0 || i >= cols) return -1;
+		if( x - i*hSpacing > previewWidth) return -1;
 		int level = (page*rows+j)*cols+i;
-		Intent intent = new Intent(getContext(),Game.class);
-		intent.putExtra("level",level);
-		getContext().startActivity(intent);
+		return level;
 	}
 
 	private void fling( float velX)
