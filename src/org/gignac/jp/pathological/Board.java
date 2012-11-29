@@ -49,6 +49,7 @@ class Board implements Paintable
 	public SpriteCache sc;
 	private long pause_changed;
 	private boolean dirty = true;
+	public int delay = 50;
 
 	public Board(GameResources gr, SpriteCache sc,
 		int level, Runnable onPainted, boolean showTimer)

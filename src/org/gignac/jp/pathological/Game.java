@@ -58,6 +58,14 @@ public class Game extends Activity
         Runnable update = new Runnable() {
             public void run() {
                 if(board == null) return;
+				if(board.delay>20) {
+					--board.delay;
+					return;
+				}
+				if(board.delay>0) {
+					--board.delay;
+					if((board.delay&1) != 0) return;
+				}
                 switch(board.update()) {
                 case Board.LAUNCH_TIMEOUT:
                     onLaunchTimeout();
