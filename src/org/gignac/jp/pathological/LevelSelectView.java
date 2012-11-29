@@ -24,6 +24,7 @@ public class LevelSelectView extends GLSurfaceView
 	private long prevTime;
 	private int width=0, height=0;
 	private int nLoaded=0, nUnlocked=0;
+	private int highlight = -1;
 	private Bitmap text;
 	private Canvas c = new Canvas();
 	private int[] textWidth;
@@ -39,6 +40,7 @@ public class LevelSelectView extends GLSurfaceView
 		setRenderer(renderer);
 		setRenderMode(RENDERMODE_CONTINUOUSLY);
 		g = new GestureDetector(new LevelSelectGestureListener(this));
+		g.setIsLongpressEnabled(false);
 		renderer.setPaintable(this);
         gr = GameResources.getInstance(getContext());
         textWidth = new int[gr.numlevels];
@@ -46,6 +48,7 @@ public class LevelSelectView extends GLSurfaceView
 
 	public void onResume() {
 		nUnlocked = GameResources.shp.getInt("nUnlocked",1);		
+		highlight = -1;
 
         super.onResume();
 
@@ -58,6 +61,17 @@ public class LevelSelectView extends GLSurfaceView
 		paint.setColor(0x30000000);
 		c.drawRect(5,5,previewWidth+5,previewHeight+5,paint);
 		sc.cache(0x5800000000l,shadow);
+		
+		Bitmap hilight = Bitmap.createBitmap(
+            SpriteCache.powerOfTwo(previewWidth+20),
+			SpriteCache.powerOfTwo(previewHeight+20),
+            Bitmap.Config.ARGB_8888);
+		c.setBitmap(hilight);
+		paint.setMaskFilter(new BlurMaskFilter(10,BlurMaskFilter.Blur.NORMAL));
+		paint.setColor(0xff40a0ff);
+		c.drawRect(10,10,previewWidth+10,previewHeight+10,paint);
+		sc.cache(0x5800000001l,hilight);
+
 		IntroScreen.setup(sc);
 	}
 
@@ -150,6 +164,8 @@ public class LevelSelectView extends GLSurfaceView
 					int x = page*width+hmargin+i*hSpacing;
 					int y = vmargin+j*vSpacing;
 					if(level < nUnlocked) {
+						if(highlight == level)
+							b.blit(0x5800000001l, x-10, y-10);
 						b.blit(0x5800000000l, x+5, y+5);
 						b.fill(0xff000000, x-1,
 							y-1, previewWidth+2,
@@ -195,6 +211,7 @@ public class LevelSelectView extends GLSurfaceView
 	private void scroll( float dx)
 	{
 		xOffset += dx;
+		highlight = -1;
 		requestRender();
 		try {
 			wait();
@@ -205,9 +222,18 @@ public class LevelSelectView extends GLSurfaceView
 	{
 		int level = pickLevel(x,y);
 		if(level == -1) return;
+		highlight = level;
+		requestRender();
 		Intent intent = new Intent(getContext(),Game.class);
 		intent.putExtra("level",level);
 		getContext().startActivity(intent);
+	}
+
+	private void showPress( float x, float y)
+	{
+		int level = pickLevel(x,y);
+		highlight = level;
+		requestRender();		
 	}
 
 	private int pickLevel( float x, float y)
@@ -279,6 +305,12 @@ public class LevelSelectView extends GLSurfaceView
 		{
 			view.tap(e.getX(), e.getY());
 			return true;
+		}
+
+		@Override
+		public void onShowPress(MotionEvent e)
+		{
+			view.showPress(e.getX(), e.getY());
 		}
 	}
 }
