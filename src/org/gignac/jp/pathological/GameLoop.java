@@ -35,7 +35,8 @@ public class GameLoop
 				rendering = false;
 				return;
 			}
-			
+			while( SystemClock.uptimeMillis() >= targetTime + 4*delayMillis)
+				targetTime += delayMillis;
 			while( SystemClock.uptimeMillis() >= targetTime) {
 				update.run();
 				targetTime += delayMillis;
