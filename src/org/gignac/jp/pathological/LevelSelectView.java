@@ -252,6 +252,7 @@ public class LevelSelectView extends GLSurfaceView
 		if( i < 0 || i >= cols) return -1;
 		if( x - i*hSpacing > previewWidth) return -1;
 		int level = (page*rows+j)*cols+i;
+		if(level < 0 || level >= gr.numlevels) return -1;
 		return level;
 	}
 
