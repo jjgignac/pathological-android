@@ -522,9 +522,9 @@ class Board implements Paintable
 		int dy = posy - downy;
 		int dx2 = dx*dx;
 		int dy2 = dy*dy;
-		boolean isClick = (dx2+dy2 <= Marble.marble_size*Marble.marble_size);
 		if(paused) {
-			if(isClick) setPaused(false);
+			if(dx2+dy2 <= Marble.marble_size*Marble.marble_size)
+				setPaused(false);
 			return;
 		}
 		Tile downtile = whichTile(downx,downy);
@@ -533,10 +533,21 @@ class Board implements Paintable
 		int downtile_y = (downy - Marble.marble_size) / Tile.tile_size;
 		int tile_xr = downx-(downtile_x*Tile.tile_size);
 		int tile_yr = downx-Marble.marble_size-(downtile_y*Tile.tile_size);
-		if(isClick) {
+		
+		// Use a distance threshold to decide whether the gesture is a tap
+		// or a flick.  But use a smaller threshold if the flick starts near
+		// a hole position and heads in the outward direction.
+		int flickThreshold = Marble.marble_size;
+		int dir = (dx2>dy2)?(dx>0?1:3):(dy>0?2:0);
+		int xmo = tile_xr-gr.holecenters_x[0][dir];
+		int ymo = tile_yr-gr.holecenters_y[0][dir];
+		int nearThreshold = Marble.marble_size * 5/3;
+		boolean startedNearMarble =
+			(xmo*xmo+ymo*ymo) <= nearThreshold * nearThreshold;
+		if(startedNearMarble) flickThreshold /= 2;
+		if(dx2+dy2 <= flickThreshold*flickThreshold) {
 			downtile.click(this, tile_xr, tile_yr);
 		} else {
-			int dir = (dx2>dy2)?(dx>0?1:3):(dy>0?2:0);
 			downtile.flick(this, tile_xr, tile_yr, dir);
 		}
 	}
