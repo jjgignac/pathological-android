@@ -46,12 +46,8 @@ public class Game extends Activity
         }
 
         bl = new ActionListener(this);
-        ((Button)findViewById(R.id.prevlevel)).setOnClickListener(bl);
-        ((Button)findViewById(R.id.nextlevel)).setOnClickListener(bl);
-        ((Button)findViewById(R.id.quit)).setOnClickListener(bl);
-        ((Button)findViewById(R.id.pause)).setOnClickListener(bl);
-        ((Button)findViewById(R.id.volume)).setOnClickListener(bl);
-        ((Button)findViewById(R.id.retry)).setOnClickListener(bl);
+        findViewById(R.id.pause).setOnClickListener(bl);
+        findViewById(R.id.retry).setOnClickListener(bl);
 
         gv = (GameView)findViewById(R.id.gameboard);
 

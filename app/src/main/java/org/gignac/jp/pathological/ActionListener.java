@@ -15,21 +15,11 @@ public class ActionListener
     public void onClick(View v)
     {
         switch(v.getId()) {
-        case R.id.prevlevel:
-            if(game.level > 0)
-                game.playLevel(game.level-1);
-            break;
-        case R.id.nextlevel:
-            game.nextLevel();
-            break;
         case R.id.retry:
             game.playLevel(game.level);
             break;
         case R.id.pause:
             game.pause();
-            break;
-        case R.id.quit:
-            game.finish();
             break;
         }
     }

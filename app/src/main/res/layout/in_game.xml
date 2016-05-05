@@ -1,91 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-	android:orientation="horizontal" >
+    android:orientation="horizontal"
+    tools:context=".Game" >
 
 	<org.gignac.jp.pathological.GameView
 		android:id="@+id/gameboard"
-		android:layout_width="0dp"
+		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_weight="1" />
+		android:layout_below="@+id/board_name" />
 
-	<LinearLayout
-		android:layout_width="350dp"
+	<TextView
+		android:id="@+id/board_name"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_weight="0"
-		android:padding="20sp"
-		android:orientation="vertical" >
-		
-		<TextView
-			android:id="@+id/board_name"
-			android:layout_width="match_parent"
-			android:layout_height="80sp"
-			android:textSize="30sp"
-			android:gravity="center_horizontal|bottom" />
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
+		android:layout_toLeftOf="@+id/pause"
+		android:layout_toStartOf="@+id/pause"
+		android:padding="4dp"
+		tools:text="Example Board Name" />
 
-		<TextView
-			android:id="@+id/score"
-			android:layout_width="match_parent"
-			android:layout_height="80sp"
-			android:textStyle="bold"
-			android:textSize="60sp"
-			android:gravity="center_horizontal|center_vertical"
-			android:text="0" />
-		
-		<Button
-			android:id="@+id/pause"
-			android:padding="6sp"
-			android:layout_width="match_parent"
-			android:layout_height="50sp"
-			android:textStyle="bold"
-			android:textSize="20sp"
-			android:text="Pause" />
+	<ImageView
+		android:id="@+id/pause"
+		android:padding="4dp"
+		android:src="@drawable/pause"
+		android:layout_width="40dp"
+		android:layout_height="wrap_content"
+		android:layout_alignTop="@+id/board_name"
+		android:layout_alignBottom="@+id/board_name"
+		android:layout_toLeftOf="@+id/retry"
+		android:layout_toStartOf="@+id/retry"
+		android:contentDescription="@string/pause" />
 
-		<Button
-			android:id="@+id/prevlevel"
-			android:padding="6sp"
-			android:layout_width="match_parent"
-			android:layout_height="50sp"
-			android:textStyle="bold"
-			android:textSize="20sp"
-			android:text="Previous Level" />
+	<ImageView
+		android:id="@+id/retry"
+		android:padding="2dp"
+		android:src="@drawable/retry"
+		android:layout_width="40dp"
+		android:layout_height="wrap_content"
+		android:layout_alignTop="@+id/board_name"
+		android:layout_alignBottom="@+id/board_name"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
+		android:contentDescription="@string/retry" />
 
-		<Button
-			android:id="@+id/nextlevel"
-			android:padding="6sp"
-			android:layout_width="match_parent"
-			android:layout_height="50sp"
-			android:textStyle="bold"
-			android:textSize="20sp"
-			android:text="Next Level" />
-
-		<Button
-			android:id="@+id/retry"
-			android:padding="6sp"
-			android:layout_width="match_parent"
-			android:layout_height="50sp"
-			android:textStyle="bold"
-			android:textSize="20sp"
-			android:text="Retry" />
-
-		<Button
-			android:id="@+id/quit"
-			android:padding="6sp"
-			android:layout_width="match_parent"
-			android:layout_height="50sp"
-			android:textStyle="bold"
-			android:textSize="20sp"
-			android:text="Quit" />
-
-		<Button
-			android:id="@+id/volume"
-			android:padding="6sp"
-			android:layout_width="match_parent"
-			android:layout_height="50sp"
-			android:textStyle="bold"
-			android:textSize="20sp"
-			android:text="Volume" />
-
-	</LinearLayout>
-</LinearLayout>
+</RelativeLayout>
