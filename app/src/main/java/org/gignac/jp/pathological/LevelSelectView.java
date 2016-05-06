@@ -30,6 +30,7 @@ public class LevelSelectView extends View
     private int textHeight;
     private final SpriteCache sc;
     private final Paint paint = new Paint();
+    private final Runnable updater;
 
     public LevelSelectView( Context context, AttributeSet a)
     {
@@ -40,6 +41,10 @@ public class LevelSelectView extends View
         g.setIsLongpressEnabled(false);
         gr = GameResources.getInstance(getContext());
         textWidth = new int[gr.numlevels];
+
+        updater = new Runnable() {
+            public void run() { update(); };
+        };
     }
 
     @Override
@@ -127,6 +132,11 @@ public class LevelSelectView extends View
         if( pos < 0) vel = 0.005f * 300;
         else if( pos > npages-1) vel = -0.005f * 300;
         else vel += dt * (a-pos) * 0.005f;
+
+        invalidate();
+        removeCallbacks(updater);
+
+        if( vel != 0) postDelayed(updater, 1000/60);
     }
 
     public void paint( Blitter b)
