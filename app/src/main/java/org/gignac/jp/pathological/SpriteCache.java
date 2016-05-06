@@ -25,7 +25,9 @@ public class SpriteCache
     public void cache(int resid) {
         long uniq = resid&0xffffffffL;
         if( sprites.containsKey(uniq)) return;
-        cache(uniq, BitmapFactory.decodeResource(res, resid));
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+        cache(uniq, BitmapFactory.decodeResource(res, resid, options));
     }
 
     // This function catches incorrect API uses
