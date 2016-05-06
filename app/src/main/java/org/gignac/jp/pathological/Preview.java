@@ -29,7 +29,7 @@ class Preview
         int relLevel = level % (rows*cols);
 
         if(b == null) b = new BitmapBlitter(s,
-            width*supersample, height*supersample, false);
+            width*supersample, height*supersample);
         else b.reset();
         new Board(gr,s,level,null,false).paint(b);
 
@@ -66,8 +66,8 @@ class Preview
                     in = c.openFileInput(name);
                     preview = BitmapFactory.decodeStream(in);
                 } catch(FileNotFoundException e) {
-                    int rw = SpriteCache.powerOfTwo((width+1) * cols - 1);
-                    int rh = SpriteCache.powerOfTwo((height+1) * rows - 1);
+                    int rw = (width+1) * cols - 1;
+                    int rh = (height+1) * rows - 1;
                     preview = Bitmap.createBitmap(
                         rw, rh, Bitmap.Config.ARGB_8888);
                     Canvas cv = new Canvas(preview);

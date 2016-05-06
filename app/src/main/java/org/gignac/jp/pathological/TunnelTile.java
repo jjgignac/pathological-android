@@ -18,7 +18,7 @@ public abstract class TunnelTile extends Tile
         super.setxy(x,y);
         board.sc.cache(R.drawable.misc);
         uniq = 0x700000000L+(left<<16)+top;
-        b = new BitmapBlitter(board.sc,tunnel_size,tunnel_size,true);
+        b = new BitmapBlitter(board.sc,tunnel_size,tunnel_size);
         fore = b.getDest();
         final int offset = (tile_size - tunnel_size)/2;
         b.blit( R.drawable.misc, 446, (paths&1)==0?93:113,

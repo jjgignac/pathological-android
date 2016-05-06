@@ -95,8 +95,7 @@ class Board {
         liveCounter = sc.getBitmap(0x100000002L);
         if( liveCounter == null) {
             liveCounter = Bitmap.createBitmap(
-                SpriteCache.powerOfTwo(Marble.marble_size * 5),
-                SpriteCache.powerOfTwo(Marble.marble_size),
+                Marble.marble_size * 5, Marble.marble_size,
                 Bitmap.Config.ARGB_8888);
             sc.cache( 0x100000002L, liveCounter);
         }
@@ -333,7 +332,7 @@ class Board {
         }
 
         if( Game.bg == null)
-            Game.bg = new BitmapBlitter(sc,w,h,true);
+            Game.bg = new BitmapBlitter(sc,w,h);
 
         if( w != Game.bg.getWidth() ||
             h != Game.bg.getHeight()) dirty = true;

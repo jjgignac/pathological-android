@@ -51,15 +51,4 @@ public class SpriteCache
         Sprite s = sprites.get(uniq);
         return s == null ? null : s.bitmap;
     }
-
-    public static int powerOfTwo( int x)
-    {
-        --x;
-        x |= (x>>1);
-        x |= (x>>2);
-        x |= (x>>4);
-        x |= (x>>8);
-        x |= (x>>16);
-        return x+1;
-    }
 }

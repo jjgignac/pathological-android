@@ -10,14 +10,13 @@ public class BitmapBlitter
     private SpriteCache sc;
     private Bitmap dest;
     private int w,h;
-    private boolean powerOfTwo;
 
-    public BitmapBlitter( SpriteCache sc, int w, int h, boolean powerOfTwo)
+    public BitmapBlitter(SpriteCache sc, int w, int h)
     {
-        setup(sc,w,h,powerOfTwo);
+        setup(sc,w,h);
     }
 
-    private void setup( SpriteCache sc, int w, int h, boolean powerOfTwo)
+    private void setup(SpriteCache sc, int w, int h)
     {
         c = new Canvas();
         c.save();
@@ -26,7 +25,6 @@ public class BitmapBlitter
         paint = new Paint();
         setSize(w,h);
         this.sc = sc;
-        this.powerOfTwo = powerOfTwo;
     }
 
     public void reset()
@@ -38,13 +36,11 @@ public class BitmapBlitter
     public void setSize(int w, int h)
     {
         if( this.w == w && this.h == h) return;
-        int rw = powerOfTwo ? SpriteCache.powerOfTwo(w) : w;
-        int rh = powerOfTwo ? SpriteCache.powerOfTwo(h) : h;
         if( dest == null ||
-            rw != dest.getWidth() ||
-            rh != dest.getHeight()) {
+            w != dest.getWidth() ||
+            h != dest.getHeight()) {
             dest = Bitmap.createBitmap(
-                rw, rh, Bitmap.Config.ARGB_8888);
+                w, h, Bitmap.Config.ARGB_8888);
         }
         this.w = w;
         this.h = h;

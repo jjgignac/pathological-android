@@ -53,8 +53,7 @@ public class LevelSelectView extends View
         highlight = -1;
 
         Bitmap shadow = Bitmap.createBitmap(
-            SpriteCache.powerOfTwo(previewWidth+10),
-            SpriteCache.powerOfTwo(previewHeight+10),
+            previewWidth+10, previewHeight+10,
             Bitmap.Config.ARGB_8888);
         c.setBitmap(shadow);
         paint.setMaskFilter(new BlurMaskFilter(5,BlurMaskFilter.Blur.NORMAL));
@@ -63,8 +62,7 @@ public class LevelSelectView extends View
         sc.cache(0x5800000000L,shadow);
 
         Bitmap hilight = Bitmap.createBitmap(
-            SpriteCache.powerOfTwo(previewWidth+20),
-            SpriteCache.powerOfTwo(previewHeight+20),
+            previewWidth+20, previewHeight+20,
             Bitmap.Config.ARGB_8888);
         c.setBitmap(hilight);
         paint.setMaskFilter(new BlurMaskFilter(10,BlurMaskFilter.Blur.NORMAL));
@@ -85,11 +83,10 @@ public class LevelSelectView extends View
         int up = (int)Math.ceil(Math.max(-fm.ascent,-fm.top)+fm.leading);
         int down = (int)Math.ceil(Math.max(fm.descent,fm.bottom));
         textHeight = up+down;
-        int maxTxtWid = SpriteCache.powerOfTwo(previewWidth*5/4);
+        int maxTxtWid = previewWidth*5/4;
         if(text == null) {
             text = Bitmap.createBitmap( maxTxtWid,
-            SpriteCache.powerOfTwo(gr.numlevels*textHeight),
-            Bitmap.Config.ARGB_8888);
+            gr.numlevels*textHeight, Bitmap.Config.ARGB_8888);
         }
         c.setBitmap(text);
         c.drawColor(0x00000000, PorterDuff.Mode.SRC);
