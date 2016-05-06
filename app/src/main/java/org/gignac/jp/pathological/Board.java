@@ -5,8 +5,7 @@ import android.graphics.*;
 import android.os.*;
 
 @SuppressWarnings("WeakerAccess")
-class Board implements Paintable
-{
+class Board {
     public static final int INCOMPLETE = 0;
     public static final int COMPLETE = 1;
     public static final int LAUNCH_TIMEOUT = -1;
@@ -234,7 +233,7 @@ class Board implements Paintable
                thickness, height);
     }
 
-    public synchronized int update()
+    public int update()
     {
         // Return INCOMPLETE even if the board is complete.
         // This ensures that the end of level signal is only
@@ -349,7 +348,7 @@ class Board implements Paintable
         }
     }
 
-    public synchronized void paint(Blitter b)
+    public void paint(Blitter b)
     {
         int px = Board.screen_width + timer_width;
         int width = b.getWidth();
@@ -504,7 +503,7 @@ class Board implements Paintable
         return null;
     }
 
-    public synchronized void downEvent(int pointerId, float x, float y)
+    public void downEvent(int pointerId, float x, float y)
     {
         if(board_state != INCOMPLETE) return;
         if(scale == 0f) return;
@@ -519,7 +518,7 @@ class Board implements Paintable
         }
     }
 
-    public synchronized void upEvent(int pointerId, float x, float y)
+    public void upEvent(int pointerId, float x, float y)
     {
         if(board_state != INCOMPLETE) return;
         if(scale == 0f) return;

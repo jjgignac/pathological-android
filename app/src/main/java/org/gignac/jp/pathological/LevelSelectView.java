@@ -2,13 +2,11 @@ package org.gignac.jp.pathological;
 import android.view.*;
 import android.content.*;
 import android.util.*;
-import android.opengl.*;
 import android.os.*;
 import android.graphics.*;
 
 @SuppressWarnings("unused")
-public class LevelSelectView extends GLSurfaceView
-    implements Paintable
+public class LevelSelectView extends View
 {
     private static final int rows = 2;
     private static final int cols = 3;
@@ -18,7 +16,7 @@ public class LevelSelectView extends GLSurfaceView
     private static final int previewHeight = Preview.height;
 
     private final GameResources gr;
-    private final BlitterRenderer renderer;
+    private final CanvasBlitter b;
     private final GestureDetector g;
     private float xOffset = 0.0f;
     private float vel;
@@ -37,21 +35,22 @@ public class LevelSelectView extends GLSurfaceView
     {
         super(context,a);
         sc = GameResources.getInstance(context).sc;
-        renderer = new BlitterRenderer(sc);
-        setRenderer(renderer);
-        setRenderMode(RENDERMODE_CONTINUOUSLY);
+        b = new CanvasBlitter(sc);
         g = new GestureDetector(context, new LevelSelectGestureListener(this));
         g.setIsLongpressEnabled(false);
-        renderer.setPaintable(this);
         gr = GameResources.getInstance(getContext());
         textWidth = new int[gr.numlevels];
+    }
+
+    @Override
+    protected void onDraw( Canvas c) {
+        b.setCanvas(c);
+        paint(b);
     }
 
     public void onResume() {
         nUnlocked = GameResources.shp.getInt("nUnlocked",1);
         highlight = -1;
-
-        super.onResume();
 
         Bitmap shadow = Bitmap.createBitmap(
             SpriteCache.powerOfTwo(previewWidth+10),
@@ -123,7 +122,6 @@ public class LevelSelectView extends GLSurfaceView
         if( (prevPos < a) ^ (pos < a)) {
             vel = 0f;
             pos = a;
-            setRenderMode(RENDERMODE_WHEN_DIRTY);
         }
         if( pos < -0.1f) pos = -0.1f;
         else if( pos > npages-1+0.1f) pos = npages-1+0.1f;
@@ -134,8 +132,7 @@ public class LevelSelectView extends GLSurfaceView
         else vel += dt * (a-pos) * 0.005f;
     }
 
-    @Override
-    public synchronized void paint( Blitter b)
+    public void paint( Blitter b)
     {
         if(width != b.getWidth() || height != b.getHeight()) {
             width = b.getWidth();
@@ -194,17 +191,14 @@ public class LevelSelectView extends GLSurfaceView
                 }
             }
         }
-        notify();
     }
 
     @Override
     public synchronized boolean onTouchEvent(MotionEvent e) {
-        setRenderMode(RENDERMODE_WHEN_DIRTY);
         vel = 0f;
         switch(e.getAction() & MotionEvent.ACTION_MASK) {
         case MotionEvent.ACTION_UP:
             prevTime = SystemClock.uptimeMillis();
-            setRenderMode(RENDERMODE_CONTINUOUSLY);
             break;
         }
         return g.onTouchEvent(e);
@@ -214,12 +208,7 @@ public class LevelSelectView extends GLSurfaceView
     {
         xOffset += dx;
         highlight = -1;
-        requestRender();
-        try {
-            wait();
-        } catch( InterruptedException e) {
-            //
-        }
+        invalidate();
     }
 
     private void tap( float x, float y)
@@ -227,7 +216,7 @@ public class LevelSelectView extends GLSurfaceView
         int level = pickLevel(x,y);
         if(level == -1) return;
         highlight = level;
-        requestRender();
+        invalidate();
         Intent intent = new Intent(getContext(),Game.class);
         intent.putExtra("level",level);
         getContext().startActivity(intent);
@@ -236,7 +225,7 @@ public class LevelSelectView extends GLSurfaceView
     private void showPress( float x, float y)
     {
         highlight = pickLevel(x,y);
-        requestRender();
+        invalidate();
     }
 
     private int pickLevel( float x, float y)

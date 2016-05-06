@@ -78,7 +78,7 @@ public class Game extends Activity
         };
         Runnable render = new Runnable() {
             public void run() {
-                gv.requestRender();
+                gv.invalidate();
             }
         };
         gameLoop = new GameLoop( update, render, 1000 / frames_per_sec);
@@ -87,17 +87,12 @@ public class Game extends Activity
     }
 
     public void playLevel(final int level) {
-        // Only do this in the rendering thread
-        gv.queueEvent(new Runnable() {
-            public void run() {
-                loadLevel(level);
-            }
-        });
+        loadLevel(level);
     }
 
     private void loadLevel(int level) {
         this.level = level;
-        board = new Board(gr, gv.sc, level, new Runnable() {
+        board = new Board(gr, gr.sc, level, new Runnable() {
             public void run() {
                 h.post(gameLoop);
             }
@@ -122,7 +117,6 @@ public class Game extends Activity
     public void onResume()
     {
         super.onResume();
-        gv.onResume();
 
         // Schedule the updates
         gameLoop.start();
@@ -138,7 +132,6 @@ public class Game extends Activity
     protected void onPause()
     {
         super.onPause();
-        gv.onPause();
         gameLoop.stop();
     }
 

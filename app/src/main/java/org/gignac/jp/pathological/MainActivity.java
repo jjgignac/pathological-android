@@ -36,7 +36,6 @@ public class MainActivity extends Activity
     @Override
     public void onPause() {
         super.onPause();
-        v.onPause();
     }
 
     @Override

@@ -1,28 +1,30 @@
 package org.gignac.jp.pathological;
 
-import android.opengl.GLSurfaceView;
+import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.content.*;
 import android.util.*;
+import android.view.View;
 
 @SuppressWarnings("unused")
-public class GameView extends GLSurfaceView
+public class GameView extends View
 {
-    private final BlitterRenderer renderer;
+    private final CanvasBlitter b;
     private Board board;
-    public final SpriteCache sc;
 
     public GameView(Context c,AttributeSet a) {
         super(c,a);
-        sc = GameResources.getInstance(c).sc;
-        renderer = new BlitterRenderer(sc);
-        setRenderer(renderer);
-        setRenderMode(RENDERMODE_WHEN_DIRTY);
+        b = new CanvasBlitter(GameResources.getInstance(c).sc);
     }
 
     public void setBoard(Board board) {
         this.board = board;
-        renderer.setPaintable(board);
+    }
+
+    @Override
+    protected void onDraw(Canvas c) {
+        b.setCanvas(c);
+        board.paint(b);
     }
 
     @Override
