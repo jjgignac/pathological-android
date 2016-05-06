@@ -6,6 +6,7 @@ import android.opengl.*;
 import android.os.*;
 import android.graphics.*;
 
+@SuppressWarnings("unused")
 public class LevelSelectView extends GLSurfaceView
     implements Paintable
 {
@@ -16,9 +17,9 @@ public class LevelSelectView extends GLSurfaceView
     private static final int previewWidth = Preview.width;
     private static final int previewHeight = Preview.height;
 
-    private GameResources gr;
-    private BlitterRenderer renderer;
-    private GestureDetector g;
+    private final GameResources gr;
+    private final BlitterRenderer renderer;
+    private final GestureDetector g;
     private float xOffset = 0.0f;
     private float vel;
     private long prevTime;
@@ -26,10 +27,10 @@ public class LevelSelectView extends GLSurfaceView
     private int nLoaded=0, nUnlocked=0;
     private int highlight = -1;
     private Bitmap text;
-    private Canvas c = new Canvas();
-    private int[] textWidth;
+    private final Canvas c = new Canvas();
+    private final int[] textWidth;
     private int textHeight;
-    private SpriteCache sc;
+    private final SpriteCache sc;
     private final Paint paint = new Paint();
 
     public LevelSelectView( Context context, AttributeSet a)
@@ -39,7 +40,7 @@ public class LevelSelectView extends GLSurfaceView
         renderer = new BlitterRenderer(sc);
         setRenderer(renderer);
         setRenderMode(RENDERMODE_CONTINUOUSLY);
-        g = new GestureDetector(new LevelSelectGestureListener(this));
+        g = new GestureDetector(context, new LevelSelectGestureListener(this));
         g.setIsLongpressEnabled(false);
         renderer.setPaintable(this);
         gr = GameResources.getInstance(getContext());
@@ -60,7 +61,7 @@ public class LevelSelectView extends GLSurfaceView
         paint.setMaskFilter(new BlurMaskFilter(5,BlurMaskFilter.Blur.NORMAL));
         paint.setColor(0x30000000);
         c.drawRect(5,5,previewWidth+5,previewHeight+5,paint);
-        sc.cache(0x5800000000l,shadow);
+        sc.cache(0x5800000000L,shadow);
 
         Bitmap hilight = Bitmap.createBitmap(
             SpriteCache.powerOfTwo(previewWidth+20),
@@ -70,7 +71,7 @@ public class LevelSelectView extends GLSurfaceView
         paint.setMaskFilter(new BlurMaskFilter(10,BlurMaskFilter.Blur.NORMAL));
         paint.setColor(0xff40a0ff);
         c.drawRect(10,10,previewWidth+10,previewHeight+10,paint);
-        sc.cache(0x5800000001l,hilight);
+        sc.cache(0x5800000001L,hilight);
 
         IntroScreen.setup(sc);
     }
@@ -102,7 +103,7 @@ public class LevelSelectView extends GLSurfaceView
             c.drawText(label,0,up+textHeight*i,paint);
             textWidth[i] = txtWid;
         }
-        sc.cache(0x5700000000l,text);
+        sc.cache(0x5700000000L,text);
         nLoaded = nUnlocked;
     }
 
@@ -146,11 +147,12 @@ public class LevelSelectView extends GLSurfaceView
         update();
 
         int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
-        IntroScreen.draw_back(gr,b);
+        IntroScreen.draw_back(b);
         IntroScreen.draw_fore(gr,b);
         b.transform( 1f, -xOffset, 0f);
 
         int hSpacing = (width - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
+        @SuppressWarnings("PointlessArithmeticExpression")
         int vSpacing = (height - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;
         int lockSize = previewHeight * 3 / 4;
 
@@ -165,8 +167,8 @@ public class LevelSelectView extends GLSurfaceView
                     int y = vmargin+j*vSpacing;
                     if(level < nUnlocked) {
                         if(highlight == level)
-                            b.blit(0x5800000001l, x-10, y-10);
-                        b.blit(0x5800000000l, x+5, y+5);
+                            b.blit(0x5800000001L, x-10, y-10);
+                        b.blit(0x5800000000L, x+5, y+5);
                         b.fill(0xff000000, x-1,
                             y-1, previewWidth+2,
                             previewHeight+2);
@@ -183,9 +185,9 @@ public class LevelSelectView extends GLSurfaceView
                         y -= previewHeight*4/9;
                     }
 
-                    Bitmap text = sc.getBitmap(0x5700000000l);
+                    Bitmap text = sc.getBitmap(0x5700000000L);
                     if(text!=null)
-                        b.blit( 0x5700000000l,
+                        b.blit( 0x5700000000L,
                             0,textHeight*level,textWidth[level],textHeight,
                             x + (previewWidth-textWidth[level])/2,
                             y + previewHeight + 1,textWidth[level],textHeight);
@@ -215,7 +217,9 @@ public class LevelSelectView extends GLSurfaceView
         requestRender();
         try {
             wait();
-        } catch( InterruptedException e) {}
+        } catch( InterruptedException e) {
+            //
+        }
     }
 
     private void tap( float x, float y)
@@ -231,14 +235,14 @@ public class LevelSelectView extends GLSurfaceView
 
     private void showPress( float x, float y)
     {
-        int level = pickLevel(x,y);
-        highlight = level;
+        highlight = pickLevel(x,y);
         requestRender();
     }
 
     private int pickLevel( float x, float y)
     {
         int hSpacing = (width - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
+        @SuppressWarnings("PointlessArithmeticExpression")
         int vSpacing = (height - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;
         x += xOffset;
         int page = (int)Math.floor(x / width);
@@ -264,7 +268,7 @@ public class LevelSelectView extends GLSurfaceView
     private class LevelSelectGestureListener
         extends GestureDetector.SimpleOnGestureListener
     {
-        LevelSelectView view;
+        final LevelSelectView view;
 
         LevelSelectGestureListener( LevelSelectView view)
         {

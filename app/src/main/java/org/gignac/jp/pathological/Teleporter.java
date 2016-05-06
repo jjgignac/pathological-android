@@ -2,7 +2,7 @@ package org.gignac.jp.pathological;
 
 class Teleporter extends TunnelTile
 {
-    private int image;
+    private final int image;
     private Teleporter other;
 
     public Teleporter(Board board, int paths, Teleporter other)

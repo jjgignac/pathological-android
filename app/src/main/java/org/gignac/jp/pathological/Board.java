@@ -4,6 +4,7 @@ import java.util.*;
 import android.graphics.*;
 import android.os.*;
 
+@SuppressWarnings("WeakerAccess")
 class Board implements Paintable
 {
     public static final int INCOMPLETE = 0;
@@ -21,12 +22,12 @@ class Board implements Paintable
     public static final int screen_width = board_width + Marble.marble_size;
     public static final int screen_height = board_height + Marble.marble_size;
     private int timer_width = Marble.marble_size*3/4;
-    public GameResources gr;
+    public final GameResources gr;
     public Trigger trigger;
     public Stoplight stoplight;
-    public Vector<Marble> marbles;
-    public Tile[][] tiles;
-    private int[] launch_queue;
+    public final Vector<Marble> marbles;
+    public final Tile[][] tiles;
+    private final int[] launch_queue;
     private int board_state;
     private boolean paused;
     public String name;
@@ -36,17 +37,16 @@ class Board implements Paintable
     private int board_timeout;
     private int board_timeout_start;
     public String colors;
-    public int launch_timer;
     private Marble[] marblesCopy = new Marble[20];
-    private HashMap<Integer,Point> down;
+    private final HashMap<Integer,Point> down;
     private float launch_queue_offset;
     private Bitmap liveCounter;
-    private Canvas liveCounterCanvas;
+    private final Canvas liveCounterCanvas;
     private final Paint paint = new Paint();
     private float scale = 0f;
     private float offsetx;
-    private Runnable onPainted;
-    public SpriteCache sc;
+    private final Runnable onPainted;
+    public final SpriteCache sc;
     private long pause_changed;
     private boolean dirty = true;
     public int delay = 50;
@@ -55,7 +55,7 @@ class Board implements Paintable
         int level, Runnable onPainted, boolean showTimer)
     {
         this.gr = gr;
-        this.marbles = new Vector<Marble>();
+        this.marbles = new Vector<>();
         this.trigger = null;
         this.stoplight = null;
         this.launch_queue = new int[screen_height * 3 / Marble.marble_size];
@@ -70,7 +70,7 @@ class Board implements Paintable
         this.pause_changed = SystemClock.uptimeMillis()-10000;
         if(!showTimer) timer_width = 0;
 
-        down = new HashMap<Integer,Point>();
+        down = new HashMap<>();
 
         paint.setAntiAlias(true);
         paint.setColor(0xfff0f0f0);
@@ -93,13 +93,13 @@ class Board implements Paintable
             tiles[j] = new Tile[horiz_tiles];
 
         // Prepare the live marbles counter image
-        liveCounter = sc.getBitmap(0x100000002l);
+        liveCounter = sc.getBitmap(0x100000002L);
         if( liveCounter == null) {
             liveCounter = Bitmap.createBitmap(
                 SpriteCache.powerOfTwo(Marble.marble_size * 5),
                 SpriteCache.powerOfTwo(Marble.marble_size),
                 Bitmap.Config.ARGB_8888);
-            sc.cache( 0x100000002l, liveCounter);
+            sc.cache( 0x100000002L, liveCounter);
         }
         liveCounterCanvas = new Canvas(liveCounter);
 
@@ -109,7 +109,9 @@ class Board implements Paintable
         // Load the level
         try {
             _load(gr,  level);
-        } catch(IOException e) {}
+        } catch(IOException e) {
+            //
+        }
 
         // Fill up the launch queue
         for( int i=0; i < launch_queue.length; ++i) {
@@ -162,11 +164,17 @@ class Board implements Paintable
             board_width - x, Marble.marble_size);
 
         // Draw the live marble counter
-        b.blit(0x100000002l, Marble.marble_size/2, 0);
+        b.blit(0x100000002L, Marble.marble_size/2, 0);
 
+        draw_board_timer_and_marble_queue(b, fullHeight);
+    }
+
+    private void draw_board_timer_and_marble_queue(
+            Blitter b, int timer_height)
+    {
         // Draw the board timer
-        timerColor = 0xff000080;
-        timeLeft = (float)board_timeout / Game.frames_per_sec;
+        int timerColor = 0xff000080;
+        float timeLeft = (float)board_timeout / Game.frames_per_sec;
         if( timeLeft < 60f && board_timeout*2 < board_timeout_start) {
             // Make the timer flash to indicate that time
             // is running out.
@@ -174,7 +182,7 @@ class Board implements Paintable
             int phase = Math.round(s*s*255);
             timerColor = 0xff000000 | phase | (255-phase)<<16;
         }
-        int timer_height = fullHeight;
+
         int y = (board_timeout*timer_height+board_timeout_start/2) /
             board_timeout_start;
         b.fill(0xff000000, screen_width+3,
@@ -198,6 +206,10 @@ class Board implements Paintable
         drawPauseButton(b);
     }
 
+    private int makeRGBA(int rgb, int alpha) {
+        return (alpha<<24)|rgb;
+    }
+
     private void drawPauseButton(Blitter b)
     {
         if(board_state != INCOMPLETE) return;
@@ -206,8 +218,8 @@ class Board implements Paintable
         if(!paused) intensity ^= 0xff;
         if(intensity == 0) return;
 
-        int borderColor = ((intensity/2)<<24)|0x000000;
-        int color = (intensity<<24)|0xd0d0d0;
+        int borderColor = makeRGBA(0x000000, intensity/2);
+        int color = makeRGBA(0xd0d0d0, intensity);
 
         int thickness = b.getWidth()/30;
         int spacing = thickness * 4/5;
@@ -306,7 +318,7 @@ class Board implements Paintable
                 }
             }
         }
-        if(dirty) sc.cache(0x500000000l,Game.bg.getDest());
+        if(dirty) sc.cache(0x500000000L,Game.bg.getDest());
     }
 
     private void cache_background(int w,int h)
@@ -322,7 +334,7 @@ class Board implements Paintable
         }
 
         if( Game.bg == null)
-            Game.bg = new BitmapBlitter(sc,w,h);
+            Game.bg = new BitmapBlitter(sc,w,h,true);
 
         if( w != Game.bg.getWidth() ||
             h != Game.bg.getHeight()) dirty = true;
@@ -332,7 +344,7 @@ class Board implements Paintable
             draw_backdrop(Game.bg);
             Game.bg.transform(1f,w-px,0f);
             draw_back(Game.bg);
-            sc.cache(0x500000000l,Game.bg.getDest());
+            sc.cache(0x500000000L,Game.bg.getDest());
             dirty = false;
         }
     }
@@ -349,7 +361,7 @@ class Board implements Paintable
         // Draw the background
         cache_background(width, height);
         refresh_bg_cache();
-        b.blit(0x500000000l,
+        b.blit(0x500000000L,
             0,0,Game.bg.getWidth(),Game.bg.getHeight(),
             0,0,width,height);
 
@@ -383,7 +395,6 @@ class Board implements Paintable
     }
 
     public void set_launch_timer( int passes) {
-        launch_timer = passes;
         launch_timeout_start = (Marble.marble_size +
             (horiz_tiles * Tile.tile_size - Marble.marble_size)
                 * passes) / Marble.marble_speed;
@@ -410,16 +421,15 @@ class Board implements Paintable
         if( live > live_marbles_limit) live = live_marbles_limit;
         String s = live+" / "+live_marbles_limit;
         liveCounterCanvas.drawText( s, 0, Marble.marble_size*4/5, paint);
-        sc.cache( 0x100000002l, liveCounter);
+        sc.cache( 0x100000002L, liveCounter);
     }
 
     public void launch_marble() {
         activateMarble( new Marble(
-            gr, launch_queue[0],
+                launch_queue[0],
             board_width+Marble.marble_size/2,
             Marble.marble_size/2, 3));
-        for( int i=0; i < launch_queue.length-1; ++i)
-            launch_queue[i] = launch_queue[i+1];
+        System.arraycopy(launch_queue, 1, launch_queue, 0, launch_queue.length-1);
         launch_queue[launch_queue.length-1] =
             colors.charAt(gr.random.nextInt(colors.length()))-'0';
         launch_timeout = launch_timeout_start;
@@ -552,7 +562,8 @@ class Board implements Paintable
         }
     }
 
-    public boolean _load(GameResources gr, int level)
+    @SuppressWarnings("ConstantConditions")
+    public void _load(GameResources gr, int level)
         throws IOException
     {
         BufferedReader f = new BufferedReader( new InputStreamReader(
@@ -564,13 +575,13 @@ class Board implements Paintable
             String line = f.readLine();
             if( line==null) {
                 f.close();
-                return false;
+                return;
             }
             if( line.isEmpty()) continue;
             if( line.charAt(0) == '|') j += 1;
         }
 
-        Vector<Tile> teleporters = new Vector<Tile>();
+        Vector<Tile> teleporters = new Vector<>();
         String teleporter_names = "";
         String stoplight = default_stoplight;
 
@@ -620,7 +631,7 @@ class Board implements Paintable
                 if( paths == ' ') pathsint = 0;
                 else if( paths >= 'a') pathsint = paths-'a'+10;
                 char color = line.charAt(i*4+3);
-                int colorint = 0;
+                int colorint;
                 if( color == ' ') colorint = 0;
                 else if( color >= 'a') colorint = color-'a'+10;
                 else if( color >= '0' && color <= '9') colorint = color-'0';
@@ -682,7 +693,7 @@ class Board implements Paintable
                     else if( color == '>') direction = 1;
                     else if( color == 'v') direction = 2;
                     else direction = 3;
-                    activateMarble( new Marble(gr, type-'0',
+                    activateMarble( new Marble(type-'0',
                         tile.left + Tile.tile_size/2,
                         tile.top + Tile.tile_size/2,
                         direction));
@@ -694,7 +705,6 @@ class Board implements Paintable
         if( boardtimer < 0) boardtimer = default_board_timer * numwheels;
         this.set_board_timer( boardtimer);
         f.close();
-        return true;
     }
 
     public boolean isPaused() {

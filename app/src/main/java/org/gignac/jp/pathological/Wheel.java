@@ -2,8 +2,8 @@ package org.gignac.jp.pathological;
 
 class Wheel extends Tile
 {
-    public int[] marbles;
-    private Marble[] entering = new Marble[4];
+    public final int[] marbles;
+    private final Marble[] entering = new Marble[4];
     public int spinpos;
     public boolean completed;
 
@@ -136,7 +136,7 @@ class Wheel extends Tile
 
             // Eject the marble
             board.activateMarble(
-                new Marble( gr, marbles[i],
+                new Marble(marbles[i],
                     gr.holecenters_x[0][i]+left,
                     gr.holecenters_y[0][i]+top,
                     i));
@@ -179,7 +179,7 @@ class Wheel extends Tile
         }
     }
 
-    public void complete(Board board) {
+    private void complete(Board board) {
         // Complete the wheel
         for( int i=0; i<4; ++i) marbles[i] = -3;
         completed = true;
@@ -209,8 +209,7 @@ class Wheel extends Tile
             int c = marbles[i];
             if( c < 0) return false;
             if( color==8) color=c;
-            else if( c==8) c=color;
-            else if( c != color) return false;
+            else if( c != 8 && c != color) return false;
         }
 
         // Is there a stoplight?

@@ -1,13 +1,13 @@
 package org.gignac.jp.pathological;
 import android.os.*;
 
-public class GameLoop
+class GameLoop
     implements Runnable
 {
-    final Handler handler = new Handler();
-    private Runnable update;
-    private Runnable render;
-    private long delayMillis;
+    private final Handler handler = new Handler();
+    private final Runnable update;
+    private final Runnable render;
+    private final long delayMillis;
     private long targetTime;
     private boolean rendering = false;
 

@@ -2,7 +2,7 @@ package org.gignac.jp.pathological;
 
 class Filter extends TunnelTile
 {
-    private int color;
+    private final int color;
 
     public Filter(Board board, int paths, int color) {
         super(board, paths);

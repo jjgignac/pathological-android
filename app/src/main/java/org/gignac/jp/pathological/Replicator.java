@@ -2,7 +2,7 @@ package org.gignac.jp.pathological;
 
 class Replicator extends TunnelTile
 {
-    private int count;
+    private final int count;
     private int[] pending_col;
     private int[] pending_dir;
     private int[] pending_count;
@@ -44,8 +44,8 @@ class Replicator extends TunnelTile
                 }
 
                 // Add the new marble
-                board.activateMarble( new Marble( board.gr,
-                    pending_col[i], left + tile_size/2,
+                board.activateMarble( new Marble(
+                        pending_col[i], left + tile_size/2,
                     top + tile_size/2, pending_dir[i]));
                 board.gr.play_sound( GameResources.replicator);
 

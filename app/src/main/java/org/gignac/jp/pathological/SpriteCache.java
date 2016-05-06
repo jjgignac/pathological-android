@@ -9,10 +9,9 @@ import android.content.res.*;
 public class SpriteCache
 {
     private int[] textures;
-    private final HashMap<Long,Sprite> sprites =
-        new HashMap<Long,Sprite>();
+    private final HashMap<Long,Sprite> sprites = new HashMap<>();
     private boolean dirty = true;
-    private Resources res;
+    private final Resources res;
 
     public SpriteCache( Resources res) {
         this.res = res;
@@ -60,15 +59,13 @@ public class SpriteCache
     }
 
     public void cache(int resid) {
-        long uniq = resid&0xffffffffl;
+        long uniq = resid&0xffffffffL;
         if( sprites.containsKey(uniq)) return;
         cache(uniq, BitmapFactory.decodeResource(res, resid));
     }
 
-    public void cache(int[] resids) {
-        for( int resid : resids) cache(resid);
-    }
-
+    // This function catches incorrect API uses
+    @SuppressWarnings("unused")
     public void cache(int resid, Bitmap b) {
         throw new IllegalArgumentException();
     }
@@ -88,8 +85,9 @@ public class SpriteCache
         }
     }
 
+    @SuppressWarnings("unused")
     public void bind(GL10 gl, int resid) {
-        bind(gl, resid&0xffffffffl);
+        bind(gl, resid&0xffffffffL);
     }
 
     public void bind(GL10 gl, long uniq) {

@@ -2,7 +2,7 @@ package org.gignac.jp.pathological;
 
 class Director extends TunnelTile
 {
-    private int direction;
+    private final int direction;
 
     public Director(Board board, int paths, int direction)
     {

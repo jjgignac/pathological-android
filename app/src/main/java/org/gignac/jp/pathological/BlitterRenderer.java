@@ -14,13 +14,13 @@ public class BlitterRenderer
     implements GLSurfaceView.Renderer, Blitter
 {
     private Paintable painter;
-    private float[] vertices;
+    private final float[] vertices;
     private final float[] texture = new float[8];
-    private FloatBuffer textureBuffer;
-    private FloatBuffer vertexBuffer;
+    private final FloatBuffer textureBuffer;
+    private final FloatBuffer vertexBuffer;
     private int width, height;
     private GL10 gl;
-    private SpriteCache sc;
+    private final SpriteCache sc;
 
     BlitterRenderer(SpriteCache sc)
     {
@@ -77,7 +77,7 @@ public class BlitterRenderer
         if(painter != null) painter.paint(this);
     }
 
-    static final float s = 1.0f / 255.0f;
+    private static final float s = 1.0f / 255.0f;
 
     @Override
     public void transform(float scale, float dx, float dy)
@@ -97,31 +97,25 @@ public class BlitterRenderer
 
     @Override
     public void blit(int resid, int x, int y, int w, int h) {
-        blit(resid&0xffffffffl, x, y, w, h);
+        blit(resid&0xffffffffL, x, y, w, h);
     }
 
     @Override
     public void blit(int resid, int sx, int sy,
         int sw, int sh, int x, int y, int w, int h) {
-        blit(resid&0xffffffffl, sx, sy, sw, sh, x, y, w, h);
+        blit(resid&0xffffffffL, sx, sy, sw, sh, x, y, w, h);
     }
 
-    @Override
-    public void blit(long uniq, int x, int y, int w, int h) {
+    private void blit(long uniq, int x, int y, int w, int h) {
         gl.glEnable(GL10.GL_TEXTURE_2D);
         sc.bind(gl, uniq);
         blit(0f,0f,1f,1f,x,y,w,h);
     }
 
     @Override
-    public void blit( int resid, int x, int y) {
-        blit(resid&0xffffffffl, x, y);
-    }
-
-    @Override
     public void blit( int resid, int sx, int sy,
         int sw, int sh, int x, int y) {
-        blit(resid&0xffffffffl, sx, sy, sw, sh, x, y, sw, sh);
+        blit(resid&0xffffffffL, sx, sy, sw, sh, x, y, sw, sh);
     }
 
     @Override

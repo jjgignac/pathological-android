@@ -2,11 +2,11 @@ package org.gignac.jp.pathological;
 import android.view.*;
 import android.content.*;
 
-public class ActionListener
+class ActionListener
     implements View.OnClickListener,
         DialogInterface.OnClickListener
 {
-    Game game;
+    private final Game game;
 
     public ActionListener( Game game) {
         this.game = game;

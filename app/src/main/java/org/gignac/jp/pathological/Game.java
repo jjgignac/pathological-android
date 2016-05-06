@@ -6,6 +6,7 @@ import android.widget.*;
 import android.content.pm.*;
 import android.content.*;
 
+@SuppressWarnings("unused")
 public class Game extends Activity
 {
     public static final int frames_per_sec = 50;
@@ -29,7 +30,7 @@ public class Game extends Activity
         super.onCreate(stat);
 
         gr = GameResources.getInstance(this);
-        gr.create( true);
+        gr.create();
 
         overridePendingTransition(R.anim.begin, R.anim.fadeout);
         setContentView( R.layout.in_game);
@@ -49,7 +50,7 @@ public class Game extends Activity
         findViewById(R.id.pause).setOnClickListener(bl);
         findViewById(R.id.retry).setOnClickListener(bl);
 
-        gv = (GameView)findViewById(R.id.gameboard);
+        gv = (GameView)findViewById(R.id.game_board);
 
         Runnable update = new Runnable() {
             public void run() {

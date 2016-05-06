@@ -1,6 +1,6 @@
 package org.gignac.jp.pathological;
 
-public class IntroScreen
+class IntroScreen
 {
     private static final int[] pyramid = {
         2, 6, 3, 4, 4, 3, 2, 6, 4, 6
@@ -10,7 +10,7 @@ public class IntroScreen
         sc.cache(R.drawable.misc);
     }
 
-    public static void draw_back(GameResources gr, Blitter b)
+    public static void draw_back(Blitter b)
     {
         b.blit(R.drawable.misc,0,768,512,256,0,0,b.getWidth(),b.getHeight()+1);
     }

@@ -52,7 +52,7 @@ class Buffer extends TunnelTile
                     tile_size/2, tile_size/2);
             } else if( this.marble >= 0) {
                 // Bump the marble that is currently caught
-                Marble newmarble = new Marble(gr, this.marble,
+                Marble newmarble = new Marble(this.marble,
                     left + tile_size/2, top + tile_size/2,
                     marble.direction);
 

@@ -2,7 +2,7 @@ package org.gignac.jp.pathological;
 
 class Trigger extends Tile
 {
-    public static final int trigger_time = 30; // 30 seconds
+    private static final int trigger_time = 30; // 30 seconds
     public String marbles;
     private int countdown;
 
@@ -51,7 +51,7 @@ class Trigger extends Tile
         }
     }
 
-    public void complete(Board board) {
+    public void complete(@SuppressWarnings("UnusedParameters") Board board) {
         marbles = null;
         countdown = trigger_time * Game.frames_per_sec;
         invalidate();

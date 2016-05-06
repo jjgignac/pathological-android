@@ -2,7 +2,7 @@ package org.gignac.jp.pathological;
 
 class Stoplight extends Tile {
     public int current;
-    public int[] marbles;
+    public final int[] marbles;
 
     public Stoplight(Board board, String colors) {
         super(board, 0); // Call base class intializer
@@ -23,7 +23,7 @@ class Stoplight extends Tile {
         }
     }
 
-    public void complete( Board board) {
+    public void complete(@SuppressWarnings("UnusedParameters") Board board) {
         for( int i=0; i<3; ++i) {
             if( marbles[i] >= 0) {
                 marbles[i] = -1;

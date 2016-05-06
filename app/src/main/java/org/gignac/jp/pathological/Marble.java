@@ -9,7 +9,7 @@ class Marble {
     public int left, top;
     public int direction;
 
-    public Marble(GameResources gr, int color, int cx, int cy, int direction) {
+    public Marble(int color, int cx, int cy, int direction) {
         this.color = color;
         this.left = cx-marble_size/2;
         this.top = cy-marble_size/2;

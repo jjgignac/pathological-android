@@ -5,11 +5,12 @@ import android.view.MotionEvent;
 import android.content.*;
 import android.util.*;
 
+@SuppressWarnings("unused")
 public class GameView extends GLSurfaceView
 {
-    private BlitterRenderer renderer;
+    private final BlitterRenderer renderer;
     private Board board;
-    public SpriteCache sc;
+    public final SpriteCache sc;
 
     public GameView(Context c,AttributeSet a) {
         super(c,a);

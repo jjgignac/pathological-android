@@ -3,22 +3,22 @@ import android.graphics.*;
 import android.content.*;
 import java.io.*;
 
-public class Preview
+class Preview
 {
     public static final int height = 170;
     public static final int width = 224;
-    public static final int rows = 3;
-    public static final int cols = 2;
+    private static final int rows = 3;
+    private static final int cols = 2;
     private static final int supersample = 2;
     private static final Rect dest = new Rect();
     private static BitmapBlitter b = null;
-    private static Paint paint = new Paint();
+    private static final Paint paint = new Paint();
 
     public static void blit( Blitter d, int level, int x, int y)
     {
         int segment = level / (rows*cols);
         int relLevel = level % (rows*cols);
-        d.blit( 0x200000000l+segment,
+        d.blit( 0x200000000L+segment,
             (width+1)*(relLevel/rows), (height+1)*(relLevel%rows),
             width, height, x, y, width, height);
     }
@@ -52,7 +52,7 @@ public class Preview
     private static void cacheSegment(
         Context c, SpriteCache s, GameResources gr, int segment)
     {
-        long uniq = 0x200000000l+segment;
+        long uniq = 0x200000000L+segment;
         InputStream in = null;
         OutputStream out = null;
         Bitmap preview = s.getBitmap(uniq);
@@ -91,6 +91,8 @@ public class Preview
                     if( out != null) out.close();
                 }
             }
-        } catch( IOException e) {}
+        } catch( IOException e) {
+            // Ignore
+        }
     }
 }

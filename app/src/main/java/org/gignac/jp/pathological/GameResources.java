@@ -1,16 +1,18 @@
 package org.gignac.jp.pathological;
-import android.graphics.*;
 import android.media.*;
 import android.content.*;
+import android.os.Build;
+
 import java.util.*;
 import java.io.*;
 
+@SuppressWarnings("WeakerAccess")
 public class GameResources
 {
     private static GameResources instance;
     public static SharedPreferences shp;
-    private Context context;
-    public Random random;
+    private final Context context;
+    public final Random random;
     private static final int[] sound_resid = {
         R.raw.filter_admit, R.raw.wheel_turn, R.raw.wheel_completed,
         R.raw.change_color, R.raw.direct_marble, R.raw.ping,
@@ -21,7 +23,7 @@ public class GameResources
     private static final float[] sound_volume = {
         0.8f, 0.8f, 0.7f, 0.8f, 0.6f, 0.8f, 1.0f, 0.6f, 0.5f,
         0.6f, 1.0f, 0.15f, 1.0f, 1.0f, 1.0f, 1.0f, 0.8f, 1.0f};
-    private int[] sound_id = new int[sound_resid.length];
+    private final int[] sound_id = new int[sound_resid.length];
     private SoundPool sp;
     public final SpriteCache sc;
 
@@ -41,17 +43,14 @@ public class GameResources
     public static final int switched = 12;
     public static final int shredder = 13;
     public static final int replicator = 14;
-    public static final int extra_life = 15;
-    public static final int menu_scroll = 16;
-    public static final int menu_select = 17;
 
     public static final int wheel_margin = 4;
     public static final int wheel_steps = 9;
-    public int holecenter_radius;
-    public int[][] holecenters_x;
-    public int[][] holecenters_y;
+    public final int holecenter_radius;
+    public final int[][] holecenters_x;
+    public final int[][] holecenters_y;
 
-    public int numlevels;
+    public final int numlevels;
     public Vector<String> boardNames;
 
     public static synchronized GameResources getInstance(Context context) {
@@ -95,11 +94,24 @@ public class GameResources
 
     }
 
-    public void create(boolean colorblind) {
+    public void create() {
         if(sp != null) return;
 
         // Load the sound effects
-        sp = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
+        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            AudioAttributes aa = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            sp = new SoundPool.Builder()
+                    .setAudioAttributes(aa)
+                    .setMaxStreams(2).build();
+        } else {
+            @SuppressWarnings("deprecation")
+            SoundPool sp = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
+            this.sp = sp;
+        }
+
         for( int i=0; i < sound_resid.length; ++i)
             sound_id[i] = sp.load(context, sound_resid[i], 0);
     }
@@ -115,18 +127,14 @@ public class GameResources
             sound_volume[id], 0, 0, 1.0f);
     }
 
-    public Bitmap loadBitmap( int resid) {
-        return BitmapFactory.decodeResource(
-            context.getResources(),resid);
-    }
-
-    public InputStream openRawResource( int resid) {
+    @SuppressWarnings("SameParameterValue")
+    public InputStream openRawResource(int resid) {
         return context.getResources().openRawResource(resid);
     }
 
     private void getBoardNames()
     {
-        boardNames = new Vector<String>();
+        boardNames = new Vector<>();
         BufferedReader f = null;
 
         try {
@@ -139,10 +147,13 @@ public class GameResources
                     boardNames.add(line.substring(5));
             }
         } catch(IOException e) {
+            //
         } finally {
             try {
                 if(f != null) f.close();
-            } catch(IOException e) {}
+            } catch(IOException e) {
+                //
+            }
         }
     }
 }

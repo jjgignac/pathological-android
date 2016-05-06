@@ -12,11 +12,6 @@ public class BitmapBlitter
     private int w,h;
     private boolean powerOfTwo;
 
-    public BitmapBlitter( SpriteCache sc, int w, int h)
-    {
-        setup(sc,w,h,true);
-    }
-
     public BitmapBlitter( SpriteCache sc, int w, int h, boolean powerOfTwo)
     {
         setup(sc,w,h,powerOfTwo);
@@ -71,11 +66,6 @@ public class BitmapBlitter
         blit(resid&0xffffffffL, sx, sy, sw, sh, x, y, sw, sh);
     }
 
-    public void blit(int resid, int x, int y)
-    {
-        blit(resid&0xffffffffL, x, y);
-    }
-
     public void blit(long uniq, int x, int y)
     {
         Bitmap b = sc.getBitmap(uniq);
@@ -93,7 +83,7 @@ public class BitmapBlitter
         blit(resid&0xffffffffL, sx, sy, sw, sh, x, y, w, h);
     }
 
-    public void blit(long uniq, int x, int y, int w, int h)
+    private void blit(long uniq, int x, int y, int w, int h)
     {
         Bitmap b = sc.getBitmap(uniq);
         blit(b, x, y, w, h);

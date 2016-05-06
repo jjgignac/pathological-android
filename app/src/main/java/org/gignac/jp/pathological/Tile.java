@@ -3,25 +3,20 @@ package org.gignac.jp.pathological;
 class Tile
 {
     public static final int tile_size = 92;
-    public int paths;
+    public final int paths;
     public int left, top;
-    public int tile_x, tile_y;
-    protected Board board;
+    int tile_x;
+    int tile_y;
+    final Board board;
     public boolean dirty;
 
-    public Tile( Board board, int paths, int cx, int cy, int x, int y) {
+    public Tile(Board board, int paths) {
         this.board = board;
         this.paths = paths;
-        this.left = cx - tile_size/2;
-        this.top = cy - tile_size/2;
-        this.tile_x = x;
-        this.tile_y = y;
+        this.left = - tile_size/2;
+        this.top = - tile_size/2;
         this.dirty = true;
         board.sc.cache(R.drawable.misc);
-    }
-
-    public Tile( Board board, int paths) {
-        this(board,paths,0,0, 0, 0);
     }
 
     public void setxy(int x, int y) {
@@ -59,9 +54,11 @@ class Tile
 
     public void draw_fore( Blitter b) {}
 
-    public void click( Board board, int posx, int posy) {}
+    @SuppressWarnings("UnusedParameters")
+    public void click(Board board, int posx, int posy) {}
 
-    public void flick( Board board, int posx, int posy, int dir) {}
+    @SuppressWarnings("UnusedParameters")
+    public void flick(Board board, int posx, int posy, int dir) {}
 
     public void affect_marble( Board board, Marble marble, int rposx, int rposy)
     {
@@ -78,7 +75,7 @@ class Tile
         }
     }
 
-    public void invalidate() {
+    void invalidate() {
         dirty = true;
     }
 }

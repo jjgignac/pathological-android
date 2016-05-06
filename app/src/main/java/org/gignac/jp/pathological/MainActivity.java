@@ -5,6 +5,7 @@ import android.os.*;
 import android.content.pm.*;
 import android.content.*;
 
+@SuppressWarnings("unused")
 public class MainActivity extends Activity
 {
     private LevelSelectView v;

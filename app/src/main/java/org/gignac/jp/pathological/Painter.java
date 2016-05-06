@@ -2,7 +2,7 @@ package org.gignac.jp.pathological;
 
 class Painter extends TunnelTile
 {
-    private int color;
+    private final int color;
 
     public Painter(Board board, int paths, int color)
     {
