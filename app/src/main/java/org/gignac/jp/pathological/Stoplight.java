@@ -31,6 +31,5 @@ class Stoplight extends Tile {
             }
         }
         current += 1;
-        invalidate();
     }
 }

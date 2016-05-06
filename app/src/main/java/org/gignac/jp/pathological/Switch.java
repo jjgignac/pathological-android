@@ -18,7 +18,6 @@ class Switch extends TunnelTile
         curdir = otherdir;
         otherdir = t;
         board.gr.play_sound( GameResources.switched);
-        invalidate_fore();
     }
 
     protected void draw_cap(Blitter surface)

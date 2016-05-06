@@ -8,14 +8,12 @@ class Tile
     int tile_x;
     int tile_y;
     final Board board;
-    public boolean dirty;
 
     public Tile(Board board, int paths) {
         this.board = board;
         this.paths = paths;
         this.left = - tile_size/2;
         this.top = - tile_size/2;
-        this.dirty = true;
         board.sc.cache(R.drawable.misc);
     }
 
@@ -73,9 +71,5 @@ class Tile
             else if(t == 8) marble.direction = 3;
             else marble.direction = marble.direction ^ 2;
         }
-    }
-
-    void invalidate() {
-        dirty = true;
     }
 }

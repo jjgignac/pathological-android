@@ -13,22 +13,33 @@ class CanvasBlitter
     private final Rect rect = new Rect();
     private final Paint paint = new Paint();
     private final SpriteCache sc;
+    private int width;
+    private int height;
 
     public CanvasBlitter(SpriteCache sc)
     {
         this.sc = sc;
     }
 
-    public void setCanvas( Canvas c)
+    public void setCanvas( Canvas c, int width, int height)
     {
         this.c = c;
+        this.width = width;
+        this.height = height;
     }
 
     @Override
-    public void transform(float scale, float dx, float dy)
+    public void pushTransform(float scale, float dx, float dy)
     {
+        c.save();
         c.scale(scale,scale);
         c.translate(dx,dy);
+    }
+
+    @Override
+    public void popTransform()
+    {
+        c.restore();
     }
 
     @Override
@@ -105,12 +116,12 @@ class CanvasBlitter
     @Override
     public int getWidth()
     {
-        return c.getWidth();
+        return width;
     }
 
     @Override
     public int getHeight()
     {
-        return c.getHeight();
+        return height;
     }
 }

@@ -18,9 +18,9 @@ class Board {
     public static final int horiz_tiles = 8;
     public static final int board_width = horiz_tiles * Tile.tile_size;
     public static final int board_height = vert_tiles * Tile.tile_size;
-    public static final int screen_width = board_width + Marble.marble_size;
+    private static final int timer_width = Marble.marble_size*3/4;
+    private static final int screen_width = board_width + Marble.marble_size + timer_width;
     public static final int screen_height = board_height + Marble.marble_size;
-    private int timer_width = Marble.marble_size*3/4;
     public final GameResources gr;
     public Trigger trigger;
     public Stoplight stoplight;
@@ -47,8 +47,8 @@ class Board {
     private final Runnable onPainted;
     public final SpriteCache sc;
     private long pause_changed;
-    private boolean dirty = true;
     public int delay = 50;
+    private final boolean showTimer;
 
     public Board(GameResources gr, SpriteCache sc,
         int level, Runnable onPainted, boolean showTimer)
@@ -67,7 +67,7 @@ class Board {
         this.onPainted = onPainted;
         this.sc = sc;
         this.pause_changed = SystemClock.uptimeMillis()-10000;
-        if(!showTimer) timer_width = 0;
+        this.showTimer = showTimer;
 
         down = new HashMap<>();
 
@@ -117,31 +117,6 @@ class Board {
         }
     }
 
-    private void draw_backdrop(Blitter b) {
-        b.blit( R.drawable.backdrop,
-            0, 0, b.getWidth(), b.getHeight());
-    }
-
-    private void draw_back(Blitter b)
-    {
-        // Black-out the right edge of the backdrop
-        b.fill( 0xff000000, screen_width - Marble.marble_size*3/4,
-            0, Marble.marble_size*3/4+timer_width, screen_height*2);
-
-        // Draw the launcher
-        b.blit( R.drawable.misc, 415, 394, 1, 30,
-            28, -1, board_width-28, 30);
-        b.blit( R.drawable.misc, 54, 394, 38, 30, 0, -1);
-        b.blit(R.drawable.misc, 192, 387, 30, 1,
-            board_width-1, 30, 30, board_height*3);
-        b.blit( R.drawable.misc, 0, 440, 38, 38,
-            board_width-9, -1);
-
-        for( Tile[] row : tiles)
-            for( Tile tile : row)
-                tile.draw_back(b);
-    }
-
     private void draw_mid( Blitter b)
     {
         int fullHeight = (int)Math.ceil(b.getHeight()/scale);
@@ -183,9 +158,9 @@ class Board {
 
         int y = (board_timeout*timer_height+board_timeout_start/2) /
             board_timeout_start;
-        b.fill(0xff000000, screen_width+3,
+        b.fill(0xff000000, screen_width-timer_width+3,
             0, timer_width-3, timer_height-y);
-        b.fill(timerColor, screen_width+3,
+        b.fill(timerColor, screen_width-timer_width+3,
             timer_height-y, timer_width-3, y);
 
         // Draw the marble queue
@@ -303,67 +278,36 @@ class Board {
         return board_state;
     }
 
-    private void refresh_bg_cache()
-    {
-        // Refresh the background
-        boolean dirty = false;
-        for( Tile[] row : tiles) {
-            for( Tile tile : row) {
-                if( tile.dirty) {
-                    tile.draw_back(Game.bg);
-                    tile.dirty = false;
-                    dirty = true;
-                }
-            }
-        }
-        if(dirty) sc.cache(0x500000000L,Game.bg.getDest());
-    }
-
-    private void cache_background(int w,int h)
-    {
-        int px = Board.screen_width + timer_width;
-        int py = Board.screen_height;
-        if( w * py > h * px) {
-            w = (py * w + h/2) / h;
-            h = py;
-        } else {
-            h = (px * h + w/2) / w;
-            w = px;
-        }
-
-        if( Game.bg == null)
-            Game.bg = new BitmapBlitter(sc,w,h);
-
-        if( w != Game.bg.getWidth() ||
-            h != Game.bg.getHeight()) dirty = true;
-
-        if( dirty) {
-            Game.bg.setSize(w, h);
-            draw_backdrop(Game.bg);
-            Game.bg.transform(1f,w-px,0f);
-            draw_back(Game.bg);
-            sc.cache(0x500000000L,Game.bg.getDest());
-            dirty = false;
-        }
-    }
-
     public void paint(Blitter b)
     {
-        int px = Board.screen_width + timer_width;
         int width = b.getWidth();
         int height = b.getHeight();
-        scale = width * Board.screen_height < height * px ?
-            (float)width / px : (float)height / Board.screen_height;
-        offsetx = width - px*scale;
+        int adj_screen_width = showTimer ? screen_width : screen_width - timer_width;
+        scale = width * screen_height < height * adj_screen_width ?
+            (float)width / adj_screen_width : (float)height / screen_height;
+        offsetx = width/scale - adj_screen_width;
 
         // Draw the background
-        cache_background(width, height);
-        refresh_bg_cache();
-        b.blit(0x500000000L,
-            0,0,Game.bg.getWidth(),Game.bg.getHeight(),
-            0,0,width,height);
+        b.blit( R.drawable.backdrop, 0, 0, width, height);
 
-        b.transform( scale, offsetx, 0.0f);
+        b.pushTransform( scale, offsetx, 0.0f);
+
+        // Black-out the right edge of the backdrop
+        b.fill( 0xff000000, board_width, 0,
+                screen_width - board_width, screen_height*2);
+
+        // Draw the launcher
+        b.blit( R.drawable.misc, 415, 394, 1, 30,
+                28, -1, board_width-28, 30);
+        b.blit( R.drawable.misc, 54, 394, 38, 30, 0, -1);
+        b.blit(R.drawable.misc, 192, 387, 30, 1,
+                board_width-1, 30, 30, board_height*3);
+        b.blit( R.drawable.misc, 0, 440, 38, 38,
+                board_width-9, -1);
+
+        for( Tile[] row : tiles)
+            for( Tile tile : row)
+                tile.draw_back(b);
 
         // Draw the middle
         draw_mid(b);
@@ -374,6 +318,8 @@ class Board {
 
         // Draw the foreground
         draw_fore(b);
+
+        b.popTransform();
 
         // Trigger the update step
         if(onPainted != null) onPainted.run();
@@ -506,7 +452,7 @@ class Board {
     {
         if(board_state != INCOMPLETE) return;
         if(scale == 0f) return;
-        int posx = Math.round((x - offsetx) / scale);
+        int posx = Math.round(x / scale - offsetx);
         int posy = Math.round(y / scale);
         Point pos = down.get(pointerId);
         if( pos == null) {
@@ -521,7 +467,7 @@ class Board {
     {
         if(board_state != INCOMPLETE) return;
         if(scale == 0f) return;
-        int posx = Math.round((x - offsetx) / scale);
+        int posx = Math.round(x / scale - offsetx);
         int posy = Math.round(y / scale);
         final Point dpos = down.get(pointerId);
         if(dpos == null) return;

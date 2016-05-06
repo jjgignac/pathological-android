@@ -11,5 +11,6 @@ interface Blitter
     void fill( int color, int x, int y, int w, int h);
     int getWidth();
     int getHeight();
-    void transform(float scale, float dx, float dy);
+    void pushTransform(float scale, float dx, float dy);
+    void popTransform();
 }

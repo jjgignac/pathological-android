@@ -27,13 +27,7 @@ public class BitmapBlitter
         this.sc = sc;
     }
 
-    public void reset()
-    {
-        c.restore();
-        c.save();
-    }
-
-    public void setSize(int w, int h)
+    private void setSize(int w, int h)
     {
         if( this.w == w && this.h == h) return;
         if( dest == null ||
@@ -44,16 +38,20 @@ public class BitmapBlitter
         }
         this.w = w;
         this.h = h;
-        c.restore();
         c.setBitmap(dest);
         c.clipRect(0,0,w,h);
-        c.save();
     }
 
-    public void transform(float scale, float dx, float dy)
+    public void pushTransform(float scale, float dx, float dy)
     {
+        c.save();
         c.scale(scale,scale);
         c.translate(dx,dy);
+    }
+
+    public void popTransform()
+    {
+        c.restore();
     }
 
     public void blit(int resid, int sx, int sy,

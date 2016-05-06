@@ -44,7 +44,7 @@ public class LevelSelectView extends View
 
     @Override
     protected void onDraw( Canvas c) {
-        b.setCanvas(c);
+        b.setCanvas(c, getWidth(), getHeight());
         paint(b);
     }
 
@@ -143,7 +143,7 @@ public class LevelSelectView extends View
         int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
         IntroScreen.draw_back(b);
         IntroScreen.draw_fore(gr,b);
-        b.transform( 1f, -xOffset, 0f);
+        b.pushTransform( 1f, -xOffset, 0f);
 
         int hSpacing = (width - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
         @SuppressWarnings("PointlessArithmeticExpression")
@@ -188,6 +188,7 @@ public class LevelSelectView extends View
                 }
             }
         }
+        b.popTransform();
     }
 
     @Override

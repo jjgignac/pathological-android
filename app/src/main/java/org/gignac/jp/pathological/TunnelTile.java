@@ -7,7 +7,6 @@ public abstract class TunnelTile extends Tile
     private long uniq;
     private Bitmap fore;
     private BitmapBlitter b;
-    private boolean fore_dirty;
 
     TunnelTile(Board board, int paths) {
         super(board,paths);
@@ -29,24 +28,16 @@ public abstract class TunnelTile extends Tile
             56, 9, 18-offset, 65-offset);
         b.blit( R.drawable.misc, 503, (paths&8)==0?0:114,
             9, 56, 18-offset, 18-offset);
-        b.transform(1f,-left-offset,-top-offset);
-        fore_dirty = true;
+        b.pushTransform(1f,-left-offset,-top-offset);
     }
 
     @Override
     public final void draw_fore( Blitter b) {
         final int offset = (tile_size - tunnel_size)/2;
-        if( fore_dirty) {
-            draw_cap(this.b);
-            board.sc.cache(uniq,fore);
-            fore_dirty = false;
-        }
+        draw_cap(this.b);
+        board.sc.cache(uniq,fore);
         b.blit(uniq, left+offset, top+offset);
     }
 
     protected abstract void draw_cap(Blitter b);
-
-    void invalidate_fore() {
-        fore_dirty = true;
-    }
 }

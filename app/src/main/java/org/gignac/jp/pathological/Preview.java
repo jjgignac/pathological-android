@@ -30,7 +30,6 @@ class Preview
 
         if(b == null) b = new BitmapBlitter(s,
             width*supersample, height*supersample);
-        else b.reset();
         new Board(gr,s,level,null,false).paint(b);
 
         dest.left = (width+1)*(relLevel/rows);

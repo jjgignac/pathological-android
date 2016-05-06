@@ -21,7 +21,6 @@ class Trigger extends Tile
             colors.charAt(gr.random.nextInt(colors.length())) +
             colors.charAt(gr.random.nextInt(colors.length())) +
             colors.charAt(gr.random.nextInt(colors.length()));
-        invalidate();
     }
 
     @Override
@@ -54,6 +53,5 @@ class Trigger extends Tile
     public void complete(@SuppressWarnings("UnusedParameters") Board board) {
         marbles = null;
         countdown = trigger_time * Game.frames_per_sec;
-        invalidate();
     }
 }
