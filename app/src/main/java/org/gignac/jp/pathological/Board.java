@@ -198,9 +198,9 @@ class Board {
         int spacing = thickness * 4/5;
         int height = thickness * 4;
         int x = ((int)(b.getWidth()/scale) -
-            2*thickness - spacing) / 2 - (int)(offsetx/scale);
+            2*thickness - spacing) / 2 - (int)offsetx;
         int y = ((int)(b.getHeight()/scale) - height) / 2;
-        b.fill(borderColor, (int)Math.floor(-offsetx/scale), 0,
+        b.fill(borderColor, (int)Math.floor(-offsetx), 0,
             (int)(b.getWidth()/scale)+2, (int)(b.getHeight()/scale)+2);
         b.fill(color, x, y, thickness, height);
         b.fill(color, x+thickness+spacing, y,
