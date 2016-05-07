@@ -10,7 +10,7 @@ class Board {
     public static final int COMPLETE = 1;
     public static final int LAUNCH_TIMEOUT = -1;
     public static final int BOARD_TIMEOUT = -2;
-    private static final String default_colors = "2346";
+    private static final String default_colors = "23468";
     private static final String default_stoplight = "643";
     private static final int default_launch_timer = 6;
     private static final int default_board_timer = 30;
