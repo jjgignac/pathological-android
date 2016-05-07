@@ -20,7 +20,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".GameActivity" />
+        <activity android:name=".GameActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            />
 
     </application>
 
