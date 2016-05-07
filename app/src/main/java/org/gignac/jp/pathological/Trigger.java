@@ -52,6 +52,6 @@ class Trigger extends Tile
 
     public void complete(@SuppressWarnings("UnusedParameters") Board board) {
         marbles = null;
-        countdown = trigger_time * Game.frames_per_sec;
+        countdown = trigger_time * GameActivity.frames_per_sec;
     }
 }

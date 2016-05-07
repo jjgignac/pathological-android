@@ -225,7 +225,7 @@ public class LevelSelectView extends View
         if(level == -1) return;
         highlight = level;
         invalidate();
-        Intent intent = new Intent(getContext(),Game.class);
+        Intent intent = new Intent(getContext(),GameActivity.class);
         intent.putExtra("level",level);
         getContext().startActivity(intent);
     }

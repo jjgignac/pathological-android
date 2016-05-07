@@ -7,7 +7,7 @@ import android.content.pm.*;
 import android.content.*;
 
 @SuppressWarnings("unused")
-public class Game extends Activity
+public class GameActivity extends Activity
 {
     public static final int frames_per_sec = 50;
 
@@ -20,7 +20,7 @@ public class Game extends Activity
     private ActionListener bl;
     public static BitmapBlitter bg;
 
-    public Game()
+    public GameActivity()
     {
     }
 
@@ -151,7 +151,7 @@ public class Game extends Activity
     private void onLaunchTimeout()
     {
         gr.play_sound(GameResources.die);
-        AlertDialog.Builder b = new AlertDialog.Builder(Game.this);
+        AlertDialog.Builder b = new AlertDialog.Builder(GameActivity.this);
         b.setTitle("Failed").
             setMessage("The launch timer has expired.").
             setCancelable(false).
@@ -162,7 +162,7 @@ public class Game extends Activity
     private void onBoardTimeout()
     {
         gr.play_sound(GameResources.die);
-        AlertDialog.Builder b = new AlertDialog.Builder(Game.this);
+        AlertDialog.Builder b = new AlertDialog.Builder(GameActivity.this);
         b.setTitle("Failed").
             setMessage("The board timer has expired.").
             setCancelable(false).

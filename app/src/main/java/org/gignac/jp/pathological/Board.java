@@ -123,7 +123,7 @@ class Board {
 
         // Draw the launch timer
         int timerColor = 0x40404040;
-        float timeLeft = (float)launch_timeout / Game.frames_per_sec;
+        float timeLeft = (float)launch_timeout / GameActivity.frames_per_sec;
         if( timeLeft < 3.5f) {
             // Make the timer flash to indicate that time
             // is running out.
@@ -147,7 +147,7 @@ class Board {
     {
         // Draw the board timer
         int timerColor = 0xff000080;
-        float timeLeft = (float)board_timeout / Game.frames_per_sec;
+        float timeLeft = (float)board_timeout / GameActivity.frames_per_sec;
         if( timeLeft < 60f && board_timeout*2 < board_timeout_start) {
             // Make the timer flash to indicate that time
             // is running out.
@@ -345,7 +345,7 @@ class Board {
     }
 
     public void set_board_timer(int seconds) {
-        board_timeout_start = seconds * Game.frames_per_sec;
+        board_timeout_start = seconds * GameActivity.frames_per_sec;
         board_timeout = board_timeout_start;
     }
 

@@ -6,9 +6,9 @@ class ActionListener
     implements View.OnClickListener,
         DialogInterface.OnClickListener
 {
-    private final Game game;
+    private final GameActivity game;
 
-    public ActionListener( Game game) {
+    public ActionListener( GameActivity game) {
         this.game = game;
     }
 
