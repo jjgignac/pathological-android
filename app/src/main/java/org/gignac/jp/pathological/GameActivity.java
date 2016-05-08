@@ -8,6 +8,9 @@ import android.widget.*;
 import android.content.pm.*;
 import android.content.*;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 @SuppressWarnings("unused")
 public class GameActivity extends Activity
 {
@@ -55,6 +58,12 @@ public class GameActivity extends Activity
 
         gv = (GameView)findViewById(R.id.game_board);
         board_timer = findViewById(R.id.board_timer);
+
+        AdView mAdView = (AdView)findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
 
         Runnable update = new Runnable() {
             public void run() {

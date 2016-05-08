@@ -245,12 +245,12 @@ class Board {
     public void paint(Blitter b)
     {
         int width = b.getWidth();
-        int height = b.getHeight();
+        int height = b.getHeight() - 30;
         scale = height * screen_width < width * screen_height ?
             (float)height / screen_height : (float)width / screen_width;
 
         // Draw the background
-        b.blit( R.drawable.backdrop, 0, 0, width, height);
+        b.blit( R.drawable.backdrop, 0, 0, width, b.getHeight());
 
         // Black-out the top edge of the backdrop
         b.fill( 0xff000000, 0, 0,
