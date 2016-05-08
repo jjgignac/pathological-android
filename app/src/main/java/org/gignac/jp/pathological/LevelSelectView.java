@@ -8,9 +8,9 @@ import android.graphics.*;
 @SuppressWarnings("unused")
 public class LevelSelectView extends View
 {
-    private static final int rows = 2;
-    private static final int cols = 3;
-    private static final int hmargin = Board.board_width/4;
+    private static final int rows = 3;
+    private static final int cols = 2;
+    private static final int hmargin = Board.board_width/6;
     private static final int vmargin = Board.board_width/4;
     private static final int previewWidth = Preview.width;
     private static final int previewHeight = Preview.height;
@@ -155,6 +155,7 @@ public class LevelSelectView extends View
         IntroScreen.draw_fore(gr,b);
         b.pushTransform( 1f, -xOffset, 0f);
 
+        @SuppressWarnings("PointlessArithmeticExpression")
         int hSpacing = (width - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
         @SuppressWarnings("PointlessArithmeticExpression")
         int vSpacing = (height - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;

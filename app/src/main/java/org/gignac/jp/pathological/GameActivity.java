@@ -35,7 +35,7 @@ public class GameActivity extends Activity
         overridePendingTransition(R.anim.begin, R.anim.fadeout);
         setContentView( R.layout.in_game);
         setRequestedOrientation(
-            ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+            ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
         if( stat != null) {
             // Restore the game state

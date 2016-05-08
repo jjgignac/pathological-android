@@ -5,8 +5,8 @@ import java.io.*;
 
 class Preview
 {
-    public static final int height = 170;
-    public static final int width = 224;
+    public static final int height = 224;
+    public static final int width = 170;
     private static final int rows = 3;
     private static final int cols = 2;
     private static final int supersample = 2;

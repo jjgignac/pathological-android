@@ -29,7 +29,7 @@ public class MainActivity extends Activity
 
         setContentView(R.layout.main);
         setRequestedOrientation(
-            ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+            ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         v = (LevelSelectView)findViewById(R.id.levelSelect);
     }
 

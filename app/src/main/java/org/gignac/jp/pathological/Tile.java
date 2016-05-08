@@ -19,7 +19,7 @@ class Tile
 
     public void setxy(int x, int y) {
         left = Tile.tile_size * x;
-        top = Marble.marble_size + Tile.tile_size * y;
+        top = Tile.tile_size * y;
         tile_x = x;
         tile_y = y;
     }
@@ -41,9 +41,9 @@ class Tile
             b.blit( R.drawable.misc,
                 46*((paths+10)%11), 386+46*(paths/11), 46, 46,
                 left+23, top+23);
-            if( (paths & 1) > 0 && tile_y == 0) {
-                b.blit( R.drawable.misc, 92, 455, 46, 23,
-                    left+23,top-14);
+            if( (paths & 8) > 0 && tile_x == 0) {
+                b.blit( R.drawable.misc, 299, 386, 28, 46,
+                    left-14,top+23);
             }
         }
     }

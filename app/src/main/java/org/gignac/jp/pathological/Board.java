@@ -14,13 +14,13 @@ class Board {
     private static final String default_stoplight = "643";
     private static final int default_launch_timer = 6;
     private static final int default_board_timer = 30;
-    public static final int vert_tiles = 6;
-    public static final int horiz_tiles = 8;
+    public static final int vert_tiles = 8;
+    public static final int horiz_tiles = 6;
     public static final int board_width = horiz_tiles * Tile.tile_size;
     public static final int board_height = vert_tiles * Tile.tile_size;
-    private static final int timer_width = Marble.marble_size*3/4;
-    private static final int screen_width = board_width + Marble.marble_size + timer_width;
-    public static final int screen_height = board_height + Marble.marble_size;
+    private static final int timer_height = Marble.marble_size*3/4;
+    private static final int screen_width = board_width + Marble.marble_size;
+    public static final int screen_height = board_height + Marble.marble_size + timer_height;
     public final GameResources gr;
     public Trigger trigger;
     public Stoplight stoplight;
@@ -39,11 +39,8 @@ class Board {
     private Marble[] marblesCopy = new Marble[20];
     private final HashMap<Integer,Point> down;
     private float launch_queue_offset;
-    private Bitmap liveCounter;
-    private final Canvas liveCounterCanvas;
     private final Paint paint = new Paint();
     private float scale = 0f;
-    private float offsetx;
     private final Runnable onPainted;
     public final SpriteCache sc;
     private long pause_changed;
@@ -57,7 +54,7 @@ class Board {
         this.marbles = new Vector<>();
         this.trigger = null;
         this.stoplight = null;
-        this.launch_queue = new int[screen_height * 3 / Marble.marble_size];
+        this.launch_queue = new int[screen_width * 3 / Marble.marble_size];
         this.board_state = INCOMPLETE;
         this.paused = false;
         this.live_marbles_limit = 10;
@@ -91,16 +88,6 @@ class Board {
         for( int j=0; j < vert_tiles; ++j)
             tiles[j] = new Tile[horiz_tiles];
 
-        // Prepare the live marbles counter image
-        liveCounter = sc.getBitmap(0x100000002L);
-        if( liveCounter == null) {
-            liveCounter = Bitmap.createBitmap(
-                Marble.marble_size * 5, Marble.marble_size,
-                Bitmap.Config.ARGB_8888);
-            sc.cache( 0x100000002L, liveCounter);
-        }
-        liveCounterCanvas = new Canvas(liveCounter);
-
         sc.cache( R.drawable.backdrop);
         sc.cache( R.drawable.misc);
 
@@ -119,8 +106,6 @@ class Board {
 
     private void draw_mid( Blitter b)
     {
-        int fullHeight = (int)Math.ceil(b.getHeight()/scale);
-
         // Draw the launch timer
         int timerColor = 0x40404040;
         float timeLeft = (float)launch_timeout / GameActivity.frames_per_sec;
@@ -131,20 +116,26 @@ class Board {
             int phase = Math.round(s*s*191);
             timerColor = 0x40404040 + (phase<<16) + ((phase*2/3)<<24);
         }
-        int x = (launch_timeout*board_width+launch_timeout_start/2) /
+        int y = (launch_timeout*board_height+launch_timeout_start/2) /
             launch_timeout_start;
-        b.fill(timerColor, x, 0,
-            board_width - x, Marble.marble_size);
+        b.fill(timerColor, 0, Marble.marble_size,
+            Marble.marble_size, board_height - y);
 
-        // Draw the live marble counter
-        b.blit(0x100000002L, Marble.marble_size/2, 0);
+        // Indicate how many live balls remain
+        int ybase = board_height-2;
+        for( int i=0; i < live_marbles_limit - marbles.size(); ++i) {
+            b.blit(R.drawable.misc, 0, 611, 16, 16,
+                    Marble.marble_size/2 - 8, ybase - Marble.marble_size * i,
+                    16, 16);
+        }
 
-        draw_board_timer_and_marble_queue(b, fullHeight);
+        draw_marble_queue(b);
     }
 
-    private void draw_board_timer_and_marble_queue(
-            Blitter b, int timer_height)
+    private void draw_board_timer(Blitter b)
     {
+        int timer_width = b.getWidth();
+
         // Draw the board timer
         int timerColor = 0xff000080;
         float timeLeft = (float)board_timeout / GameActivity.frames_per_sec;
@@ -156,27 +147,25 @@ class Board {
             timerColor = 0xff000000 | phase | (255-phase)<<16;
         }
 
-        int y = (board_timeout*timer_height+board_timeout_start/2) /
+        int x = (board_timeout*timer_width+board_timeout_start/2) /
             board_timeout_start;
-        b.fill(0xff000000, screen_width-timer_width+3,
-            0, timer_width-3, timer_height-y);
-        b.fill(timerColor, screen_width-timer_width+3,
-            timer_height-y, timer_width-3, y);
+        b.fill(timerColor, 0, 0, x, timer_height - 3);
+        b.fill(0xff000000, x, 0, timer_width, timer_height - 3);
+    }
 
+    private void draw_marble_queue(Blitter b)
+    {
         // Draw the marble queue
-//        b.fill(0xff000000, board_width, launch_queue_offset, 28, launch_queue.length*28);
         int iOffset = Math.round(launch_queue_offset);
         for(int i=0; i < launch_queue.length; ++i)
             b.blit(R.drawable.misc, 28*launch_queue[i], 357, 28, 28,
-                board_width, iOffset + i * Marble.marble_size);
+                iOffset + i * Marble.marble_size, 0);
     }
 
     private void draw_fore( Blitter b) {
         for(Tile[] row : tiles)
             for(Tile tile : row)
                 tile.draw_fore(b);
-
-        drawPauseButton(b);
     }
 
     private int makeRGBA(int rgb, int alpha) {
@@ -197,11 +186,10 @@ class Board {
         int thickness = b.getWidth()/30;
         int spacing = thickness * 4/5;
         int height = thickness * 4;
-        int x = ((int)(b.getWidth()/scale) -
-            2*thickness - spacing) / 2 - (int)offsetx;
-        int y = ((int)(b.getHeight()/scale) - height) / 2;
-        b.fill(borderColor, (int)Math.floor(-offsetx), 0,
-            (int)(b.getWidth()/scale)+2, (int)(b.getHeight()/scale)+2);
+        int x = (b.getWidth() - 2*thickness - spacing) / 2;
+        int y = (b.getHeight() - height) / 2;
+        b.fill(borderColor, 0, 0,
+            b.getWidth(), b.getHeight());
         b.fill(color, x, y, thickness, height);
         b.fill(color, x+thickness+spacing, y,
                thickness, height);
@@ -267,9 +255,9 @@ class Board {
             // overlap.
             Tile topRight = tiles[0][horiz_tiles-1];
             if( launch_queue_offset < Marble.marble_size * 0.9f &&
-                (topRight.paths & 1) == 1 &&
+                (topRight.paths & 2) == 2 &&
                (!(topRight instanceof Wheel) ||
-                ((Wheel)topRight).marbles[0] < 0))
+                ((Wheel)topRight).marbles[1] < 0))
                 speed = Marble.marble_speed*0.7f;
             launch_queue_offset -= speed;
             if(launch_queue_offset < 0) launch_queue_offset = 0;
@@ -282,36 +270,42 @@ class Board {
     {
         int width = b.getWidth();
         int height = b.getHeight();
-        int adj_screen_width = showTimer ? screen_width : screen_width - timer_width;
-        scale = width * screen_height < height * adj_screen_width ?
-            (float)width / adj_screen_width : (float)height / screen_height;
-        offsetx = width/scale - adj_screen_width;
+        int adj_screen_height = showTimer ? screen_height : screen_height - timer_height;
+        scale = height * screen_width < width * adj_screen_height ?
+            (float)height / adj_screen_height : (float)width / screen_width;
 
         // Draw the background
         b.blit( R.drawable.backdrop, 0, 0, width, height);
 
-        b.pushTransform( scale, offsetx, 0.0f);
+        // Black-out the top edge of the backdrop
+        b.fill( 0xff000000, 0, 0,
+                width, Math.round((timer_height + Marble.marble_size/2) * scale));
 
-        // Black-out the right edge of the backdrop
-        b.fill( 0xff000000, board_width, 0,
-                screen_width - board_width, screen_height*2);
+        draw_board_timer(b);
+
+        b.pushTransform( scale, 1, timer_height);
 
         // Draw the launcher
+        b.blit( R.drawable.misc, 192, 387, 30, 1,
+                -1, Marble.marble_size, 30, board_height - Marble.marble_size);
         b.blit( R.drawable.misc, 415, 394, 1, 30,
-                28, -1, board_width-28, 30);
-        b.blit( R.drawable.misc, 54, 394, 38, 30, 0, -1);
-        b.blit(R.drawable.misc, 192, 387, 30, 1,
-                board_width-1, 30, 30, board_height*3);
-        b.blit( R.drawable.misc, 0, 440, 38, 38,
-                board_width-9, -1);
+                30, -1, (int)Math.ceil(width / scale), 30);
+        b.blit( R.drawable.misc, 8, 386, 30, 38,
+                -1, board_height + Marble.marble_size - 38);
+        b.blit( R.drawable.misc, 238, 394, 38, 38, -1, -1);
+
+        b.pushTransform( 1f, Marble.marble_size, Marble.marble_size);
 
         for( Tile[] row : tiles)
             for( Tile tile : row)
                 tile.draw_back(b);
 
+        b.popTransform();
+
         // Draw the middle
         draw_mid(b);
 
+        b.pushTransform( 1f, Marble.marble_size, Marble.marble_size);
         // Draw all of the marbles
         for(Marble marble : marbles)
             marble.draw(b);
@@ -320,6 +314,9 @@ class Board {
         draw_fore(b);
 
         b.popTransform();
+        b.popTransform();
+
+        drawPauseButton(b);
 
         // Trigger the update step
         if(onPainted != null) onPainted.run();
@@ -340,7 +337,7 @@ class Board {
 
     public void set_launch_timer( int passes) {
         launch_timeout_start = (Marble.marble_size +
-            (horiz_tiles * Tile.tile_size - Marble.marble_size)
+            (vert_tiles * Tile.tile_size - Marble.marble_size)
                 * passes) / Marble.marble_speed;
     }
 
@@ -351,28 +348,17 @@ class Board {
 
     public void activateMarble( Marble m) {
         marbles.add(m);
-        updateLiveCounter();
     }
 
     public void deactivateMarble( Marble m) {
         marbles.remove(m);
-        updateLiveCounter();
-    }
-
-    private void updateLiveCounter() {
-        liveCounterCanvas.drawColor(0,PorterDuff.Mode.CLEAR);
-        int live = marbles.size();
-        if( live > live_marbles_limit) live = live_marbles_limit;
-        String s = live+" / "+live_marbles_limit;
-        liveCounterCanvas.drawText( s, 0, Marble.marble_size*4/5, paint);
-        sc.cache( 0x100000002L, liveCounter);
     }
 
     public void launch_marble() {
         activateMarble( new Marble(
                 launch_queue[0],
-            board_width+Marble.marble_size/2,
-            Marble.marble_size/2, 3));
+            -Marble.marble_size/2,
+            -Marble.marble_size/2, 2));
         System.arraycopy(launch_queue, 1, launch_queue, 0, launch_queue.length-1);
         launch_queue[launch_queue.length-1] =
             colors.charAt(gr.random.nextInt(colors.length()))-'0';
@@ -383,31 +369,30 @@ class Board {
     public void affect_marble( Marble marble)
     {
         int cx = marble.left + Marble.marble_size/2;
-        int cy = marble.top - Marble.marble_size/2;
+        int cy = marble.top + Marble.marble_size/2;
 
-        // Bounce marbles off of the top
-        if( cy == Marble.marble_size/2) {
-            marble.direction = 2;
+        // Bounce marbles off of the left
+        if( cx == Marble.marble_size/2) {
+            marble.direction = 1;
             return;
         }
 
         int effective_cx = cx + Marble.marble_size/2 * Marble.dx[marble.direction];
         int effective_cy = cy + Marble.marble_size/2 * Marble.dy[marble.direction];
 
-        if( cy < 0) {
-            if(cx == Marble.marble_size/2) {
-                marble.direction = 1;
+        if( cx < 0) {
+            if(cy == board_height - Marble.marble_size/2) {
+                marble.direction = 0;
                 return;
             }
-            if( cx == Tile.tile_size * horiz_tiles - Marble.marble_size/2
-                && marble.direction == 1) {
-                marble.direction = 3;
+            if( cy == Marble.marble_size/2) {
+                marble.direction = 2;
                 return;
             }
 
             // The special case of new marbles at the top
-            effective_cx = cx;
-            effective_cy = cy + Marble.marble_size;
+            effective_cx = cx + 1 + Marble.marble_size;
+            effective_cy = cy;
         }
 
         int tile_x = effective_cx / Tile.tile_size;
@@ -415,21 +400,21 @@ class Board {
         int tile_xr = cx - tile_x * Tile.tile_size;
         int tile_yr = cy - tile_y * Tile.tile_size;
 
-        if( tile_x >= horiz_tiles) return;
+        if( tile_y < 0) return;
 
         Tile tile = tiles[tile_y][tile_x];
 
-        if( cy < 0 && marble.direction != 2) {
-            // The special case of new marbles at the top
-            if( tile_xr == Tile.tile_size / 2 && ((tile.paths & 1) == 1)) {
+        if( cx < 0 && marble.direction != 1) {
+            // The special case of new marbles on the left
+            if( tile_yr == Tile.tile_size / 2 && ((tile.paths & 8) == 8)) {
                 if( tile instanceof Wheel) {
                     Wheel w = (Wheel)tile;
-                    if( w.spinpos > 0 || w.marbles[0] != -3) return;
-                    w.marbles[0] = -2;
-                    marble.direction = 2;
+                    if( w.spinpos > 0 || w.marbles[3] != -3) return;
+                    w.marbles[3] = -2;
+                    marble.direction = 1;
                     this.launch_marble();
                 } else if( this.marbles.size() < live_marbles_limit) {
-                    marble.direction = 2;
+                    marble.direction = 1;
                     this.launch_marble();
                 }
             }
@@ -439,8 +424,8 @@ class Board {
 
     private Tile whichTile(int posx, int posy) {
         // Determine which tile the pointer is in
-        int tile_x = posx / Tile.tile_size;
-        int tile_y = (posy - Marble.marble_size) / Tile.tile_size;
+        int tile_x = (posx - Marble.marble_size) / Tile.tile_size;
+        int tile_y = (posy - Marble.marble_size - timer_height) / Tile.tile_size;
         if( tile_x >= 0 && tile_x < horiz_tiles &&
             tile_y >= 0 && tile_y < vert_tiles) {
             return tiles[tile_y][tile_x];
@@ -452,7 +437,7 @@ class Board {
     {
         if(board_state != INCOMPLETE) return;
         if(scale == 0f) return;
-        int posx = Math.round(x / scale - offsetx);
+        int posx = Math.round(x / scale);
         int posy = Math.round(y / scale);
         Point pos = down.get(pointerId);
         if( pos == null) {
@@ -467,7 +452,7 @@ class Board {
     {
         if(board_state != INCOMPLETE) return;
         if(scale == 0f) return;
-        int posx = Math.round(x / scale - offsetx);
+        int posx = Math.round(x / scale);
         int posy = Math.round(y / scale);
         final Point dpos = down.get(pointerId);
         if(dpos == null) return;
@@ -515,7 +500,7 @@ class Board {
 
         // Skip the previous levels
         int j = 0;
-        while( j < vert_tiles * level) {
+        while( j < horiz_tiles * level) {
             String line = f.readLine();
             if( line==null) {
                 f.close();
@@ -533,7 +518,7 @@ class Board {
         int boardtimer = -1;
 
         j = 0;
-        while( j < vert_tiles) {
+        while( j < horiz_tiles) {
             String line = f.readLine();
             if(line.isEmpty()) continue;
 
@@ -568,7 +553,7 @@ class Board {
                 continue;
             }
 
-            for( int i=0; i < horiz_tiles; ++i) {
+            for( int i=0; i < vert_tiles; ++i) {
                 char type = line.charAt(i*4+1);
                 char paths = line.charAt(i*4+2);
                 int pathsint = paths-'0';
@@ -580,6 +565,9 @@ class Board {
                 else if( color >= 'a') colorint = color-'a'+10;
                 else if( color >= '0' && color <= '9') colorint = color-'0';
                 else colorint = 0;
+
+                // Rotate the paths to account for portrait mode
+                pathsint = (pathsint >> 1) | ((pathsint & 1)<<3);
 
                 Tile tile = null;
                 if( type == 'O') {
@@ -598,25 +586,25 @@ class Board {
                 else if( type == 'X') tile = new Shredder(this, pathsint);
                 else if( type == '*') tile = new Replicator(this, pathsint, colorint);
                 else if( type == '^') {
-                    if( color == ' ') tile = new Director(this, pathsint, 0);
-                    else if( color == '>') tile = new Switch(this, pathsint, 0, 1);
-                    else if( color == 'v') tile = new Switch(this, pathsint, 0, 2);
-                    else if( color == '<') tile = new Switch(this, pathsint, 0, 3);
+                    if( color == ' ') tile = new Director(this, pathsint, 3);
+                    else if( color == '>') tile = new Switch(this, pathsint, 3, 0);
+                    else if( color == 'v') tile = new Switch(this, pathsint, 3, 1);
+                    else if( color == '<') tile = new Switch(this, pathsint, 3, 2);
                 } else if( type == '>') {
-                    if( color == ' ') tile = new Director(this, pathsint, 1);
-                    else if( color == '^') tile = new Switch(this, pathsint, 1, 0);
-                    else if( color == 'v') tile = new Switch(this, pathsint, 1, 2);
-                    else if( color == '<') tile = new Switch(this, pathsint, 1, 3);
+                    if( color == ' ') tile = new Director(this, pathsint, 0);
+                    else if( color == '^') tile = new Switch(this, pathsint, 0, 3);
+                    else if( color == 'v') tile = new Switch(this, pathsint, 0, 1);
+                    else if( color == '<') tile = new Switch(this, pathsint, 0, 2);
                 } else if( type == 'v') {
-                    if( color == ' ') tile = new Director(this, pathsint, 2);
-                    else if( color == '^') tile = new Switch(this, pathsint, 2, 0);
-                    else if( color == '>') tile = new Switch(this, pathsint, 2, 1);
-                    else if( color == '<') tile = new Switch(this, pathsint, 2, 3);
+                    if( color == ' ') tile = new Director(this, pathsint, 1);
+                    else if( color == '^') tile = new Switch(this, pathsint, 1, 3);
+                    else if( color == '>') tile = new Switch(this, pathsint, 1, 0);
+                    else if( color == '<') tile = new Switch(this, pathsint, 1, 2);
                 } else if( type == '<') {
-                    if( color == ' ') tile = new Director(this,pathsint, 3);
-                    else if( color == '^') tile = new Switch(this, pathsint, 3, 0);
-                    else if( color == '>') tile = new Switch(this, pathsint, 3, 1);
-                    else if( color == 'v') tile = new Switch(this, pathsint, 3, 2);
+                    if( color == ' ') tile = new Director(this,pathsint, 2);
+                    else if( color == '^') tile = new Switch(this, pathsint, 2, 3);
+                    else if( color == '>') tile = new Switch(this, pathsint, 2, 0);
+                    else if( color == 'v') tile = new Switch(this, pathsint, 2, 1);
                 }
                 else if( type == '=') {
                     if( teleporter_names.indexOf(color) >= 0) {
@@ -629,14 +617,14 @@ class Board {
                     }
                 }
 
-                this.set_tile( i, j, tile);
+                this.set_tile( j, vert_tiles-i-1, tile);
 
                 if( type >= '0' && type <= '8') {
                     int direction;
-                    if( color == '^') direction = 0;
-                    else if( color == '>') direction = 1;
-                    else if( color == 'v') direction = 2;
-                    else direction = 3;
+                    if( color == '^') direction = 3;
+                    else if( color == '>') direction = 0;
+                    else if( color == 'v') direction = 1;
+                    else direction = 2;
                     activateMarble( new Marble(type-'0',
                         tile.left + Tile.tile_size/2,
                         tile.top + Tile.tile_size/2,
