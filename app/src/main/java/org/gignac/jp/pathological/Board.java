@@ -18,9 +18,8 @@ class Board {
     public static final int horiz_tiles = 6;
     public static final int board_width = horiz_tiles * Tile.tile_size;
     public static final int board_height = vert_tiles * Tile.tile_size;
-    private static final int timer_height = Marble.marble_size*3/4;
     private static final int screen_width = board_width + Marble.marble_size;
-    public static final int screen_height = board_height + Marble.marble_size + timer_height;
+    public static final int screen_height = board_height + Marble.marble_size;
     public final GameResources gr;
     public Trigger trigger;
     public Stoplight stoplight;
@@ -33,8 +32,8 @@ class Board {
     public int live_marbles_limit;
     private int launch_timeout;
     private int launch_timeout_start;
-    private int board_timeout;
-    private int board_timeout_start;
+    public int board_timeout;
+    public int board_timeout_start;
     public String colors;
     private Marble[] marblesCopy = new Marble[20];
     private final HashMap<Integer,Point> down;
@@ -45,10 +44,9 @@ class Board {
     public final SpriteCache sc;
     private long pause_changed;
     public int delay = 50;
-    private final boolean showTimer;
 
     public Board(GameResources gr, SpriteCache sc,
-        int level, Runnable onPainted, boolean showTimer)
+                 int level, Runnable onPainted)
     {
         this.gr = gr;
         this.marbles = new Vector<>();
@@ -64,7 +62,6 @@ class Board {
         this.onPainted = onPainted;
         this.sc = sc;
         this.pause_changed = SystemClock.uptimeMillis()-10000;
-        this.showTimer = showTimer;
 
         down = new HashMap<>();
 
@@ -130,27 +127,6 @@ class Board {
         }
 
         draw_marble_queue(b);
-    }
-
-    private void draw_board_timer(Blitter b)
-    {
-        int timer_width = b.getWidth();
-
-        // Draw the board timer
-        int timerColor = 0xff000080;
-        float timeLeft = (float)board_timeout / GameActivity.frames_per_sec;
-        if( timeLeft < 60f && board_timeout*2 < board_timeout_start) {
-            // Make the timer flash to indicate that time
-            // is running out.
-            float s = (float)Math.sin(timeLeft*3);
-            int phase = Math.round(s*s*255);
-            timerColor = 0xff000000 | phase | (255-phase)<<16;
-        }
-
-        int x = (board_timeout*timer_width+board_timeout_start/2) /
-            board_timeout_start;
-        b.fill(timerColor, 0, 0, x, timer_height - 3);
-        b.fill(0xff000000, x, 0, timer_width, timer_height - 3);
     }
 
     private void draw_marble_queue(Blitter b)
@@ -270,20 +246,17 @@ class Board {
     {
         int width = b.getWidth();
         int height = b.getHeight();
-        int adj_screen_height = showTimer ? screen_height : screen_height - timer_height;
-        scale = height * screen_width < width * adj_screen_height ?
-            (float)height / adj_screen_height : (float)width / screen_width;
+        scale = height * screen_width < width * screen_height ?
+            (float)height / screen_height : (float)width / screen_width;
 
         // Draw the background
         b.blit( R.drawable.backdrop, 0, 0, width, height);
 
         // Black-out the top edge of the backdrop
         b.fill( 0xff000000, 0, 0,
-                width, Math.round((timer_height + Marble.marble_size/2) * scale));
+                width, Math.round(Marble.marble_size/2 * scale));
 
-        draw_board_timer(b);
-
-        b.pushTransform( scale, 1, timer_height);
+        b.pushTransform( scale, 1, 0);
 
         // Draw the launcher
         b.blit( R.drawable.misc, 192, 387, 30, 1,
@@ -425,7 +398,7 @@ class Board {
     private Tile whichTile(int posx, int posy) {
         // Determine which tile the pointer is in
         int tile_x = (posx - Marble.marble_size) / Tile.tile_size;
-        int tile_y = (posy - Marble.marble_size - timer_height) / Tile.tile_size;
+        int tile_y = (posy - Marble.marble_size) / Tile.tile_size;
         if( tile_x >= 0 && tile_x < horiz_tiles &&
             tile_y >= 0 && tile_y < vert_tiles) {
             return tiles[tile_y][tile_x];

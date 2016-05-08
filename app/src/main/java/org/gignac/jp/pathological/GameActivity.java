@@ -2,6 +2,8 @@ package org.gignac.jp.pathological;
 
 import android.app.*;
 import android.os.*;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import android.content.pm.*;
 import android.content.*;
@@ -17,6 +19,7 @@ public class GameActivity extends Activity
     private GameResources gr;
     private GameLoop gameLoop;
     private GameView gv;
+    private View board_timer;
     private ActionListener bl;
     public static BitmapBlitter bg;
 
@@ -51,6 +54,7 @@ public class GameActivity extends Activity
         findViewById(R.id.retry).setOnClickListener(bl);
 
         gv = (GameView)findViewById(R.id.game_board);
+        board_timer = findViewById(R.id.board_timer);
 
         Runnable update = new Runnable() {
             public void run() {
@@ -63,7 +67,9 @@ public class GameActivity extends Activity
                     --board.delay;
                     if((board.delay&1) != 0) return;
                 }
-                switch(board.update()) {
+                int status = board.update();
+                update_board_timer();
+                switch(status) {
                 case Board.LAUNCH_TIMEOUT:
                     onLaunchTimeout();
                     break;
@@ -86,6 +92,27 @@ public class GameActivity extends Activity
         playLevel(level);
     }
 
+    private void update_board_timer()
+    {
+        // Draw the board timer
+        int timerColor = 0xff000080;
+        float timeLeft = (float)board.board_timeout / frames_per_sec;
+        if( timeLeft < 60f && board.board_timeout*2 < board.board_timeout_start) {
+            // Make the timer flash to indicate that time
+            // is running out.
+            float s = (float)Math.sin(timeLeft*3);
+            int phase = Math.round(s*s*255);
+            timerColor = 0xff000000 | phase | (255-phase)<<16;
+        }
+
+        int x = Math.round((float)board.board_timeout * gv.getWidth() /
+                board.board_timeout_start);
+        ViewGroup.LayoutParams params = board_timer.getLayoutParams();
+        params.width = x;
+        board_timer.setLayoutParams(params);
+        board_timer.setBackgroundColor(timerColor);
+    }
+
     public void playLevel(final int level) {
         loadLevel(level);
     }
@@ -96,7 +123,7 @@ public class GameActivity extends Activity
             public void run() {
                 h.post(gameLoop);
             }
-        }, true);
+        });
 
         h.post( new Runnable() {
             public void run() {
