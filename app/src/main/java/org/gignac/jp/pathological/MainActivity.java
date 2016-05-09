@@ -5,10 +5,14 @@ import android.net.Uri;
 import android.os.*;
 import android.content.pm.*;
 import android.content.*;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 @SuppressWarnings("unused")
 public class MainActivity extends Activity
@@ -53,6 +57,34 @@ public class MainActivity extends Activity
         final PopupMenu menu = new PopupMenu(this, v);
         menu.getMenuInflater().inflate(R.menu.intromenu, menu.getMenu());
         menu.show();
+    }
+
+    public void showAboutDialog(MenuItem item) {
+        final PackageInfo info;
+        try {
+            info = getPackageManager().getPackageInfo(getPackageName(), 0);
+        } catch(Exception e) {
+            return;
+        }
+
+        final SpannableString text = new SpannableString(
+                getString(R.string.about_dialog, info.versionName));
+        Linkify.addLinks(text, Linkify.WEB_URLS);
+
+        final AlertDialog d = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.about) + " " + getString(R.string.app_name))
+                .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setMessage(text)
+                .show();
+
+        // Make links clickable.  Must be called after show()
+        ((TextView)d.findViewById(android.R.id.message))
+                .setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     public void showLicenceDialog(MenuItem item) {

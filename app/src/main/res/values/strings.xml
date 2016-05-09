@@ -5,8 +5,41 @@
     <string name="retry">Retry</string>
     <string name="pause">Pause</string>
     <string name="menu">Menu</string>
+    <string name="about">About</string>
     <string name="license">License</string>
     <string name="close">Close</string>
     <string name="open_in_browser">Open In Browser</string>
+    <string name="about_dialog">Version %s\n
+        \nCopyright &#169; 2016  John-Paul Gignac\n
+        \nThis program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.\n
+        \nThis program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.\n
+        \nThe source code for this program is available at
+        https://github.com/jjgignac/pathological-android\n
+        \nThanks to the following people for their helpful support, criticisms,
+        comments, contributions, etc.:\n
+        \n
+            Carrie Bloomfield\n
+            Mike Brenneman\n
+            T. Francis Chen\n
+            Kim Gignac\n
+            Matthias Le Bidan\n
+            Steve Mills\n
+            James Porto\n
+            Paul Preney\n
+            Paul Prescod\n
+            Alesh Slovak\n
+            Peter Tkacz\n
+            Dale Wick\n
+        \nOriginal Soundtrack by Matthias Le Bidan.
+        The Pathological logo was designed by Carrie Bloomfield.
+        Board designs were contributed by Mike Brenneman and Kim Gignac.
+        In-game graphics partially based on artwork by Mike Brenneman.
+    </string>
 
 </resources>
