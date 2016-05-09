@@ -4,5 +4,9 @@
     <string name="author_attrib">By John-Paul Gignac</string>
     <string name="retry">Retry</string>
     <string name="pause">Pause</string>
+    <string name="menu">Menu</string>
+    <string name="license">License</string>
+    <string name="close">Close</string>
+    <string name="open_in_browser">Open In Browser</string>
 
 </resources>
