@@ -5,15 +5,22 @@ import android.util.*;
 import android.os.*;
 import android.graphics.*;
 
-@SuppressWarnings("unused")
+@SuppressWarnings("unused,PointlessArithmeticExpression")
 public class LevelSelectView extends View
 {
     private static final int rows = 3;
     private static final int cols = 2;
-    private static final int hmargin = Board.board_width/6;
-    private static final int vmargin = Board.board_width/4;
-    private static final int previewWidth = Preview.width;
-    private static final int previewHeight = Preview.height;
+    private static final float hmargin_ratio = 1.1f;
+    private static final float hspacing_ratio = 0.9f;
+    private static final float vmargin_ratio = 1.1f;
+    private static final float vspacing_ratio = 0.9f;
+    private int hmargin;
+    private int vmargin;
+    private int previewWidth;
+    private int previewHeight;
+    private int lockSize;
+    private int hSpacing;
+    private int vSpacing;
 
     private final GameResources gr;
     private final CanvasBlitter b;
@@ -21,7 +28,6 @@ public class LevelSelectView extends View
     private float xOffset = 0.0f;
     private float vel;
     private long prevTime;
-    private int width=0, height=0;
     private int nLoaded=0, nUnlocked=0;
     private int highlight = -1;
     private Bitmap text;
@@ -57,6 +63,32 @@ public class LevelSelectView extends View
         nUnlocked = GameResources.shp.getInt("nUnlocked",1);
         highlight = -1;
 
+        IntroScreen.setup(sc);
+    }
+
+    @Override
+    public void onSizeChanged(int w, int h, int oldw, int oldh) {
+        float boxWidth = w / (cols + 2*hmargin_ratio + (cols-1)*hspacing_ratio);
+        float boxHeight = h / (rows + 2*vmargin_ratio + (rows-1)*vspacing_ratio);
+
+        hmargin = Math.round(boxWidth * hmargin_ratio);
+        vmargin = Math.round(boxHeight * vmargin_ratio);
+
+        if( boxWidth * Preview.height > boxHeight * Preview.width) {
+            previewWidth = Math.round(boxHeight * Preview.width / Preview.height);
+            previewHeight = Math.round(boxHeight);
+            hmargin += Math.round((boxWidth - previewWidth) * 0.5);
+        } else {
+            previewWidth = Math.round(boxWidth);
+            previewHeight = Math.round(boxWidth * Preview.height / Preview.width);
+            vmargin += Math.round((boxHeight - previewHeight) * 0.5);
+        }
+
+        hSpacing = (w - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
+        vSpacing = (h - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;
+
+        lockSize = previewHeight * 3 / 4;
+
         Bitmap shadow = Bitmap.createBitmap(
             previewWidth+10, previewHeight+10,
             Bitmap.Config.ARGB_8888);
@@ -74,13 +106,11 @@ public class LevelSelectView extends View
         paint.setColor(0xff40a0ff);
         c.drawRect(10,10,previewWidth+10,previewHeight+10,paint);
         sc.cache(0x5800000001L,hilight);
-
-        IntroScreen.setup(sc);
     }
 
     private void prepPaint()
     {
-        paint.setTextSize(previewWidth*0.1f);
+        paint.setTextSize(previewWidth*0.17f);
         paint.setAntiAlias(true);
         paint.setMaskFilter(null);
         paint.setColor(0xff000000);
@@ -88,7 +118,7 @@ public class LevelSelectView extends View
         int up = (int)Math.ceil(Math.max(-fm.ascent,-fm.top)+fm.leading);
         int down = (int)Math.ceil(Math.max(fm.descent,fm.bottom));
         textHeight = up+down;
-        int maxTxtWid = previewWidth*5/4;
+        int maxTxtWid = getWidth()/cols;
         if(text == null) {
             text = Bitmap.createBitmap( maxTxtWid,
             gr.numlevels*textHeight, Bitmap.Config.ARGB_8888);
@@ -115,19 +145,19 @@ public class LevelSelectView extends View
         prevTime = time;
 
         int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
-        float pos = xOffset / width;
+        float pos = xOffset / getWidth();
         float prevPos = pos;
         int a = Math.round(pos);
         if( pos < 0) a = 0;
         else if( pos > npages-1) a = npages-1;
-        pos += dt * vel / width;
+        pos += dt * vel / getWidth();
         if( (prevPos < a) ^ (pos < a)) {
             vel = 0f;
             pos = a;
         }
         if( pos < -0.1f) pos = -0.1f;
         else if( pos > npages-1+0.1f) pos = npages-1+0.1f;
-        xOffset = pos * width;
+        xOffset = pos * getWidth();
 
         if( pos < 0) vel = 0.005f * 300;
         else if( pos > npages-1) vel = -0.005f * 300;
@@ -141,10 +171,8 @@ public class LevelSelectView extends View
 
     public void paint( Blitter b)
     {
-        if(width != b.getWidth() || height != b.getHeight()) {
-            width = b.getWidth();
-            height = b.getHeight();
-        }
+        int width = b.getWidth();
+        int height = b.getHeight();
 
         if(nUnlocked > nLoaded) prepPaint();
 
@@ -154,12 +182,6 @@ public class LevelSelectView extends View
         IntroScreen.draw_back(b);
         IntroScreen.draw_fore(gr,b);
         b.pushTransform( 1f, -xOffset, 0f);
-
-        @SuppressWarnings("PointlessArithmeticExpression")
-        int hSpacing = (width - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
-        @SuppressWarnings("PointlessArithmeticExpression")
-        int vSpacing = (height - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;
-        int lockSize = previewHeight * 3 / 4;
 
         int fromPage = Math.max(0, Math.round(xOffset) / width);
         int toPage = Math.min(npages, fromPage+2);
@@ -177,7 +199,7 @@ public class LevelSelectView extends View
                         b.fill(0xff000000, x-1,
                             y-1, previewWidth+2,
                             previewHeight+2);
-                        Preview.blit(b,level,x,y);
+                        Preview.blit(b,level,x,y, previewWidth, previewHeight);
                     } else {
                         b.blit(R.drawable.misc, 0, 479, 128, 128,
                             x+(previewWidth-lockSize)/2+10,
@@ -239,9 +261,8 @@ public class LevelSelectView extends View
 
     private int pickLevel( float x, float y)
     {
-        int hSpacing = (width - 2*hmargin - cols*previewWidth) / (cols-1) + previewWidth;
-        @SuppressWarnings("PointlessArithmeticExpression")
-        int vSpacing = (height - 2*vmargin - rows*previewHeight) / (rows-1) + previewHeight;
+        int width = getWidth();
+        int height = getHeight();
         x += xOffset;
         int page = (int)Math.floor(x / width);
         x -= page * width;

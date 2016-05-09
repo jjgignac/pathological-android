@@ -24,7 +24,7 @@ public class GameView extends View
     @Override
     protected void onDraw(Canvas c) {
         b.setCanvas(c, getWidth(), getHeight());
-        if(board != null) board.paint(b);
+        if(board != null) board.paint(b, true);
     }
 
     @Override

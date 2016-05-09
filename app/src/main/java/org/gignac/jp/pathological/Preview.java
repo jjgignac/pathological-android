@@ -5,8 +5,11 @@ import java.io.*;
 
 class Preview
 {
-    public static final int height = 224;
-    public static final int width = 170;
+    private static final float scale = 0.3f;
+    public static final int width = Math.round(scale *
+            (Board.horiz_tiles * Tile.tile_size + Marble.marble_size));
+    public static final int height = Math.round(scale *
+            (Board.vert_tiles * Tile.tile_size + Marble.marble_size));
     private static final int rows = 3;
     private static final int cols = 2;
     private static final int supersample = 2;
@@ -14,13 +17,14 @@ class Preview
     private static BitmapBlitter b = null;
     private static final Paint paint = new Paint();
 
-    public static void blit( Blitter d, int level, int x, int y)
+    public static void blit( Blitter d, int level,
+                             int x, int y, int w, int h)
     {
         int segment = level / (rows*cols);
         int relLevel = level % (rows*cols);
         d.blit( 0x200000000L+segment,
             (width+1)*(relLevel/rows), (height+1)*(relLevel%rows),
-            width, height, x, y, width, height);
+            width, height, x, y, w, h);
     }
 
     private static void render( Canvas c,
@@ -30,7 +34,7 @@ class Preview
 
         if(b == null) b = new BitmapBlitter(s,
             width*supersample, height*supersample);
-        new Board(gr,s,level,null).paint(b);
+        new Board(gr,s,level,null).paint(b, false);
 
         dest.left = (width+1)*(relLevel/rows);
         dest.top = (height+1)*(relLevel%rows);
