@@ -103,7 +103,7 @@ class CanvasBlitter
         rect.top = y;
         rect.right = x + w;
         rect.bottom = y + h;
-        c.drawBitmap( b, src, rect, null);
+        if(b != null) c.drawBitmap( b, src, rect, null);
     }
 
     @Override
