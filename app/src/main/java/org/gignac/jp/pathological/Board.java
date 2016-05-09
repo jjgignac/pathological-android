@@ -35,6 +35,7 @@ class Board {
     public int board_timeout;
     public int board_timeout_start;
     public String colors;
+    public String firstColors;
     private Marble[] marblesCopy = new Marble[20];
     private final HashMap<Integer,Point> down;
     private float launch_queue_offset;
@@ -59,6 +60,7 @@ class Board {
         this.launch_timeout = -1;
         this.board_timeout = -1;
         this.colors = default_colors;
+        this.firstColors = "";
         this.onPainted = onPainted;
         this.sc = sc;
         this.pause_changed = SystemClock.uptimeMillis()-10000;
@@ -97,6 +99,10 @@ class Board {
 
         // Fill up the launch queue
         for( int i=0; i < launch_queue.length; ++i) {
+            if( i < firstColors.length()) {
+                launch_queue[i] = firstColors.charAt(i)-'0';
+                continue;
+            }
             launch_queue[i] = colors.charAt(gr.random.nextInt(colors.length()))-'0';
         }
     }
@@ -509,6 +515,11 @@ class Board {
                     for( char c : line.substring(7).toCharArray()) {
                         if (c >= '0' && c <= '8') colors = colors + c;
                     }
+                } else if( line.startsWith("firstcolors=")) {
+                        firstColors = "";
+                        for( char c : line.substring(12).toCharArray()) {
+                            if( c >= '0' && c <= '8') firstColors = firstColors + c;
+                        }
                 } else if( line.startsWith("stoplight=")) {
                     stoplight = "";
                     for(char c : line.substring(10).toCharArray())

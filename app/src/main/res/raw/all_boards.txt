@@ -36,20 +36,50 @@
 # colors      - The colors that will be served on this level (default: 2,3,4,6,8)
 #               Note: color 8 is normally chosen 1/3 as often as the other colors,
 #               but you can repeat colors in order to increase their relative odds.
+# firstcolors - The first few marble colors that should be launched.  These
+#               colors do not need to be in the colors list.
 # maxmarbles  - The maximum number of active marbles (default: 10)
 # stoplight   - The colors in the stoplight (default: 6,4,3)
 
+name=Pathology 101
+author=John-Paul Gignac and James Porto
+boardtimer=60
+launchtimer=4
+firstcolors=6,6,6,6,3,2,4
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   | 6 |Ob | c |
+|   |   |   |   |   | 3 | a | 9 |
+|   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Bicycle
+author=John-Paul Gignac
+boardtimer=60
+launchtimer=4
+firstcolors=3,3,3,2,2,3,2,2,6,4
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   |O5 |   |   |
+|   |   |   |   |   | 5 |   |   |
+|   |   |   |   |   | 5 |   |   |
+|   |   |   |   |   |O1 |   |   |
+|   |   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
 name=Easy Does It
-author=Mike Brenneman
+author=Mike Brenneman and John-Paul Gignac
 boardtimer=600
 launchtimer=90
 maxmarbles=5
 +---+---+---+---+---+---+---+---+
-|   |   |   |O7 |Od |   |   |   |
-|   |   |   | 5 | 5 |   |   |   |
-|   |   |   | 5 | 5 |   |   |   |
-|   |   |   | 5 | 5 |   |   |   |
-|   |   |   |O3 |O9 |   |   |   |
+|   |   |   |O7 | a |Od |   |   |
+|   |   |   | 5 |   | 5 |   |   |
+|   |   |   | 5 |   | 5 |   |   |
+|   |   |   | 5 |   | 5 |   |   |
+|   |   |   |O3 | a |O9 |   |   |
 |   |   |   |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
 
