@@ -507,14 +507,7 @@ class Board {
                 else if( line.startsWith("colors=")) {
                     colors = "";
                     for( char c : line.substring(7).toCharArray()) {
-                        if( c >= '0' && c <= '7') {
-                            colors = colors + c;
-                            colors = colors + c;
-                            colors = colors + c;
-                        } else if( c == '8') {
-                            // Crazy marbles are one-third as common
-                            colors = colors + c;
-                        }
+                        if (c >= '0' && c <= '8') colors = colors + c;
                     }
                 } else if( line.startsWith("stoplight=")) {
                     stoplight = "";
@@ -609,6 +602,18 @@ class Board {
         }
         if( boardtimer < 0) boardtimer = default_board_timer * numwheels;
         this.set_board_timer( boardtimer);
+
+        // Make the crazy marbles less frequent than the other colors
+        String adjColors = "";
+        for( char c : colors.toCharArray()) {
+            if( c >= '0' && c <= '7') {
+                for(int i=0; i < 3; ++i) adjColors = adjColors + c;
+            } else if( c == '8') {
+                adjColors = adjColors + c;
+            }
+        }
+        colors = adjColors;
+
         f.close();
     }
 
