@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Pathological</string>
+    <string name="author_attrib">By John-Paul Gignac</string>
     <string name="retry">Retry</string>
     <string name="pause">Pause</string>
 

@@ -106,6 +106,22 @@ public class LevelSelectView extends View
         paint.setColor(0xff40a0ff);
         c.drawRect(10,10,previewWidth+10,previewHeight+10,paint);
         sc.cache(0x5800000001L,hilight);
+
+        // Prepare the author attribution image
+        Typeface origTypeface = paint.getTypeface();
+        paint.setTextSize(previewWidth*0.22f);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.ITALIC));
+        paint.setAntiAlias(true);
+        paint.setMaskFilter(null);
+        paint.setColor(0xff000000);
+        String text = getContext().getString(R.string.author_attrib);
+        int width = Math.round(paint.measureText(text));
+        int height = Math.round(-paint.ascent() + paint.descent());
+        Bitmap authorAttrib = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        c.setBitmap(authorAttrib);
+        c.drawText(text, 0, -paint.ascent(), paint);
+        paint.setTypeface(origTypeface);
+        sc.cache(0x5800000002L,authorAttrib);
     }
 
     private void prepPaint()
@@ -181,6 +197,10 @@ public class LevelSelectView extends View
         int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
         IntroScreen.draw_back(b);
         IntroScreen.draw_fore(gr,b);
+
+        // Draw the author attribution
+        b.blit(0x5800000002L, (getWidth() - sc.getBitmap(0x5800000002L).getWidth())/2, 90);
+
         b.pushTransform( 1f, -xOffset, 0f);
 
         int fromPage = Math.max(0, Math.round(xOffset) / width);
