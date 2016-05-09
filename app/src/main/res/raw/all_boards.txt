@@ -121,6 +121,7 @@ maxmarbles=5
 
 name=Trigger Practice
 author=Mike Brenneman
+colors=2,3,4,6
 boardtimer=240
 launchtimer=2
 maxmarbles=5
@@ -229,12 +230,13 @@ launchtimer=2
 
 name=Rules of the Road
 author=Kim Gignac
+colors=2,3,4,6
 boardtimer=150
 +---+---+---+---+---+---+---+---+
 |   |   |&66|Of | a |vc |   |   |
 |   |   |O1 | 5 |   |O3 |O8 |   |
-|   |   |   |O5 |!  |   |   |   |
-|   |   |   |&54|   |   |   |   |
+|   |   |   |O5 |   |   |   |   |
+|   |   |   |&54|   |!  |   |   |
 |   |   |   |O1 |   |   |   |   |
 |   |   |   |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
@@ -363,14 +365,15 @@ colors=0,1,2,3,4,5,6,7
 
 name=Blame Shorty
 author=Kim Gignac
+colors=2,3,4,6
 launchtimer=20
 maxmarbles=10
 boardtimer=240
 +---+---+---+---+---+---+---+---+
 |   |   |   |O7 | c |O7 | c |   |
 |   |   |   | 3 |@f |<9 |O1 |   |
-|   |%  |   |   | 5 |   |   |   |
 |   |   |   |   | 5 |   |   |   |
+|   |   |   |   | 5 |   |%  |   |
 |   |   |O2 | a | 9 |   |   |   |
 |   |   |   |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
@@ -493,6 +496,7 @@ colors=0,1,2,3,4,5,6,7
 
 name=The Asylum
 author=Kim Gignac
+colors=2,3,4,6
 +---+---+---+---+---+---+---+---+
 |   |O3 | c |   |   | 6 |O9 |   |
 |   |   | 3 |Oc |O2 | 9 |   |   |
@@ -553,6 +557,7 @@ colors=0,1,2,3,4,5,6,7
 
 name=Change Rooms
 author=Mike Brenneman (w/ tweaks by John-Paul Gignac)
+colors=2,3,4,6
 boardtimer=180
 launchtimer=2
 maxmarbles=5
@@ -583,6 +588,7 @@ stoplight=7,2,3
 
 name=Traffic Cop
 author=Mike Brenneman
+colors=2,3,4,6
 boardtimer=300
 launchtimer=3
 maxmarbles=5
@@ -625,6 +631,7 @@ launchtimer=1
 
 name=Trigger Happy
 author=Mike Brenneman
+colors=2,3,4,6
 boardtimer=300
 launchtimer=4
 maxmarbles=5
@@ -667,6 +674,7 @@ colors=2,4,6,7
 
 name=Around the Bend
 author=Mike Brenneman
+colors=2,3,4,6
 boardtimer=360
 launchtimer=3
 maxmarbles=5
