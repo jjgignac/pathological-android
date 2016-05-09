@@ -39,7 +39,6 @@ class Board {
     private Marble[] marblesCopy = new Marble[20];
     private final HashMap<Integer,Point> down;
     private float launch_queue_offset;
-    private final Paint paint = new Paint();
     private float scale = 0f;
     private final Runnable onPainted;
     public final SpriteCache sc;
@@ -67,6 +66,7 @@ class Board {
 
         down = new HashMap<>();
 
+        Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setColor(0xfff0f0f0);
         paint.setTextSize(Marble.marble_size*4/5);

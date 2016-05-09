@@ -49,7 +49,7 @@ public class LevelSelectView extends View
         textWidth = new int[gr.numlevels];
 
         updater = new Runnable() {
-            public void run() { update(); };
+            public void run() { update(); }
         };
     }
 
@@ -187,9 +187,6 @@ public class LevelSelectView extends View
 
     public void paint( Blitter b)
     {
-        int width = b.getWidth();
-        int height = b.getHeight();
-
         if(nUnlocked > nLoaded) prepPaint();
 
         update();
@@ -203,14 +200,14 @@ public class LevelSelectView extends View
 
         b.pushTransform( 1f, -xOffset, 0f);
 
-        int fromPage = Math.max(0, Math.round(xOffset) / width);
+        int fromPage = Math.max(0, Math.round(xOffset) / getWidth());
         int toPage = Math.min(npages, fromPage+2);
         for( int page=fromPage; page < toPage; ++page) {
             for( int j=0; j < rows; ++j) {
                 for( int i=0; i < cols; ++i) {
                     int level = (page*rows+j)*cols+i;
                     if(level >= gr.numlevels) continue;
-                    int x = page*width+hmargin+i*hSpacing;
+                    int x = page*getWidth()+hmargin+i*hSpacing;
                     int y = vmargin+j*vSpacing;
                     if(level < nUnlocked) {
                         if(highlight == level)
@@ -281,11 +278,9 @@ public class LevelSelectView extends View
 
     private int pickLevel( float x, float y)
     {
-        int width = getWidth();
-        int height = getHeight();
         x += xOffset;
-        int page = (int)Math.floor(x / width);
-        x -= page * width;
+        int page = (int)Math.floor(x / getWidth());
+        x -= page * getWidth();
         y -= vmargin;
         int j = (int)Math.floor(y / vSpacing);
         if( j < 0 || j >= rows) return -1;
