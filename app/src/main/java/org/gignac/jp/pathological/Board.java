@@ -44,6 +44,7 @@ class Board {
     public final SpriteCache sc;
     private long pause_changed;
     public int delay = 50;
+    private int score = 0;
 
     public Board(GameResources gr, SpriteCache sc,
                  int level, Runnable onPainted)
@@ -202,8 +203,13 @@ class Board {
             try_again = false;
             for(Tile[] row : tiles)
                 for(Tile tile : row)
-                    if( tile instanceof Wheel)
-                        try_again |= ((Wheel)tile).maybe_complete(this);
+                    if( tile instanceof Wheel) {
+                        int deltaScore = ((Wheel)tile).maybe_complete(this);
+                        if( deltaScore > 0) {
+                            score += deltaScore;
+                            try_again = true;
+                        }
+                    }
         }
 
         // Check if the board is complete
@@ -637,5 +643,8 @@ class Board {
         pause_changed = SystemClock.uptimeMillis();
         this.paused = paused;
     }
-}
 
+    public int score() {
+        return score;
+    }
+}

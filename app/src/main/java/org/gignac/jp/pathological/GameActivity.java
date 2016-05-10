@@ -23,6 +23,7 @@ public class GameActivity extends Activity
     private GameLoop gameLoop;
     private GameView gv;
     private View board_timer;
+    private TextView score_view;
     private ActionListener bl;
     public static BitmapBlitter bg;
 
@@ -58,6 +59,8 @@ public class GameActivity extends Activity
 
         gv = (GameView)findViewById(R.id.game_board);
         board_timer = findViewById(R.id.board_timer);
+        score_view = (TextView)findViewById(R.id.score);
+        score_view.setText("0");
 
         AdView mAdView = (AdView)findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
@@ -78,6 +81,7 @@ public class GameActivity extends Activity
                 }
                 int status = board.update();
                 update_board_timer();
+                score_view.setText(String.valueOf(board.score()));
                 switch(status) {
                 case Board.LAUNCH_TIMEOUT:
                     onLaunchTimeout();

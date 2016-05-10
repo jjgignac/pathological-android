@@ -181,8 +181,10 @@ class Wheel extends Tile
         board.gr.play_sound( GameResources.wheel_completed);
     }
 
-    public boolean maybe_complete(Board board) {
-        if( spinpos > 0) return false;
+    public int maybe_complete(Board board) {
+        if( spinpos > 0) return 0;
+
+        int base_score = completed ? 10 : 50;
 
         // Is there a trigger?
         if(board.trigger != null &&
@@ -190,20 +192,20 @@ class Wheel extends Tile
             // Compare against the trigger
             for( int i=0; i<4; ++i) {
                 if( marbles[i] != board.trigger.marbles.charAt(i)-'0' &&
-                    marbles[i] != 8) return false;
+                    marbles[i] != 8) return 0;
             }
             complete( board);
             board.trigger.complete( board);
-            return true;
+            return base_score + 50;
         }
 
         // Do we have four the same color?
         int color = 8;
         for( int i=0; i<4; ++i) {
             int c = marbles[i];
-            if( c < 0) return false;
+            if( c < 0) return 0;
             if( color==8) color=c;
-            else if( c != 8 && c != color) return false;
+            else if( c != 8 && c != color) return 0;
         }
 
         // Is there a stoplight?
@@ -212,13 +214,16 @@ class Wheel extends Tile
             // Compare against the stoplight
             if( color != 8 &&
                 color != board.stoplight.marbles[board.stoplight.current])
-                return false;
-            else
-                board.stoplight.complete( board);
+                return 0;
+            else {
+                complete(board);
+                board.stoplight.complete(board);
+                return base_score + 20;
+            }
         }
 
         complete( board);
-        return true;
+        return base_score;
     }
 }
 
