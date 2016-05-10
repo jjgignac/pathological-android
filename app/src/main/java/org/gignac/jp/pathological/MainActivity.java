@@ -132,6 +132,22 @@ public class MainActivity extends Activity
                 .show();
     }
 
+    public void showHowToPlayDialog(MenuItem item) {
+        WebView wv = new WebView(this);
+        wv.loadUrl("file:///android_asset/howtoplay.html");
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.how_to_play)
+                .setView(wv)
+                .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
     public void toggleMusic(View v) {
         music.toggleMute();
     }

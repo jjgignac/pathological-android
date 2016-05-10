@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/how_to_play"
+        android:title="@string/how_to_play"
+        android:onClick="showHowToPlayDialog" />
     <item android:id="@+id/about"
         android:title="@string/about"
         android:onClick="showAboutDialog" />

@@ -1,0 +1,191 @@
+<html>
+<head>
+<title>Pathological - How to Play</title>
+</head>
+<body>
+
+<h1>How to Play</h1>
+
+<p>
+Pathological is a puzzle game consisting of marbles that roll along
+paths, and interact along the way with various devices and gadgets.
+</p>
+<p>
+The object of each level is to "complete" all of the wheels on the
+board.  To complete a wheel, catch four marbles of matching color in the
+same wheel.  The marbles will vanish, and the wheel will turn dark to
+indicate that it has been completed.  Note that this is only the
+<i>usual</i> way of completing a wheel.  The exceptional cases are
+described in the section on <b>Triggers</b> and <b>Stoplights</b>.
+</p>
+<p>
+<b>To rotate a wheel</b>, tap on the wheel.
+<b>To eject a marble from a wheel</b>, swipe your finger in the
+direction that you would like the marble to go.
+</p>
+<h3>The Board Timer</h3>
+<p>
+The board timer is the maximum amount of time allowed to complete a
+level.  It is depicted as a blue progress bar at the top of the screen.
+You must complete each level before the countdown reaches zero.  If
+you complete the level within the available time, a bonus is awarded
+based on the percentage of time remaining.
+</p>
+<h3>The Launch Timer</h3>
+<p>
+The launch timer, depicted as a faint grey progress bar in the launch
+area, represents the maximum amount of time that a newly launched
+marble can remain in the launch area.  Each time a marble is launched,
+the launch timer is reset to its full value.  You must catch each new
+marble before the launch timer expires.
+</p>
+<h3>The Active Marble Limit</h3>
+<p>
+Each level has a maximum number of marbles that are allowed to be in
+motion at a time.  As long as the maximum number of marbles are in
+motion, you can not eject any more marbles from wheels.
+</p>
+<p>
+The maximum number of active marbles is shown as grey dots at the
+bottom of the launch area.
+</p>
+
+<h2>Game Elements</h2>
+
+<h3>Buffers</h3>
+<p>
+Buffers catch and hold a single marble at a time.  The marble is held
+until another marble knocks it out, and takes its place.  Note that once
+a marble falls into a buffer, there is no way of emptying the buffer
+again.
+</p>
+<table border=0 cellpadding=8 cellspacing=0><tr>
+<td align=center valign=top>
+<img src="images/buffer.png" width=92 height=92><br>
+An empty buffer
+</td><td align=center valign=top>
+<img src="images/buffer2.png" width=92 height=92><br>
+A buffer holding a purple marble
+</td></tr></table>
+
+<h3>Directors</h3>
+<p>
+Directors force all marbles to exit in the indicated direction.  They are
+often used as one-way gates, allowing marbles to pass through in one
+direction but not the other.
+</p>
+<img src="images/director.png" width=92 height=92><br>
+A director
+
+<h3>Filters</h3>
+<p>
+Filters only allow the indicated color of marble to pass through.
+Any other color of marble
+will simply bounce back in the direction that it came from.
+</p>
+<img src="images/filter.png" width=92 height=92><br>
+An orange filter
+
+<h3>Painters</h3>
+<p>
+Painters change the color of passing marbles to the indicated color.
+</p>
+<img src="images/painter.png" width=92 height=92><br>
+A blue painter
+
+<h3>Replicators</h3>
+<p>
+Replicators create copies of marbles.  Whenever a marble enters a
+replicator, at least two marbles are emitted.  Some replicators produce
+more copies than others.
+</p>
+<p>
+The number of copies produced by a replicator may be limited by the
+active marbles limit.
+</p>
+<img src="images/replicator.png" width=92 height=92><br>
+A replicator
+
+<h3>Shredders</h3>
+<p>
+Shredders simply destroy any marbles that enter into them.
+</p>
+<img src="images/shredder.png" width=92 height=92><br>
+A shredder
+
+<h3>Switches</h3>
+<p>
+Switches, like directors, force marbles to exit in the indicated
+direction.  But unlike directors, switches switch between two different
+directions.  Each passing marble causes them to switch.
+</p>
+<img src="images/switch.png" width=92 height=92><br>
+A switch
+
+<h3>Teleporters</h3>
+<p>
+Teleporters transport passing marbles to their twin teleporter at some
+other location on the board.  Note that a board can have several pairs of
+teleporters, and their pairings might not be obvious.  It can be
+helpful to realize that teleporters can only change the location of a
+marble - not the direction.
+</p>
+<img src="images/teleporter.png" width=92 height=92><br>
+A teleporter
+
+<h3>Triggers and Stoplights</h3>
+<p>
+Triggers and stoplights place temporary restrictions on wheel completion.
+</p>
+<p>
+If a board contains a <b>stoplight</b>, then the first three wheels to
+be completed must be completed, respectively, using the three colors of
+the stoplight <i>in order from top to bottom</i>.  For example, if the
+stoplight has the colors red, yellow and green (as in the diagram), then
+you must first complete a wheel using four red marbles.  Then the second
+wheel must be completed using four yellow marbles, and the third must be
+completed using four green marbles.  After the stoplight
+has been fully exhausted, then the rest of the wheels on the board can
+be completed using any colors as per usual.
+</p>
+<p>
+If a board contains a trigger, then the first wheel to be completed must
+be completed by <i>exactly</i> matching the marble configuration presented
+by the trigger.  Trigger configurations are chosen randomly.  After the
+trigger has been satisfied, the rest of the wheels on the board can be
+completed in the normal way.  But beware!  A trigger will only stay
+satisfied for a short time.
+</p>
+<p>
+A board can only have at most one stoplight or trigger, but it <i>can
+have one of each</i>.  If a board has both a stoplight and a trigger, you
+must satisfy the trigger before working toward exhausting the stoplight.
+</p>
+<table border=0 cellpadding=8 cellspacing=0><tr>
+<td align=center valign=top>
+<img src="images/stoplight.png" width=92 height=92><br>
+A stoplight
+</td><td align=center valign=top>
+<img src="images/trigger.png" width=92 height=92><br>
+A trigger
+</td></tr><tr><td align=center valign=top>
+<img src="images/stoplight2.png" width=92 height=92><br>
+A partially-exhausted stoplight
+</td><td align=center valign=top>
+<img src="images/trigger2.png" width=92 height=92><br>
+A satisfied trigger
+</td></tr></table>
+
+<h2>Scoring</h2>
+<table border=1 cellpadding=4 cellspacing=0>
+<tr><th>Action</th><th>Points<br>Awarded</th></tr>
+<tr><td>Completing a wheel</td><td align=right>50</td></tr>
+<tr><td>Satisfying a trigger</td><td align=right>50</td></tr>
+<tr><td>Exhausting one light on a stoplight</td><td align=right>20</td></tr>
+<tr><td>Completing an already-completed wheel</td><td align=right>10</td></tr>
+<tr><td>Time bonus per % time remaining</td><td align=right>5</td></tr>
+<tr><td>Bonus per % holes empty</td><td align=right>2</td></tr>
+</table>
+
+</body>
+</html>
