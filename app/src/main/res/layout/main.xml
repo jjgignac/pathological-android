@@ -24,4 +24,19 @@
         android:onClick="showIntroMenu"
         />
 
+    <ImageView
+        android:id="@+id/mute_music"
+        android:src="@drawable/mute_music"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginEnd="18dp"
+        android:scaleType="centerInside"
+        android:layout_alignTop="@+id/menu"
+        android:layout_toLeftOf="@+id/menu"
+        android:layout_toStartOf="@+id/menu"
+        android:contentDescription="@string/mute_music"
+        android:onClick="toggleMusic"
+        />
+
 </RelativeLayout>

@@ -11,6 +11,7 @@ import android.text.util.Linkify;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity
 {
     private LevelSelectView v;
+    private MutableMusicPlayer music;
 
     /** Called when the activity is first created. */
     @Override
@@ -40,6 +42,9 @@ public class MainActivity extends Activity
         setRequestedOrientation(
             ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         v = (LevelSelectView)findViewById(R.id.levelSelect);
+
+        music = new MutableMusicPlayer(this, R.raw.intro,
+                (ImageView)findViewById(R.id.mute_music));
     }
 
     @Override
@@ -51,6 +56,18 @@ public class MainActivity extends Activity
     public void onResume() {
         super.onResume();
         v.onResume();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        music.start();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        music.stop();
     }
 
     public void showIntroMenu(View v) {
@@ -111,5 +128,9 @@ public class MainActivity extends Activity
                     }
                 })
                 .show();
+    }
+
+    public void toggleMusic(View v) {
+        music.toggleMute();
     }
 }
