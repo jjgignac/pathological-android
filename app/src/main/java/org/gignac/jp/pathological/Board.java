@@ -647,4 +647,24 @@ class Board {
     public int score() {
         return score;
     }
+
+    public int emptyHolePercentage() {
+        int nHoles = 0;
+        int nEmpty = 0;
+        for(Tile[] row : tiles) {
+            for (Tile tile : row) {
+                if (!(tile instanceof Wheel)) continue;
+                nHoles += 4;
+                for( int marble : ((Wheel)tile).marbles) {
+                    if( marble < 0) nEmpty += 1;
+                }
+            }
+        }
+        return (nEmpty * 100 + nHoles/2) / nHoles;
+    }
+
+    public int timeRemainingPercentage() {
+        return (board_timeout * 100 + board_timeout_start/2)
+                / board_timeout_start;
+    }
 }

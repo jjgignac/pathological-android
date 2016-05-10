@@ -220,13 +220,36 @@ public class GameActivity extends Activity
             e.putInt("nUnlocked",level+2);
             e.apply();
         }
-        AlertDialog.Builder b = new AlertDialog.Builder(this);
-        b.setTitle("Level Complete!").
-            setMessage("Bonus for 50% time remaining: 100\n"+
-                "Bonus for 25% empty holes: 50\n").
-            setCancelable(false).
-            setPositiveButton("Retry", bl).
-            setNeutralButton("Continue", bl).show();
+
+        // Calculate the final score
+        int score = board.score();
+        int emptyHolePercentage = board.emptyHolePercentage();
+        int emptyHoleBonus = emptyHolePercentage * 2;
+        int timeRemainingPercentage = board.timeRemainingPercentage();
+        int timeRemainingBonus = timeRemainingPercentage * 5;
+        int total = score + emptyHoleBonus + timeRemainingBonus;
+
+        View view = getLayoutInflater().inflate( R.layout.level_cleared,
+                (ViewGroup)gv.getRootView(), false);
+        ((TextView)view.findViewById(R.id.score))
+                .setText(String.valueOf(score));
+        ((TextView)view.findViewById(R.id.empty_hole_bonus_text))
+                .setText(getString(R.string.empty_hole_bonus, emptyHolePercentage));
+        ((TextView)view.findViewById(R.id.empty_hole_bonus))
+                .setText(String.valueOf(emptyHoleBonus));
+        ((TextView)view.findViewById(R.id.time_remaining_bonus_text))
+                .setText(getString(R.string.time_remaining_bonus, timeRemainingPercentage));
+        ((TextView)view.findViewById(R.id.time_remaining_bonus))
+                .setText(String.valueOf(timeRemainingBonus));
+        ((TextView)view.findViewById(R.id.total))
+                .setText(String.valueOf(total));
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.level_cleared)
+                .setView(view)
+                .setNegativeButton(R.string.quit, bl)
+                .setPositiveButton(R.string.retry, bl)
+                .setNeutralButton(R.string.next_level, bl).show();
     }
 
     public void pause() {

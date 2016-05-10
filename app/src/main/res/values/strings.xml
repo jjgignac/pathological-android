@@ -3,12 +3,20 @@
     <string name="app_name">Pathological</string>
     <string name="author_attrib">By John-Paul Gignac</string>
     <string name="retry">Retry</string>
+    <string name="quit">Quit</string>
+    <string name="next_level">Next Level</string>
     <string name="pause">Pause</string>
     <string name="menu">Menu</string>
     <string name="about">About</string>
     <string name="license">License</string>
     <string name="close">Close</string>
     <string name="open_in_browser">Open In Browser</string>
+    <string name="level_cleared">Level Cleared!</string>
+    <string name="score">Score:</string>
+    <string name="empty_hole_bonus">Bonus for %d%% empty holes:</string>
+    <string name="time_remaining_bonus">Bonus for %d%% time remaining:</string>
+    <string name="total">Total:</string>
+    <string name="star">Star</string>
     <string name="about_dialog">Version %s\n
         \nCopyright &#169; 2016  John-Paul Gignac\n
         \nThis program is free software: you can redistribute it and/or modify

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#eee"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:ignore="Overdraw">
+
+    <TableLayout
+        android:id="@+id/stats"
+        android:theme="@style/level_complete_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_centerHorizontal="true">
+
+        <TableRow>
+            <TextView
+                android:id="@+id/score_text"
+                android:text="@string/score" />
+            <TextView
+                android:id="@+id/score"
+                android:padding="5dp"
+                tools:text="10320" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/empty_hole_bonus_text"
+                tools:text="@string/empty_hole_bonus" />
+            <TextView
+                android:id="@+id/empty_hole_bonus"
+                android:padding="5dp"
+                tools:text="700" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/time_remaining_bonus_text"
+                tools:text="@string/time_remaining_bonus" />
+            <TextView
+                android:id="@+id/time_remaining_bonus"
+                android:padding="5dp"
+                tools:text="1430" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/total_text"
+                android:textStyle="bold"
+                android:text="@string/total" />
+            <TextView
+                android:id="@+id/total"
+                android:textStyle="bold"
+                android:padding="5dp"
+                tools:text="12450" />
+        </TableRow>
+
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stats"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        >
+
+        <ImageView
+            android:id="@+id/star1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/star"
+            android:contentDescription="@string/star"
+            />
+
+        <ImageView
+            android:id="@+id/star2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/star_silhouette"
+            android:contentDescription="@string/star"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            />
+
+        <ImageView
+            android:id="@+id/star3"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/star_silhouette"
+            android:contentDescription="@string/star"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>
