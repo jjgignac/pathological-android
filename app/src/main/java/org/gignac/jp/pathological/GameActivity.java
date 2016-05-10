@@ -26,6 +26,7 @@ public class GameActivity extends Activity
     private TextView score_view;
     private ActionListener bl;
     public static BitmapBlitter bg;
+    private MutableMusicPlayer music;
 
     public GameActivity()
     {
@@ -102,6 +103,10 @@ public class GameActivity extends Activity
         };
         gameLoop = new GameLoop( update, render, 1000 / frames_per_sec);
 
+        music = new MutableMusicPlayer(this, R.raw.background,
+                (ImageView)findViewById(R.id.mute_music));
+        music.start();
+
         playLevel(level);
     }
 
@@ -128,6 +133,7 @@ public class GameActivity extends Activity
 
     public void playLevel(final int level) {
         loadLevel(level);
+        music.resume();
     }
 
     private void loadLevel(int level) {
@@ -176,9 +182,15 @@ public class GameActivity extends Activity
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus)
-    {
-        if(!hasFocus) board.setPaused(true);
+    protected void onStop() {
+        super.onStop();
+        pause();
+    }
+
+    @Override
+    public void finish() {
+        music.stop();
+        super.finish();
     }
 
     @Override
@@ -186,6 +198,7 @@ public class GameActivity extends Activity
     {
         super.onDestroy();
         gr.destroy();
+        music.stop();
     }
 
     private void onLaunchTimeout()
@@ -253,6 +266,21 @@ public class GameActivity extends Activity
     }
 
     public void pause() {
-        board.setPaused(!board.isPaused());
+        music.pause();
+        board.setPaused(true);
+    }
+
+    public void resume() {
+        music.resume();
+        board.setPaused(false);
+    }
+
+    public void togglePause() {
+        if( board.isPaused()) resume();
+        else pause();
+    }
+
+    public void toggleMusic(View v) {
+        music.toggleMute();
     }
 }

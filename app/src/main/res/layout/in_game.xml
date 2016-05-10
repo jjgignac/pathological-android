@@ -37,9 +37,24 @@
         android:layout_marginEnd="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/mute_music"
+        android:layout_toStartOf="@+id/mute_music"
+        tools:text="270" />
+
+    <ImageView
+        android:id="@+id/mute_music"
+        android:src="@drawable/mute_music"
+        android:layout_width="22dp"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_toLeftOf="@+id/pause"
         android:layout_toStartOf="@+id/pause"
-        tools:text="270" />
+        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/board_name"
+        android:onClick="toggleMusic"
+        android:contentDescription="@string/mute_music" />
 
     <ImageView
         android:id="@+id/pause"
@@ -47,8 +62,8 @@
         android:layout_width="22dp"
         android:layout_height="match_parent"
         android:padding="4dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_toLeftOf="@+id/retry"
         android:layout_toStartOf="@+id/retry"
         android:layout_alignParentTop="true"

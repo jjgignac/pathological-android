@@ -447,8 +447,11 @@ class Board {
         int dx2 = dx*dx;
         int dy2 = dy*dy;
         if(paused) {
-            if(dx2+dy2 <= Marble.marble_size*Marble.marble_size)
-                setPaused(false);
+            if(dx2+dy2 <= Marble.marble_size*Marble.marble_size) {
+                if( gr.context instanceof GameActivity) {
+                    ((GameActivity)gr.context).resume();
+                }
+            }
             return;
         }
         Tile downtile = whichTile(downx,downy);

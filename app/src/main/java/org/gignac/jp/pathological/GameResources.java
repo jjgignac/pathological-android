@@ -11,7 +11,7 @@ public class GameResources
 {
     private static GameResources instance;
     public static SharedPreferences shp;
-    private final Context context;
+    public Context context;
     public final Random random;
     private static final int[] sound_resid = {
         R.raw.filter_admit, R.raw.wheel_turn, R.raw.wheel_completed,
@@ -55,6 +55,7 @@ public class GameResources
 
     public static synchronized GameResources getInstance(Context context) {
         if(instance == null) instance = new GameResources(context);
+        else instance.context = context;
         return instance;
     }
 

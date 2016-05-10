@@ -50,12 +50,14 @@ public class MainActivity extends Activity
     @Override
     public void onPause() {
         super.onPause();
+        music.pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         v.onResume();
+        music.resume();
     }
 
     @Override

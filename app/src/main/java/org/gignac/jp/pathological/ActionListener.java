@@ -19,7 +19,7 @@ class ActionListener
             game.playLevel(game.level);
             break;
         case R.id.pause:
-            game.pause();
+            game.togglePause();
             break;
         }
     }
