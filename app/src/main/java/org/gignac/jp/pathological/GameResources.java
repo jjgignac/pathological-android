@@ -118,7 +118,7 @@ public class GameResources
     }
 
     public void destroy() {
-        sp.release();
+        if(sp != null) sp.release();
         sp = null;
     }
 
