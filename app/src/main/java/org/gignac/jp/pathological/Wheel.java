@@ -107,8 +107,8 @@ class Wheel extends Tile
             [(tile_x+Marble.dx[i]+Board.horiz_tiles) % Board.horiz_tiles];
 
         if ( marbles[i] < 0 ||
-            // Disallow marbles to go off the top of the board
-            (tile_y == 0 && i==0) ||
+            // Disallow marbles to go off the left edge of the board
+            (tile_x == 0 && i==3) ||
 
             // If there is no way out here, skip it
             ((paths & (1 << i)) == 0) ||
