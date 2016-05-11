@@ -45,6 +45,10 @@ public class MainActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
+        MutableMusicPlayer.isMuted = getSharedPreferences(
+                "org.gignac.jp.pathological.Pathological", Context.MODE_PRIVATE)
+                .getBoolean("mute", false);
+
         // Prevent multiple instances of the app
         if (!isTaskRoot()) {
             final Intent intent = getIntent();

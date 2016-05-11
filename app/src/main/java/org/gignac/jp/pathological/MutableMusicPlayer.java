@@ -17,6 +17,7 @@
 package org.gignac.jp.pathological;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.widget.ImageView;
@@ -25,7 +26,7 @@ class MutableMusicPlayer {
     private final Context context;
     private final int resourceId;
     private final ImageView muteButton;
-    private static boolean isMuted;
+    static boolean isMuted;
     private boolean isPaused;
     private MediaPlayer mediaPlayer;
 
@@ -87,7 +88,18 @@ class MutableMusicPlayer {
                 muteButton.setAlpha(1f);
             }
         }
-        isMuted = mute;
+
+        if( isMuted != mute) {
+            // Save muted state
+            SharedPreferences shp = context.getSharedPreferences(
+                    "org.gignac.jp.pathological.Pathological", Context.MODE_PRIVATE);
+            SharedPreferences.Editor e = shp.edit();
+            e.putBoolean("mute", mute);
+            e.apply();
+
+            isMuted = mute;
+        }
+
         isPaused = pause;
     }
 }
