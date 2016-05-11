@@ -274,12 +274,6 @@ public class GameActivity extends Activity
     {
         gr.play_sound(GameResources.levelfinish);
         gameLoop.stop();
-        if(level >= GameResources.shp.getInt("nUnlocked",1)-1
-            && level < gr.numlevels - 1) {
-            SharedPreferences.Editor e = GameResources.shp.edit();
-            e.putInt("nUnlocked",level+2);
-            e.apply();
-        }
 
         // Calculate the final score
         int score = board.score();
@@ -288,6 +282,21 @@ public class GameActivity extends Activity
         int timeRemainingPercentage = board.timeRemainingPercentage();
         int timeRemainingBonus = timeRemainingPercentage * 5;
         int total = score + emptyHoleBonus + timeRemainingBonus;
+
+        int prevBest = GameResources.shp.getInt("best_"+level, -1);
+
+        if(level >= GameResources.shp.getInt("nUnlocked",1)-1
+                && level < gr.numlevels - 1) {
+            SharedPreferences.Editor e = GameResources.shp.edit();
+            e.putInt("nUnlocked",level+2);
+            e.apply();
+        }
+
+        if( total > prevBest) {
+            SharedPreferences.Editor e = GameResources.shp.edit();
+            e.putInt("best_"+level, total);
+            e.apply();
+        }
 
         View view = getLayoutInflater().inflate( R.layout.level_cleared,
                 (ViewGroup)gv.getRootView(), false);
@@ -303,6 +312,15 @@ public class GameActivity extends Activity
                 .setText(String.valueOf(timeRemainingBonus));
         ((TextView)view.findViewById(R.id.total))
                 .setText(String.valueOf(total));
+
+        if( prevBest >= 0) {
+            view.findViewById(R.id.prev_best_row).setVisibility(View.VISIBLE);
+            ((TextView)view.findViewById(R.id.prev_best)).setText(String.valueOf(prevBest));
+        }
+
+        if( total > prevBest) {
+            view.findViewById(R.id.new_best).setVisibility(View.VISIBLE);
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.level_cleared)

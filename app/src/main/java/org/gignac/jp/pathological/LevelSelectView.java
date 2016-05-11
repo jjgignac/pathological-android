@@ -50,9 +50,13 @@ public class LevelSelectView extends View
     private final Canvas c = new Canvas();
     private final int[] textWidth;
     private int textHeight;
+    private int maxTxtWid;
     private final SpriteCache sc;
     private final Paint paint = new Paint();
     private final Runnable updater;
+    private boolean mNeedsPrep;
+    private static final Typeface normal = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
+    private static final Typeface italic = Typeface.create(Typeface.DEFAULT, Typeface.ITALIC);
 
     public LevelSelectView( Context context, AttributeSet a)
     {
@@ -80,6 +84,7 @@ public class LevelSelectView extends View
         highlight = -1;
 
         IntroScreen.setup(sc);
+        mNeedsPrep = true;
     }
 
     @Override
@@ -124,9 +129,8 @@ public class LevelSelectView extends View
         sc.cache(0x5800000001L,hilight);
 
         // Prepare the author attribution image
-        Typeface origTypeface = paint.getTypeface();
         paint.setTextSize(previewWidth*0.22f);
-        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.ITALIC));
+        paint.setTypeface(italic);
         paint.setAntiAlias(true);
         paint.setMaskFilter(null);
         paint.setColor(0xff000000);
@@ -136,7 +140,7 @@ public class LevelSelectView extends View
         Bitmap authorAttrib = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         c.setBitmap(authorAttrib);
         c.drawText(text, 0, -paint.ascent(), paint);
-        paint.setTypeface(origTypeface);
+        paint.setTypeface(normal);
         sc.cache(0x5800000002L,authorAttrib);
     }
 
@@ -149,8 +153,8 @@ public class LevelSelectView extends View
         Paint.FontMetrics fm = paint.getFontMetrics();
         int up = (int)Math.ceil(Math.max(-fm.ascent,-fm.top)+fm.leading);
         int down = (int)Math.ceil(Math.max(fm.descent,fm.bottom));
-        textHeight = up+down;
-        int maxTxtWid = getWidth()/cols;
+        textHeight = (up+down) * 2;
+        maxTxtWid = getWidth()/cols;
         if(text == null) {
             text = Bitmap.createBitmap( maxTxtWid,
             gr.numlevels*textHeight, Bitmap.Config.ARGB_8888);
@@ -163,8 +167,19 @@ public class LevelSelectView extends View
                 ". "+gr.boardNames.elementAt(i) : "");
             int txtWid = (int)Math.ceil(paint.measureText(label));
             if(txtWid > maxTxtWid) txtWid = maxTxtWid;
-            c.drawText(label,0,up+textHeight*i,paint);
-            textWidth[i] = txtWid;
+            c.drawText(label,(maxTxtWid - txtWid)/2,up+textHeight*i,paint);
+
+            int best = GameResources.shp.getInt("best_"+i, -1);
+            int bestWid = 0;
+            if( best >= 0) {
+                String bestText = getContext().getString(R.string.best) + " " + best;
+                bestWid = Math.min((int) Math.ceil(paint.measureText(bestText)), maxTxtWid);
+                paint.setTypeface(italic);
+                c.drawText(bestText, (maxTxtWid - bestWid) / 2, up + textHeight * i + (up + down), paint);
+                paint.setTypeface(normal);
+            }
+
+            textWidth[i] = Math.max(txtWid, bestWid);
         }
         sc.cache(0x5700000000L,text);
         nLoaded = nUnlocked;
@@ -203,7 +218,10 @@ public class LevelSelectView extends View
 
     public void paint( Blitter b)
     {
-        if(nUnlocked > nLoaded) prepPaint();
+        if( mNeedsPrep) {
+            prepPaint();
+            mNeedsPrep = false;
+        }
 
         update();
 
@@ -248,7 +266,8 @@ public class LevelSelectView extends View
                     Bitmap text = sc.getBitmap(0x5700000000L);
                     if(text!=null)
                         b.blit( 0x5700000000L,
-                            0,textHeight*level,textWidth[level],textHeight,
+                            (maxTxtWid - textWidth[level])/2,
+                            textHeight*level,textWidth[level],textHeight,
                             x + (previewWidth-textWidth[level])/2,
                             y + previewHeight + 1,textWidth[level],textHeight);
                 }

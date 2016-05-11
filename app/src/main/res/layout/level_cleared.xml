@@ -57,7 +57,34 @@
                 tools:text="12450" />
         </TableRow>
 
+        <TableRow
+            android:id="@+id/prev_best_row"
+            tools:visibility="visible"
+            android:visibility="gone">
+            <TextView
+                android:text="@string/prev_best" />
+            <TextView
+                android:id="@+id/prev_best"
+                android:padding="5dp"
+                tools:text="12005" />
+        </TableRow>
+
     </TableLayout>
+
+    <TextView
+        android:id="@+id/new_best"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/stats"
+        android:layout_marginTop="-12dp"
+        android:layout_marginBottom="12dp"
+        android:textSize="28sp"
+        android:textColor="#0b0"
+        android:textStyle="italic"
+        android:text="@string/new_best"
+        tools:visibility="visible"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -65,6 +92,7 @@
         android:layout_below="@+id/stats"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
+        android:visibility="gone"
         >
 
         <ImageView
