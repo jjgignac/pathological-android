@@ -178,6 +178,7 @@ boardtimer=120
 
 name=Ketchup and Mustard
 author=Mike Brenneman
+colors=2,3,4,6
 boardtimer=300
 launchtimer=8
 maxmarbles=5
@@ -192,6 +193,7 @@ maxmarbles=5
 
 name=Filters 101
 author=Mike Brenneman
+colors=2,3,4,6
 boardtimer=240
 launchtimer=6
 maxmarbles=5
@@ -218,6 +220,7 @@ boardtimer=120
 
 name=The Run-Around
 author=John-Paul Gignac
+colors=2,3,4,6
 boardtimer=300
 launchtimer=10
 maxmarbles=5
@@ -285,6 +288,7 @@ boardtimer=300
 
 name=Throw-Away Society
 author=John-Paul Gignac <jp@gignac.org>
+colors=2,3,4,6
 maxmarbles=3
 boardtimer=210
 +---+---+---+---+---+---+---+---+
@@ -448,6 +452,7 @@ colors=0,2,4,6,7
 
 name=The Blue Zone
 author=Mike Brenneman
+colors=2,3,4,6
 boardtimer=180
 launchtimer=6
 maxmarbles=5
@@ -677,6 +682,7 @@ stoplight=6,4,2
 
 name=Code Breaker
 author=John-Paul Gignac
+colors=2,3,4,6
 boardtimer=360
 launchtimer=30
 maxmarbles=6
@@ -733,6 +739,7 @@ maxmarbles=5
 
 name=Zig Zag
 author=Mike Brenneman
+colors=2,3,4,6
 boardtimer=360
 launchtimer=3
 maxmarbles=5
