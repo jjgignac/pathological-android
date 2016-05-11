@@ -241,11 +241,11 @@ class Board {
             // wait for 10% of the marble height before we
             // accelerate, so the marbles don't appear to
             // overlap.
-            Tile topRight = tiles[0][horiz_tiles-1];
+            Tile topLeft = tiles[0][0];
             if( launch_queue_offset < Marble.marble_size * 0.9f &&
-                (topRight.paths & 2) == 2 &&
-               (!(topRight instanceof Wheel) ||
-                ((Wheel)topRight).marbles[1] < 0))
+                (topLeft.paths & 8) == 8 &&
+               (!(topLeft instanceof Wheel) ||
+                ((Wheel)topLeft).marbles[3] < 0))
                 speed = Marble.marble_speed*0.7f;
             launch_queue_offset -= speed;
             if(launch_queue_offset < 0) launch_queue_offset = 0;
