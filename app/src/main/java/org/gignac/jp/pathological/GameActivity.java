@@ -283,6 +283,9 @@ public class GameActivity extends Activity
         int timeRemainingBonus = timeRemainingPercentage * 5;
         int total = score + emptyHoleBonus + timeRemainingBonus;
 
+        new ReportStatsTask(this, level, score, emptyHolePercentage,
+                timeRemainingPercentage).execute();
+
         int prevBest = GameResources.shp.getInt("best_"+level, -1);
 
         if(level >= GameResources.shp.getInt("nUnlocked",1)-1

@@ -31,14 +31,17 @@ class Util {
 
         if( !BuildConfig.BUILD_TYPE.equals("release")) {
             // Register as a test device
-            String android_id = Settings.Secure.getString(
-                    context.getContentResolver(), Settings.Secure.ANDROID_ID);
-            String adMobID = md5(android_id).toUpperCase();
-            AdRequest adReq = adRequestBuilder.addTestDevice(adMobID).build();
+            AdRequest adReq = adRequestBuilder.addTestDevice(adMobID(context)).build();
             if( !adReq.isTestDevice(context)) return null;
         }
 
         return adRequestBuilder.build();
+    }
+
+    public static String adMobID(Context context) {
+        String android_id = Settings.Secure.getString(
+                context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        return md5(android_id).toUpperCase();
     }
 
     private static String md5(final String s) {
