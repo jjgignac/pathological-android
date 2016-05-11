@@ -279,6 +279,7 @@ public class LevelSelectView extends View
     {
         int level = pickLevel(x,y);
         if(level == -1) return;
+        if(BuildConfig.BUILD_TYPE.equals("release") && level >= nUnlocked) return;
         highlight = level;
         invalidate();
         Intent intent = new Intent(getContext(),GameActivity.class);
