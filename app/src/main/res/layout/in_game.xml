@@ -68,6 +68,7 @@
         android:layout_toStartOf="@+id/retry"
         android:layout_alignParentTop="true"
         android:layout_alignBottom="@+id/board_name"
+        android:onClick="togglePause"
         android:contentDescription="@string/pause" />
 
     <ImageView
@@ -82,6 +83,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_alignBottom="@+id/board_name"
+        android:onClick="retry"
         android:contentDescription="@string/retry" />
 
     <org.gignac.jp.pathological.GameView

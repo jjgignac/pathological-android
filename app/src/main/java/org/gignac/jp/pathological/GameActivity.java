@@ -40,7 +40,6 @@ public class GameActivity extends Activity
     private GameView gv;
     private View board_timer;
     private TextView score_view;
-    private ActionListener bl;
     public static BitmapBlitter bg;
     private MutableMusicPlayer music;
 
@@ -69,10 +68,6 @@ public class GameActivity extends Activity
             Bundle extras = getIntent().getExtras();
             level = extras.getInt("level");
         }
-
-        bl = new ActionListener(this);
-        findViewById(R.id.pause).setOnClickListener(bl);
-        findViewById(R.id.retry).setOnClickListener(bl);
 
         gv = (GameView)findViewById(R.id.game_board);
         board_timer = findViewById(R.id.board_timer);
@@ -224,8 +219,18 @@ public class GameActivity extends Activity
         b.setTitle("Failed").
             setMessage("The launch timer has expired.").
             setCancelable(false).
-            setPositiveButton("Retry", bl).
-            setNegativeButton("Quit", bl).show();
+            setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    playLevel(level);
+                }
+            }).
+            setNegativeButton("Quit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            }).show();
     }
 
     private void onBoardTimeout()
@@ -235,8 +240,18 @@ public class GameActivity extends Activity
         b.setTitle("Failed").
             setMessage("The board timer has expired.").
             setCancelable(false).
-            setPositiveButton("Retry", bl).
-            setNegativeButton("Quit", bl).show();
+            setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    playLevel(level);
+                }
+            }).
+            setNegativeButton("Quit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            }).show();
     }
 
     private void onBoardComplete()
@@ -276,9 +291,24 @@ public class GameActivity extends Activity
         new AlertDialog.Builder(this)
                 .setTitle(R.string.level_cleared)
                 .setView(view)
-                .setNegativeButton(R.string.quit, bl)
-                .setPositiveButton(R.string.retry, bl)
-                .setNeutralButton(R.string.next_level, bl).show();
+                .setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        playLevel(level);
+                    }
+                })
+                .setNeutralButton(R.string.next_level, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        nextLevel();
+                    }
+                }).show();
     }
 
     public void pause() {
@@ -291,9 +321,13 @@ public class GameActivity extends Activity
         board.setPaused(false);
     }
 
-    public void togglePause() {
+    public void togglePause(View v) {
         if( board.isPaused()) resume();
         else pause();
+    }
+
+    public void retry(View v) {
+        playLevel(level);
     }
 
     public void toggleMusic(View v) {
