@@ -36,6 +36,8 @@ public class MainActivity extends Activity
 {
     private LevelSelectView v;
     private MutableMusicPlayer music;
+    public static long lastInterstitialTime = 0;  // milliseconds since epoch
+    public static final long minInterstitialDelay = 60000 * 15;  // milliseconds
 
     /** Called when the activity is first created. */
     @Override

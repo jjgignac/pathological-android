@@ -24,8 +24,10 @@ import android.widget.*;
 import android.content.pm.*;
 import android.content.*;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 @SuppressWarnings("unused")
 public class GameActivity extends Activity
@@ -42,6 +44,7 @@ public class GameActivity extends Activity
     private TextView score_view;
     public static BitmapBlitter bg;
     private MutableMusicPlayer music;
+    private InterstitialAd mLevelFailedInterstitial;
 
     public GameActivity()
     {
@@ -79,6 +82,17 @@ public class GameActivity extends Activity
         if( adRequest != null) {
             mAdView.loadAd(adRequest);
         }
+
+        mLevelFailedInterstitial = new InterstitialAd(this);
+        mLevelFailedInterstitial.setAdUnitId("ca-app-pub-1344285941475721/4714906695");
+        mLevelFailedInterstitial.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewLevelFailedInterstitial();
+                playLevel(level);
+            }
+        });
+        requestNewLevelFailedInterstitial();
 
         Runnable update = new Runnable() {
             public void run() {
@@ -212,6 +226,13 @@ public class GameActivity extends Activity
         music.stop();
     }
 
+    private void requestNewLevelFailedInterstitial() {
+        AdRequest adRequest = Util.getAdMobRequest(this);
+        if( adRequest != null) {
+            mLevelFailedInterstitial.loadAd(adRequest);
+        }
+    }
+
     private void onLaunchTimeout()
     {
         gr.play_sound(GameResources.die);
@@ -222,7 +243,7 @@ public class GameActivity extends Activity
             setPositiveButton("Retry", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    playLevel(level);
+                    retry(null);
                 }
             }).
             setNegativeButton("Quit", new DialogInterface.OnClickListener() {
@@ -243,7 +264,7 @@ public class GameActivity extends Activity
             setPositiveButton("Retry", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    playLevel(level);
+                    retry(null);
                 }
             }).
             setNegativeButton("Quit", new DialogInterface.OnClickListener() {
@@ -327,7 +348,15 @@ public class GameActivity extends Activity
     }
 
     public void retry(View v) {
-        playLevel(level);
+        if( level > 5 && mLevelFailedInterstitial.isLoaded() &&
+                MainActivity.lastInterstitialTime <
+                        System.currentTimeMillis() - MainActivity.minInterstitialDelay) {
+            music.pause();
+            mLevelFailedInterstitial.show();
+            MainActivity.lastInterstitialTime = System.currentTimeMillis();
+        } else {
+            playLevel(level);
+        }
     }
 
     public void toggleMusic(View v) {
