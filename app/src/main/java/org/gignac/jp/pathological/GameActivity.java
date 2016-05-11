@@ -328,6 +328,7 @@ public class GameActivity extends Activity
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.level_cleared)
                 .setView(view)
+                .setCancelable(false)
                 .setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
