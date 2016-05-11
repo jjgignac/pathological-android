@@ -179,11 +179,6 @@ public class GameActivity extends Activity
         });
     }
 
-    public void nextLevel() {
-        if(level < gr.numlevels-1)
-            playLevel( level+1);
-    }
-
     @Override
     public void onResume()
     {
@@ -309,7 +304,7 @@ public class GameActivity extends Activity
         ((TextView)view.findViewById(R.id.total))
                 .setText(String.valueOf(total));
 
-        new AlertDialog.Builder(this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.level_cleared)
                 .setView(view)
                 .setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
@@ -323,13 +318,16 @@ public class GameActivity extends Activity
                     public void onClick(DialogInterface dialog, int which) {
                         playLevel(level);
                     }
-                })
-                .setNeutralButton(R.string.next_level, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        nextLevel();
-                    }
-                }).show();
+                });
+        if(level < gr.numlevels-1) {
+            builder.setNeutralButton(R.string.next_level, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    playLevel(level + 1);
+                }
+            });
+        }
+        builder.show();
     }
 
     public void pause() {
