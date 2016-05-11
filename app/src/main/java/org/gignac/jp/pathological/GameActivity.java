@@ -64,10 +64,10 @@ public class GameActivity extends Activity
         score_view.setText("0");
 
         AdView mAdView = (AdView)findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-        mAdView.loadAd(adRequest);
+        AdRequest adRequest = Util.getAdMobRequest(this);
+        if( adRequest != null) {
+            mAdView.loadAd(adRequest);
+        }
 
         Runnable update = new Runnable() {
             public void run() {
