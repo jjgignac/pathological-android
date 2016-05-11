@@ -140,6 +140,7 @@ public class GameResources
 
     public void play_sound( int id)
     {
+        if(sp == null) return;
         sp.play( sound_id[id], sound_volume[id],
             sound_volume[id], 0, 0, 1.0f);
     }
