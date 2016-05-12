@@ -246,6 +246,12 @@ public class LevelSelectView extends View
             prepPaint();
             mNeedsPrep = false;
             highlight = GameResources.shp.getInt("level", 0);
+            int highlightPage = highlight / (rows * cols);
+            if( xOffset > highlightPage + 1) {
+                xOffset = highlightPage + 1;
+            } else if( xOffset < highlightPage - 1) {
+                xOffset = highlightPage - 1;
+            }
             mZoomDelay = 1000;
             prevTime = SystemClock.uptimeMillis();
         }
