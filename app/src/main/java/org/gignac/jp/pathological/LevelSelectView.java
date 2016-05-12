@@ -51,6 +51,7 @@ public class LevelSelectView extends View
     private final int[] textWidth;
     private int textHeight;
     private int maxTxtWid;
+    private final int txtCacheCols = 3;
     private final SpriteCache sc;
     private final Paint paint = new Paint();
     private final Runnable updater;
@@ -158,8 +159,9 @@ public class LevelSelectView extends View
         textHeight = (up+down) * 2;
         maxTxtWid = getWidth()/cols;
         if(text == null) {
-            text = Bitmap.createBitmap( maxTxtWid,
-            gr.numlevels*textHeight, Bitmap.Config.ARGB_8888);
+            text = Bitmap.createBitmap( maxTxtWid * txtCacheCols,
+                    (gr.numlevels*textHeight + (txtCacheCols+1))/ txtCacheCols,
+                    Bitmap.Config.ARGB_8888);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
@@ -173,7 +175,8 @@ public class LevelSelectView extends View
                 ". "+gr.boardNames.elementAt(i) : "");
             int txtWid = (int)Math.ceil(paint.measureText(label));
             if(txtWid > maxTxtWid) txtWid = maxTxtWid;
-            c.drawText(label,(maxTxtWid - txtWid)/2,up+textHeight*i,paint);
+            c.drawText(label, (i % txtCacheCols) * maxTxtWid + (maxTxtWid - txtWid)/2,
+                    up+textHeight* (i / txtCacheCols),paint);
 
             int best = GameResources.shp.getInt("best_"+i, -1);
             int bestWid = 0;
@@ -181,7 +184,8 @@ public class LevelSelectView extends View
                 String bestText = getContext().getString(R.string.best) + " " + best;
                 bestWid = Math.min((int) Math.ceil(paint.measureText(bestText)), maxTxtWid);
                 paint.setTypeface(italic);
-                c.drawText(bestText, (maxTxtWid - bestWid) / 2, up + textHeight * i + (up + down), paint);
+                c.drawText(bestText, (i % txtCacheCols) * maxTxtWid + (maxTxtWid - bestWid) / 2,
+                        up + textHeight * (i / txtCacheCols) + (up + down), paint);
                 paint.setTypeface(normal);
             }
 
@@ -299,10 +303,10 @@ public class LevelSelectView extends View
                     Bitmap text = sc.getBitmap(0x5700000000L);
                     if(text!=null)
                         b.blit( 0x5700000000L,
-                            (maxTxtWid - textWidth[level])/2,
-                            textHeight*level,textWidth[level],textHeight,
-                            x + (previewWidth-textWidth[level])/2,
-                            y + previewHeight + 1,textWidth[level],textHeight);
+                                (level % txtCacheCols) * maxTxtWid + (maxTxtWid - textWidth[level])/2,
+                                textHeight * (level / txtCacheCols), textWidth[level], textHeight,
+                                x + (previewWidth - textWidth[level])/2,
+                                y + previewHeight + 1, textWidth[level], textHeight);
                 }
             }
         }
