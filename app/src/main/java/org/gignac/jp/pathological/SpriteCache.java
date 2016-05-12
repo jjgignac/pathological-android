@@ -17,7 +17,7 @@
 package org.gignac.jp.pathological;
 import android.graphics.*;
 import java.util.*;
-import android.util.Log;
+
 import android.content.res.*;
 
 public class SpriteCache
@@ -57,11 +57,7 @@ public class SpriteCache
         if( s == null) {
             sprites.put(uniq, new Sprite(b));
         } else {
-            if( s.bitmap != b) {
-                Log.e("SpriteCache","Recycling: 0x"+Long.toHexString(uniq));
-                s.bitmap.recycle();
-                s.bitmap = b;
-            }
+            s.bitmap = b;
         }
     }
 
