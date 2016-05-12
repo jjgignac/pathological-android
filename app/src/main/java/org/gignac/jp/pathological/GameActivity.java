@@ -157,6 +157,11 @@ public class GameActivity extends Activity
     }
 
     public void playLevel(final int level) {
+        if( level != GameResources.shp.getInt("level", 0)) {
+            SharedPreferences.Editor e = GameResources.shp.edit();
+            e.putInt("level", level);
+            e.apply();
+        }
         loadLevel(level);
         music.resume();
     }
@@ -332,6 +337,9 @@ public class GameActivity extends Activity
                 .setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences.Editor e = GameResources.shp.edit();
+                        e.putInt("level", level + 1);
+                        e.apply();
                         finish();
                     }
                 })

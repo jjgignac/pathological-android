@@ -41,11 +41,11 @@ public class LevelSelectView extends View
     private final GameResources gr;
     private final CanvasBlitter b;
     private final GestureDetector g;
-    private float xOffset = 0.0f;
+    private float xOffset;
     private float vel;
     private long prevTime;
     private int nLoaded=0, nUnlocked=0;
-    private int highlight = -1;
+    private int highlight;
     private Bitmap text;
     private final Canvas c = new Canvas();
     private final int[] textWidth;
@@ -55,6 +55,8 @@ public class LevelSelectView extends View
     private final Paint paint = new Paint();
     private final Runnable updater;
     private boolean mNeedsPrep;
+    private boolean mZooming;
+    private long mZoomDelay;
     private static final Typeface normal = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
     private static final Typeface italic = Typeface.create(Typeface.DEFAULT, Typeface.ITALIC);
 
@@ -67,6 +69,7 @@ public class LevelSelectView extends View
         g.setIsLongpressEnabled(false);
         gr = GameResources.getInstance(getContext());
         textWidth = new int[gr.numlevels];
+        xOffset = GameResources.shp.getInt("level", 0) / (rows * cols);
 
         updater = new Runnable() {
             public void run() { update(); }
@@ -81,7 +84,6 @@ public class LevelSelectView extends View
 
     public void onResume() {
         nUnlocked = GameResources.shp.getInt("nUnlocked",1);
-        highlight = -1;
 
         IntroScreen.setup(sc);
         mNeedsPrep = true;
@@ -159,6 +161,10 @@ public class LevelSelectView extends View
             text = Bitmap.createBitmap( maxTxtWid,
             gr.numlevels*textHeight, Bitmap.Config.ARGB_8888);
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            setLayerType(LAYER_TYPE_SOFTWARE, paint);
+
         c.setBitmap(text);
         c.drawColor(0x00000000, PorterDuff.Mode.SRC);
         Preview.cache(getContext(),sc,gr,nUnlocked);
@@ -183,6 +189,9 @@ public class LevelSelectView extends View
         }
         sc.cache(0x5700000000L,text);
         nLoaded = nUnlocked;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            setLayerType(LAYER_TYPE_HARDWARE, paint);
     }
 
     private void update()
@@ -191,22 +200,37 @@ public class LevelSelectView extends View
         final long dt = time-prevTime;
         prevTime = time;
 
+        if( mZoomDelay > 0) {
+            mZoomDelay -= dt;
+            if (mZoomDelay <= 0) {
+                mZoomDelay = 0;
+                mZooming = true;
+            }
+        }
+
+        int highlightPage = highlight / (rows * cols);
         int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
-        float pos = xOffset / getWidth();
+        float pos = xOffset;
         float prevPos = pos;
         int a = Math.round(pos);
         if( pos < 0) a = 0;
         else if( pos > npages-1) a = npages-1;
+        if( a == highlightPage) {
+            mZooming = false;
+            mZoomDelay = 0;
+        }
         pos += dt * vel / getWidth();
-        if( (prevPos < a) ^ (pos < a)) {
+        if( !mZooming && ((prevPos < a) ^ (pos < a))) {
             vel = 0f;
             pos = a;
         }
         if( pos < -0.1f) pos = -0.1f;
         else if( pos > npages-1+0.1f) pos = npages-1+0.1f;
-        xOffset = pos * getWidth();
+        xOffset = pos;
 
-        if( pos < 0) vel = 0.005f * 300;
+        if( mZooming && pos < highlightPage) vel = 0.003f * 300;
+        else if( mZooming && pos > highlightPage) vel = -0.003f * 300;
+        else if( pos < 0) vel = 0.005f * 300;
         else if( pos > npages-1) vel = -0.005f * 300;
         else vel += dt * (a-pos) * 0.005f;
 
@@ -221,6 +245,9 @@ public class LevelSelectView extends View
         if( mNeedsPrep) {
             prepPaint();
             mNeedsPrep = false;
+            highlight = GameResources.shp.getInt("level", 0);
+            mZoomDelay = 1000;
+            prevTime = SystemClock.uptimeMillis();
         }
 
         update();
@@ -232,9 +259,9 @@ public class LevelSelectView extends View
         // Draw the author attribution
         b.blit(0x5800000002L, (getWidth() - sc.getBitmap(0x5800000002L).getWidth())/2, 90);
 
-        b.pushTransform( 1f, -xOffset, 0f);
+        b.pushTransform( 1f, -xOffset * getWidth(), 0f);
 
-        int fromPage = Math.max(0, Math.round(xOffset) / getWidth());
+        int fromPage = Math.max(0, Math.round(xOffset * getWidth()) / getWidth());
         int toPage = Math.min(npages, fromPage+2);
         for( int page=fromPage; page < toPage; ++page) {
             for( int j=0; j < rows; ++j) {
@@ -279,6 +306,8 @@ public class LevelSelectView extends View
     @Override
     public synchronized boolean onTouchEvent(MotionEvent e) {
         vel = 0f;
+        mZoomDelay = 0;
+        mZooming = false;
         switch(e.getAction() & MotionEvent.ACTION_MASK) {
         case MotionEvent.ACTION_UP:
             prevTime = SystemClock.uptimeMillis();
@@ -289,8 +318,7 @@ public class LevelSelectView extends View
 
     private void scroll( float dx)
     {
-        xOffset += dx;
-        highlight = -1;
+        xOffset += dx / getWidth();
         invalidate();
     }
 
@@ -306,15 +334,9 @@ public class LevelSelectView extends View
         getContext().startActivity(intent);
     }
 
-    private void showPress( float x, float y)
-    {
-        highlight = pickLevel(x,y);
-        invalidate();
-    }
-
     private int pickLevel( float x, float y)
     {
-        x += xOffset;
+        x += xOffset * getWidth();
         int page = (int)Math.floor(x / getWidth());
         x -= page * getWidth();
         y -= vmargin;
@@ -380,12 +402,6 @@ public class LevelSelectView extends View
         {
             view.tap(e.getX(), e.getY());
             return true;
-        }
-
-        @Override
-        public void onShowPress(MotionEvent e)
-        {
-            view.showPress(e.getX(), e.getY());
         }
     }
 }
