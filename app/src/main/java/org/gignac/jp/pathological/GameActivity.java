@@ -379,7 +379,7 @@ public class GameActivity extends Activity
         if( level > 5 && mLevelFailedInterstitial.isLoaded() &&
                 MainActivity.lastInterstitialTime <
                         System.currentTimeMillis() - MainActivity.minInterstitialDelay) {
-            music.pause();
+            pause();
             mLevelFailedInterstitial.show();
             MainActivity.lastInterstitialTime = System.currentTimeMillis();
         } else {
