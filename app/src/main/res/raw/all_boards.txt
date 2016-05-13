@@ -69,15 +69,15 @@ firstcolors=3,3,3,2,2,3,2,2,6,4
 |   |   |   |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
 
-name=Easy Does It
-author=Mike Brenneman and John-Paul Gignac
+name=Clowning Around
+author=John-Paul Gignac
 boardtimer=600
 launchtimer=90
 maxmarbles=5
 +---+---+---+---+---+---+---+---+
 |   |   |   |O7 | a |Od |   |   |
 |   |   |   | 5 |   | 5 |   |   |
-|   |   |   | 5 |   | 5 |   |   |
+|   |   |   |&51|   |&57|   |   |
 |   |   |   | 5 |   | 5 |   |   |
 |   |   |   |O3 | a |O9 |   |   |
 |   |   |   |   |   |   |   |   |
