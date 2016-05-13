@@ -39,4 +39,19 @@
         android:onClick="toggleMusic"
         />
 
+    <ImageView
+        android:id="@+id/share"
+        android:src="@drawable/ic_share_white_24dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginStart="38dp"
+        android:scaleType="centerInside"
+        android:layout_alignTop="@+id/menu"
+        android:layout_alignParentLeft="@+id/mute_music"
+        android:layout_alignParentStart="@+id/mute_music"
+        android:contentDescription="@string/mute_music"
+        android:onClick="share"
+        />
+
 </RelativeLayout>

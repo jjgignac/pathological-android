@@ -173,4 +173,15 @@ public class MainActivity extends Activity
     public void toggleMusic(View v) {
         music.toggleMute();
     }
+
+    public void share(View v) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT,
+                getString(R.string.share_text,
+                        "https://play.google.com/store/apps/details?id=" +
+                                getClass().getPackage().getName()));
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
 }
