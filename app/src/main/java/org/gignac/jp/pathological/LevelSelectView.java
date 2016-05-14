@@ -21,7 +21,7 @@ import android.util.*;
 import android.os.*;
 import android.graphics.*;
 
-@SuppressWarnings("unused,PointlessArithmeticExpression")
+@SuppressWarnings("PointlessArithmeticExpression")
 public class LevelSelectView extends View
 {
     private static final int rows = 3;
@@ -44,7 +44,7 @@ public class LevelSelectView extends View
     private float xOffset;
     private float vel;
     private long prevTime;
-    private int nLoaded=0, nUnlocked=0;
+    private int nUnlocked=0;
     private int highlight;
     private Bitmap text;
     private final Canvas c = new Canvas();
@@ -192,7 +192,6 @@ public class LevelSelectView extends View
             textWidth[i] = Math.max(txtWid, bestWid);
         }
         sc.cache(0x5700000000L,text);
-        nLoaded = nUnlocked;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             setLayerType(LAYER_TYPE_HARDWARE, paint);
@@ -244,7 +243,7 @@ public class LevelSelectView extends View
         if( vel != 0) postDelayed(updater, 1000/60);
     }
 
-    public void paint( Blitter b)
+    private void paint( Blitter b)
     {
         if( mNeedsPrep) {
             prepPaint();
