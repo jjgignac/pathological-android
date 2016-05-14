@@ -114,4 +114,13 @@ class Preview
             // Ignore
         }
     }
+
+    public static void clearCache(Context c) {
+        for( File file : c.getFilesDir().listFiles()) {
+            if( file.getName().startsWith("preview-")) {
+                //noinspection ResultOfMethodCallIgnored
+                file.delete();
+            }
+        }
+    }
 }

@@ -105,10 +105,6 @@ public class GameResources
             holecenters_x[i][3] = (int)Math.round(Tile.tile_size/2 - c);
             holecenters_y[i][3] = (int)Math.round(Tile.tile_size/2 - s);
         }
-
-        shp = context.getSharedPreferences(
-            "org.gignac.jp.pathological.Pathological", Context.MODE_PRIVATE);
-
     }
 
     public void create() {
