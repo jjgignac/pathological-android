@@ -173,10 +173,11 @@ public class GameActivity extends Activity
                 h.post(gameLoop);
             }
         });
+        final String title = (level+1) + ". " + board.name;
 
         h.post( new Runnable() {
             public void run() {
-                ((TextView)findViewById(R.id.board_name)).setText(board.name);
+                ((TextView)findViewById(R.id.board_name)).setText(title);
                 board.launch_marble();
                 gv.setBoard(board);
                 gameLoop.start();
