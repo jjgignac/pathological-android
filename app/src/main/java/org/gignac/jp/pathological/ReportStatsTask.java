@@ -13,6 +13,8 @@ class ReportStatsTask extends AsyncTask<Void, Void, Void> {
                            int timeRemainingPercentage) {
         try {
             url = new URL("http://pathological.gignac.org/score.php?i=" + Util.adMobID(context) +
+                    "&v=" + BuildConfig.VERSION_NAME +
+                    (BuildConfig.BUILD_TYPE.equals("release") ? "" : "d") +
                     "&l=" + level + "&s=" + score + "&e=" + emptyHolePercentage +
                     "&t=" + timeRemainingPercentage);
         } catch( Exception e) {
