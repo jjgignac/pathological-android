@@ -30,6 +30,7 @@ public class LevelSelectView extends View
     private static final float hspacing_ratio = 0.9f;
     private static final float vmargin_ratio = 1.1f;
     private static final float vspacing_ratio = 0.9f;
+    private static final int highlightRadius = 50;
     private int hmargin;
     private int vmargin;
     private int previewWidth;
@@ -123,12 +124,15 @@ public class LevelSelectView extends View
         sc.cache(0x5800000000L,shadow);
 
         Bitmap hilight = Bitmap.createBitmap(
-            previewWidth+20, previewHeight+20,
-            Bitmap.Config.ARGB_8888);
+                previewWidth + 2 * highlightRadius,
+                previewHeight + 2 * highlightRadius,
+                Bitmap.Config.ARGB_8888);
         c.setBitmap(hilight);
-        paint.setMaskFilter(new BlurMaskFilter(10,BlurMaskFilter.Blur.NORMAL));
+        paint.setMaskFilter(new BlurMaskFilter(highlightRadius,BlurMaskFilter.Blur.NORMAL));
         paint.setColor(0xff40a0ff);
-        c.drawRect(10,10,previewWidth+10,previewHeight+10,paint);
+        c.drawRect(highlightRadius,highlightRadius,
+                previewWidth+highlightRadius,previewHeight+highlightRadius,
+                paint);
         sc.cache(0x5800000001L,hilight);
 
         // Prepare the author attribution image
@@ -281,7 +285,12 @@ public class LevelSelectView extends View
                     int y = vmargin+j*vSpacing;
                     if(level < nUnlocked) {
                         if(highlight == level)
-                            b.blit(0x5800000001L, x-10, y-10);
+                            b.blit(0x5800000001L, 0, 0,
+                                    previewWidth + 2 * highlightRadius,
+                                    previewHeight + 2 * highlightRadius,
+                                    x - highlightRadius, y - highlightRadius,
+                                    previewWidth + 2 * highlightRadius,
+                                    previewHeight + 2 * highlightRadius + textHeight / 4);
                         b.blit(0x5800000000L, x+5, y+5);
                         b.fill(0xff000000, x-1,
                             y-1, previewWidth+2,
