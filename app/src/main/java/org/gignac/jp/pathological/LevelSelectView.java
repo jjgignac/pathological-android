@@ -160,7 +160,7 @@ public class LevelSelectView extends View
         maxTxtWid = getWidth()/cols;
         if(text == null) {
             text = Bitmap.createBitmap( maxTxtWid * txtCacheCols,
-                    (gr.numlevels*textHeight + (txtCacheCols+1))/ txtCacheCols,
+                    ((gr.numlevels + txtCacheCols - 1) / txtCacheCols) * textHeight,
                     Bitmap.Config.ARGB_8888);
         }
 
