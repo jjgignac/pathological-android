@@ -78,12 +78,6 @@ public class LevelSelectView extends View
         };
     }
 
-    @Override
-    protected void onDraw( Canvas c) {
-        b.setCanvas(c, getWidth(), getHeight());
-        paint(b);
-    }
-
     public void onResume() {
         nUnlocked = GameResources.shp.getInt("nUnlocked",1);
 
@@ -151,56 +145,6 @@ public class LevelSelectView extends View
         sc.cache(0x5800000002L,authorAttrib);
     }
 
-    private void prepPaint()
-    {
-        paint.setTextSize(previewWidth*0.17f);
-        paint.setAntiAlias(true);
-        paint.setMaskFilter(null);
-        paint.setColor(0xff000000);
-        Paint.FontMetrics fm = paint.getFontMetrics();
-        int up = (int)Math.ceil(Math.max(-fm.ascent,-fm.top)+fm.leading);
-        int down = (int)Math.ceil(Math.max(fm.descent,fm.bottom));
-        textHeight = (up+down) * 2;
-        maxTxtWid = getWidth()/cols;
-        if(text == null) {
-            text = Bitmap.createBitmap( maxTxtWid * txtCacheCols,
-                    ((gr.numlevels + txtCacheCols - 1) / txtCacheCols) * textHeight,
-                    Bitmap.Config.ARGB_8888);
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            setLayerType(LAYER_TYPE_SOFTWARE, paint);
-
-        c.setBitmap(text);
-        c.drawColor(0x00000000, PorterDuff.Mode.SRC);
-        Preview.cache(getContext(),sc,gr,nUnlocked);
-        for( int i=0; i < gr.numlevels; ++i) {
-            String label = (i+1) + (i < nUnlocked ?
-                ". "+gr.boardNames.elementAt(i) : "");
-            int txtWid = (int)Math.ceil(paint.measureText(label));
-            if(txtWid > maxTxtWid) txtWid = maxTxtWid;
-            c.drawText(label, (i % txtCacheCols) * maxTxtWid + (maxTxtWid - txtWid)/2,
-                    up+textHeight* (i / txtCacheCols),paint);
-
-            int best = GameResources.shp.getInt("best_"+i, -1);
-            int bestWid = 0;
-            if( best >= 0) {
-                String bestText = getContext().getString(R.string.best) + " " + best;
-                bestWid = Math.min((int) Math.ceil(paint.measureText(bestText)), maxTxtWid);
-                paint.setTypeface(italic);
-                c.drawText(bestText, (i % txtCacheCols) * maxTxtWid + (maxTxtWid - bestWid) / 2,
-                        up + textHeight * (i / txtCacheCols) + (up + down), paint);
-                paint.setTypeface(normal);
-            }
-
-            textWidth[i] = Math.max(txtWid, bestWid);
-        }
-        sc.cache(0x5700000000L,text);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            setLayerType(LAYER_TYPE_HARDWARE, paint);
-    }
-
     private void update()
     {
         final long time = SystemClock.uptimeMillis();
@@ -247,10 +191,11 @@ public class LevelSelectView extends View
         if( vel != 0) postDelayed(updater, 1000/60);
     }
 
-    private void paint( Blitter b)
-    {
+    @Override
+    protected void onDraw( Canvas c) {
+        b.setCanvas(c, getWidth(), getHeight());
+
         if( mNeedsPrep) {
-            prepPaint();
             mNeedsPrep = false;
             highlight = GameResources.shp.getInt("level", 0);
             int highlightPage = highlight / (rows * cols);
@@ -261,9 +206,19 @@ public class LevelSelectView extends View
             }
             mZoomDelay = 1000;
             prevTime = SystemClock.uptimeMillis();
+
+            Preview.cache(getContext(),sc,gr,nUnlocked);
         }
 
         update();
+
+        paint.setTextSize(previewWidth*0.17f);
+        paint.setAntiAlias(true);
+        paint.setMaskFilter(null);
+        paint.setColor(0xff000000);
+        Paint.FontMetrics fm = paint.getFontMetrics();
+        int up = (int)Math.ceil(Math.max(-fm.ascent,-fm.top)+fm.leading);
+        int down = (int)Math.ceil(Math.max(fm.descent,fm.bottom));
 
         int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
         IntroScreen.draw_back(b);
@@ -308,13 +263,23 @@ public class LevelSelectView extends View
                         y -= previewHeight*4/9;
                     }
 
-                    Bitmap text = sc.getBitmap(0x5700000000L);
-                    if(text!=null)
-                        b.blit( 0x5700000000L,
-                                (level % txtCacheCols) * maxTxtWid + (maxTxtWid - textWidth[level])/2,
-                                textHeight * (level / txtCacheCols), textWidth[level], textHeight,
-                                x + (previewWidth - textWidth[level])/2,
-                                y + previewHeight + 1, textWidth[level], textHeight);
+                    // Draw the board title
+                    String label = (level+1) + (level < nUnlocked ?
+                            ". "+gr.boardNames.elementAt(level) : "");
+                    c.drawText( label,
+                            x + previewWidth / 2 - paint.measureText(label) / 2,
+                            y + previewHeight + up, paint);
+
+                    // Draw the high score
+                    int best = GameResources.shp.getInt("best_"+level, -1);
+                    if( best >= 0) {
+                        String bestText = getContext().getString(R.string.best) + " " + best;
+                        paint.setTypeface(italic);
+                        c.drawText(bestText,
+                                x + previewWidth / 2 - paint.measureText(bestText) / 2,
+                                y + previewHeight + (up + down) + up, paint);
+                        paint.setTypeface(normal);
+                    }
                 }
             }
         }
