@@ -61,6 +61,7 @@ class Board {
     private long pause_changed;
     public int delay = 50;
     private int score = 0;
+    private Tutorial tutorial = null;
 
     public Board(GameResources gr, SpriteCache sc,
                  int level, Runnable onPainted)
@@ -121,6 +122,13 @@ class Board {
                 continue;
             }
             launch_queue[i] = colors.charAt(gr.random.nextInt(colors.length()))-'0';
+        }
+
+        // Set up the tutorial if required
+        if( level == 0) {
+            tutorial = new Tutorial(this, 0);
+        } else if( level == 1) {
+            tutorial = new Tutorial(this, 4);
         }
     }
 
@@ -313,6 +321,11 @@ class Board {
 
         // Draw the foreground
         draw_fore(b);
+
+        if( tutorial != null && b instanceof CanvasBlitter) {
+            tutorial.paint((CanvasBlitter)b,
+                    - (float)board_timeout / GameActivity.frames_per_sec);
+        }
 
         b.popTransform();
         b.popTransform();

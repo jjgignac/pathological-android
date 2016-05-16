@@ -40,14 +40,17 @@ class Wheel extends Tile
     public void draw_back(Blitter b)
     {
         super.draw_back(b);
-        GameResources gr = board.gr;
+        draw( board.gr, b, marbles, left, top, spinpos, completed);
+    }
 
+    public static void draw(GameResources gr, Blitter b, int[] marbles,
+                            int left, int top, int spinpos, boolean completed) {
         if( spinpos != 0) {
             b.blit(R.drawable.misc, completed?0:92, 0, 92, 92, left, top);
             for(int i=0; i<4; ++i) {
                 int holecenter_x = gr.holecenters_x[spinpos][i];
                 int holecenter_y = gr.holecenters_y[spinpos][i];
-                b.blit( R.drawable.misc, completed?362:334, 662, 28, 28,
+                b.blit( R.drawable.misc, completed?483:455, 633, 28, 28,
                     holecenter_x-Marble.marble_size/2+left,
                     holecenter_y-Marble.marble_size/2+top);
             }

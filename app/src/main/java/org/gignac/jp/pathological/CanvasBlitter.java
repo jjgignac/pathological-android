@@ -24,7 +24,7 @@ import android.graphics.Rect;
 class CanvasBlitter
     implements Blitter
 {
-    private Canvas c;
+    Canvas c;
     private final Rect src = new Rect();
     private final Rect rect = new Rect();
     private final Paint paint = new Paint();
