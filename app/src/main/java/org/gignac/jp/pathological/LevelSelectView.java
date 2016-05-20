@@ -250,10 +250,10 @@ public class LevelSelectView extends View
                             x+(previewWidth-lockSize)/2+10,
                             y+(previewHeight-lockSize)/2+10,
                             lockSize, lockSize);
-                        b.blit(R.drawable.misc, 128, 479, 128, 128,
-                            x+(previewWidth-lockSize)/2,
+                        b.blit(R.drawable.misc, 144, 479, 96, 128,
+                            x+(previewWidth-lockSize*96/128)/2,
                             y+(previewHeight-lockSize)/2,
-                            lockSize, lockSize);
+                            lockSize*96/128, lockSize);
                         y -= previewHeight*4/9;
                     }
 
