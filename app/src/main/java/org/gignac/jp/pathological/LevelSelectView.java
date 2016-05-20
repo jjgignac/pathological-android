@@ -47,12 +47,7 @@ public class LevelSelectView extends View
     private long prevTime;
     private int nUnlocked=0;
     private int highlight;
-    private Bitmap text;
     private final Canvas c = new Canvas();
-    private final int[] textWidth;
-    private int textHeight;
-    private int maxTxtWid;
-    private final int txtCacheCols = 3;
     private final SpriteCache sc;
     private final Paint paint = new Paint();
     private final Runnable updater;
@@ -70,7 +65,6 @@ public class LevelSelectView extends View
         g = new GestureDetector(context, new LevelSelectGestureListener(this));
         g.setIsLongpressEnabled(false);
         gr = GameResources.getInstance(getContext());
-        textWidth = new int[gr.numlevels];
         xOffset = GameResources.shp.getInt("level", 0) / (rows * cols);
 
         updater = new Runnable() {
@@ -245,7 +239,7 @@ public class LevelSelectView extends View
                                     previewHeight + 2 * highlightRadius,
                                     x - highlightRadius, y - highlightRadius,
                                     previewWidth + 2 * highlightRadius,
-                                    previewHeight + 2 * highlightRadius + textHeight / 4);
+                                    previewHeight + 2 * highlightRadius);
                         b.blit(0x5800000000L, x+5, y+5);
                         b.fill(0xff000000, x-1,
                             y-1, previewWidth+2,

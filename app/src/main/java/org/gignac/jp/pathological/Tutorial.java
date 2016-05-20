@@ -4,9 +4,9 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 class Tutorial {
-    private static Paint paint = new Paint();
-    private static RectF rect = new RectF();
-    private static int[] marbles = { 0, 0, 0, 0 };
+    private static final Paint paint = new Paint();
+    private static final RectF rect = new RectF();
+    private static final int[] marbles = { 0, 0, 0, 0 };
 
     private final Board board;
     private int stage;
@@ -120,8 +120,8 @@ class Tutorial {
         b.blit(R.drawable.misc, 242, 434, 121, 275, x - 40, y - 10);
     }
 
-    static void drawSpinWheelTutorial(GameResources gr, CanvasBlitter b,
-                                      float visibility, float time, boolean done) {
+    private static void drawSpinWheelTutorial(GameResources gr, CanvasBlitter b,
+                                              float visibility, float time, boolean done) {
         int x = Tile.tile_size / 2;
         int y = Tile.tile_size * 7 / 2;
         int w = Tile.tile_size * 5 / 2;
@@ -190,8 +190,8 @@ class Tutorial {
                 wheelY + Tile.tile_size / 2 + Math.round(fingerPos * 10));
     }
 
-    static void drawEjectTutorial(GameResources gr, CanvasBlitter b,
-                                  float visibility, float time, boolean done) {
+    private static void drawEjectTutorial(GameResources gr, CanvasBlitter b,
+                                          float visibility, float time, boolean done) {
         int x = Tile.tile_size / 2;
         int y = Tile.tile_size * 7 / 2;
         int w = Tile.tile_size * 3;
