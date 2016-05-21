@@ -98,6 +98,10 @@ class Tutorial {
                     stage = -1; // done
                 }
                 break;
+            case 8:
+                // Draw the clear-wheels tutorial
+                drawClearWheelsTutorial(board.gr, b);
+                break;
         }
     }
 
@@ -261,5 +265,38 @@ class Tutorial {
 
         // Show the finger
         drawFingerTouchingXY(b, Math.round(fingerX), Math.round(fingerY));
+    }
+
+    private static void drawClearWheelsTutorial(GameResources gr, CanvasBlitter b) {
+        int x = Tile.tile_size;
+        int y = 16;
+        int w = Tile.tile_size * 3;
+        int h = Tile.tile_size * 2 - 20;
+
+        int wheel1X = x + 20;
+        int wheel2X = wheel1X + Tile.tile_size + 54;
+        int wheelY = y + 20;
+
+        drawFrame(b, x, y, w, h);
+
+        // Draw the incomplete wheel
+        for( int i=0; i < 4; ++i) marbles[i] = -2;
+        Wheel.draw(gr, b, marbles, wheel1X, wheelY, 0, false);
+
+        // Draw the arrow
+        b.blit( R.drawable.misc, 393, 732, 29, 30,
+                wheel1X + Tile.tile_size + 15,
+                wheelY + 30);
+
+        // Draw the completed wheel
+        Wheel.draw(gr, b, marbles, wheel2X, wheelY, 0, true);
+
+        // Draw the ex
+        b.blit( R.drawable.misc, 392, 706, 26, 25,
+                wheel1X + (Tile.tile_size - 26) / 2, wheelY + Tile.tile_size + 10);
+
+        // Draw the check
+        b.blit( R.drawable.misc, 392, 677, 29, 29,
+                wheel2X + (Tile.tile_size - 29) / 2, wheelY + Tile.tile_size + 8);
     }
 }
