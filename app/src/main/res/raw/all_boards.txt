@@ -624,7 +624,7 @@ stoplight=7,2,3
 name=Traffic Cop
 author=Mike Brenneman
 colors=2,3,4,6
-boardtimer=300
+boardtimer=320
 launchtimer=3
 maxmarbles=5
 +---+---+---+---+---+---+---+---+
