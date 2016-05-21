@@ -7,4 +7,7 @@
         <item name="android:textColor">#000</item>
         <item name="android:gravity">right</item>
     </style>
+    <style name="dialog_animation">
+        <item name="android:windowEnterAnimation">@anim/begin</item>
+    </style>
 </resources>

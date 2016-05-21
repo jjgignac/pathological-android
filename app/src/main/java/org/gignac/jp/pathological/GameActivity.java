@@ -242,48 +242,54 @@ public class GameActivity extends Activity
                 board.emptyHolePercentage(), board.timeRemainingPercentage(),
                 ReportStatsTask.REASON_LAUNCH_TIMEOUT).execute();
 
-        AlertDialog.Builder b = new AlertDialog.Builder(GameActivity.this);
-        b.setTitle("Failed").
-            setMessage("The launch timer has expired.").
-            setCancelable(false).
-            setPositiveButton("Retry", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    retry(null);
-                }
-            }).
-            setNegativeButton("Quit", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            }).show();
+        AlertDialog dialog = new AlertDialog.Builder(GameActivity.this)
+                .setTitle("Failed")
+                .setMessage("The launch timer has expired.")
+                .setCancelable(false)
+                .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        retry(null);
+                    }
+                })
+                .setNegativeButton("Quit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create();
+        dialog.getWindow().setWindowAnimations(R.style.dialog_animation);
+        dialog.show();
     }
 
     private void onBoardTimeout()
     {
         gr.play_sound(GameResources.die);
-        AlertDialog.Builder b = new AlertDialog.Builder(GameActivity.this);
 
         new ReportStatsTask(this, level, board.score(),
                 board.emptyHolePercentage(), board.timeRemainingPercentage(),
                 ReportStatsTask.REASON_BOARD_TIMEOUT).execute();
 
-        b.setTitle("Failed").
-            setMessage("The board timer has expired.").
-            setCancelable(false).
-            setPositiveButton("Retry", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    retry(null);
-                }
-            }).
-            setNegativeButton("Quit", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            }).show();
+        AlertDialog dialog = new AlertDialog.Builder(GameActivity.this)
+                .setTitle("Failed")
+                .setMessage("The board timer has expired.")
+                .setCancelable(false)
+                .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        retry(null);
+                    }
+                })
+                .setNegativeButton("Quit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create();
+        dialog.getWindow().setWindowAnimations(R.style.dialog_animation);
+        dialog.show();
     }
 
     private void onBoardComplete()
@@ -369,7 +375,9 @@ public class GameActivity extends Activity
                 }
             });
         }
-        builder.show();
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setWindowAnimations(R.style.dialog_animation);
+        dialog.show();
     }
 
     public void pause() {
