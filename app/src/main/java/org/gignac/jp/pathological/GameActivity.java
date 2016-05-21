@@ -261,6 +261,8 @@ public class GameActivity extends Activity
                 .create();
         dialog.getWindow().setWindowAnimations(R.style.dialog_animation);
         dialog.show();
+
+        temporarilyDisableButtons(dialog);
     }
 
     private void onBoardTimeout()
@@ -290,6 +292,8 @@ public class GameActivity extends Activity
                 .create();
         dialog.getWindow().setWindowAnimations(R.style.dialog_animation);
         dialog.show();
+
+        temporarilyDisableButtons(dialog);
     }
 
     private void onBoardComplete()
@@ -378,6 +382,30 @@ public class GameActivity extends Activity
         AlertDialog dialog = builder.create();
         dialog.getWindow().setWindowAnimations(R.style.dialog_animation);
         dialog.show();
+
+        temporarilyDisableButtons(dialog);
+    }
+
+    private void temporarilyDisableButtons(final AlertDialog dialog) {
+        final int[] buttons = {
+                AlertDialog.BUTTON_POSITIVE,
+                AlertDialog.BUTTON_NEGATIVE,
+                AlertDialog.BUTTON_NEUTRAL};
+        for( int id : buttons) {
+            Button b = dialog.getButton(id);
+            if( b != null) b.setEnabled(false);
+        }
+
+        h.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if( !dialog.isShowing()) return;
+                for( int id : buttons) {
+                    Button b = dialog.getButton(id);
+                    if( b != null) b.setEnabled(true);
+                }
+            }
+        }, 1500);
     }
 
     public void pause() {
