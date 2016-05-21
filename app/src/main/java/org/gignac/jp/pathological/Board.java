@@ -131,6 +131,8 @@ class Board {
             tutorial = new Tutorial(this, 4);
         } else if( level == 2) {
             tutorial = new Tutorial(this, 8);
+        } else if( level == 8) {
+            tutorial = new Tutorial(this, 9);
         }
     }
 

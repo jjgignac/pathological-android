@@ -102,6 +102,29 @@ class Tutorial {
                 // Draw the clear-wheels tutorial
                 drawClearWheelsTutorial(board.gr, b);
                 break;
+            case 9:
+                // Wait for the trigger to appear
+                if( board.trigger.marbles != null) {
+                    stage = 10;
+                    stageStartTime = time;
+                }
+                break;
+            case 10:
+                // Introduce the trigger tutorial and wait for the trigger to be completed
+                drawTriggerTutorial( board.gr, b, board, Math.min(dt, 1.0f));
+                if( board.trigger.marbles == null) {
+                    stage = 11;
+                    stageStartTime = time;
+                }
+                break;
+            case 11:
+                // Send the trigger tutorial away
+                if( dt < 1.0f) {
+                    drawTriggerTutorial( board.gr, b, board, 1.0f - dt);
+                } else {
+                    stage = -1; // done
+                }
+                break;
         }
     }
 
@@ -298,5 +321,33 @@ class Tutorial {
         // Draw the check
         b.blit( R.drawable.misc, 392, 677, 29, 29,
                 wheel2X + (Tile.tile_size - 29) / 2, wheelY + Tile.tile_size + 8);
+    }
+
+    private static void drawTriggerTutorial(GameResources gr, CanvasBlitter b,
+                                            Board board, float visibility) {
+        int x = Tile.tile_size * 3 + 20;
+        int y = Tile.tile_size * 3 - 20;
+        int w = Tile.tile_size * 3 / 2;
+        int h = Tile.tile_size * 2 - 20;
+
+        int offset = (int)Math.round(
+                Math.pow(1f - visibility, 1.8) * Tile.tile_size * 4);
+        x += offset;
+
+        int wheelX = x + (w - Tile.tile_size) / 2;
+        int wheelY = y + 20;
+
+        drawFrame(b, x, y, w, h);
+
+        // Draw the wheel
+        if( board.trigger.marbles != null) {
+            for (int i = 0; i < 4; ++i)
+                marbles[i] = board.trigger.marbles.charAt(i) - '0';
+        }
+        Wheel.draw(gr, b, marbles, wheelX, wheelY, 0, false);
+
+        // Draw the check
+        b.blit( R.drawable.misc, 392, 677, 29, 29,
+                wheelX + (Tile.tile_size - 29) / 2, wheelY + Tile.tile_size + 8);
     }
 }
