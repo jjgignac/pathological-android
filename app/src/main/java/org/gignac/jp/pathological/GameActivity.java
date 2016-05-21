@@ -237,6 +237,11 @@ public class GameActivity extends Activity
     private void onLaunchTimeout()
     {
         gr.play_sound(GameResources.die);
+
+        new ReportStatsTask(this, level, board.score(),
+                board.emptyHolePercentage(), board.timeRemainingPercentage(),
+                ReportStatsTask.REASON_LAUNCH_TIMEOUT).execute();
+
         AlertDialog.Builder b = new AlertDialog.Builder(GameActivity.this);
         b.setTitle("Failed").
             setMessage("The launch timer has expired.").
@@ -259,6 +264,11 @@ public class GameActivity extends Activity
     {
         gr.play_sound(GameResources.die);
         AlertDialog.Builder b = new AlertDialog.Builder(GameActivity.this);
+
+        new ReportStatsTask(this, level, board.score(),
+                board.emptyHolePercentage(), board.timeRemainingPercentage(),
+                ReportStatsTask.REASON_BOARD_TIMEOUT).execute();
+
         b.setTitle("Failed").
             setMessage("The board timer has expired.").
             setCancelable(false).
@@ -289,8 +299,9 @@ public class GameActivity extends Activity
         int timeRemainingBonus = timeRemainingPercentage * 5;
         int total = score + emptyHoleBonus + timeRemainingBonus;
 
-        new ReportStatsTask(this, level, score, emptyHolePercentage,
-                timeRemainingPercentage).execute();
+        new ReportStatsTask(this, level, score,
+                emptyHolePercentage, timeRemainingPercentage,
+                ReportStatsTask.REASON_COMPLETED).execute();
 
         int prevBest = GameResources.shp.getInt("best_"+level, -1);
 

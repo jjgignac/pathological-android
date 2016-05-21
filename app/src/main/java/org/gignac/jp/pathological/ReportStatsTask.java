@@ -8,15 +8,21 @@ import java.net.URL;
 class ReportStatsTask extends AsyncTask<Void, Void, Void> {
     private URL url;
 
+    public static final int REASON_COMPLETED = 0;
+    public static final int REASON_LAUNCH_TIMEOUT = 1;
+    public static final int REASON_BOARD_TIMEOUT = 2;
+
     public ReportStatsTask(Context context, int level, int score,
                            int emptyHolePercentage,
-                           int timeRemainingPercentage) {
+                           int timeRemainingPercentage,
+                           int reason) {
+
         try {
             url = new URL("http://pathological.gignac.org/score.php?i=" + Util.adMobID(context) +
                     "&v=" + BuildConfig.VERSION_NAME +
                     (BuildConfig.BUILD_TYPE.equals("release") ? "" : "d") +
                     "&l=" + level + "&s=" + score + "&e=" + emptyHolePercentage +
-                    "&t=" + timeRemainingPercentage);
+                    "&t=" + timeRemainingPercentage + "&c=" + reason);
         } catch( Exception e) {
             //
         }
