@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.gignac.jp.pathological;
+import android.graphics.Point;
 import android.media.*;
 import android.content.*;
 import android.os.Build;
@@ -68,6 +69,7 @@ public class GameResources
 
     public final int numlevels;
     public Vector<String> boardNames;
+    public Vector<Point> boardPositions;
 
     public static synchronized GameResources getInstance(Context context) {
         if(instance == null) instance = new GameResources(context);
@@ -80,7 +82,7 @@ public class GameResources
 
         sc = new SpriteCache( context.getResources());
 
-        getBoardNames();
+        getBoardInfo();
         numlevels = boardNames.size();
 
         random = new Random();
@@ -146,9 +148,10 @@ public class GameResources
         return context.getResources().openRawResource(resid);
     }
 
-    private void getBoardNames()
+    private void getBoardInfo()
     {
         boardNames = new Vector<>();
+        boardPositions = new Vector<>();
         BufferedReader f = null;
 
         try {
@@ -157,8 +160,17 @@ public class GameResources
             while( true) {
                 String line = f.readLine();
                 if( line==null) break;
-                if( line.startsWith("name="))
+                if( line.startsWith("name=")) {
+                    int level = boardNames.size();
+
                     boardNames.add(line.substring(5));
+
+                    int y = ((level / 6) & 1) == 0 ?
+                            (level % 6) / 2 : 2 - (level % 6) / 2;
+                    int x = (level / 6) * 2 +
+                            ((level ^ (level / 2) ^ (level / 6)) & 1);
+                    boardPositions.add(new Point(x,y));
+                }
             }
         } catch(IOException e) {
             //

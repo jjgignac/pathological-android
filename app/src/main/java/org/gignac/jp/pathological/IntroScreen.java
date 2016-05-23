@@ -37,20 +37,8 @@ class IntroScreen
         b.blit(R.drawable.misc, 0, 93, 342, 55,
             (b.getWidth()-342)/2, Marble.marble_size);
 
-        int pipe_w = 30;
-        int pipe_x = (Tile.tile_size-30)/2;
-        int pipe_y = b.getHeight()-227;
-
-        // Draw the pipe on the left
-        b.blit(R.drawable.misc,391,663,30,1,pipe_x,0,pipe_w,pipe_y+2);
-        b.blit(R.drawable.misc,391,665,30,10,pipe_x,pipe_y);
-
         // Draw the pipe on the right
-        pipe_x = b.getWidth() - pipe_w*6/5;
-        pipe_y = b.getHeight() - pipe_w;
-        int pipe_br_w = 90;
-        b.blit(R.drawable.misc,391,663,30,1,pipe_x,0,pipe_w,pipe_y+2);
-        b.blit(R.drawable.misc,92,662,90,30,pipe_x+pipe_w-pipe_br_w,pipe_y);
+        b.blit(R.drawable.misc, 92, 612, 96, 80, b.getWidth() - 96, b.getHeight() - 80);
 
         // Top-left wheel
         b.blit(R.drawable.misc,277,1,90,90,0,b.getHeight()-180);

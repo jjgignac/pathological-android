@@ -38,6 +38,8 @@ public class LevelSelectView extends View
     private int lockSize;
     private int hSpacing;
     private int vSpacing;
+    private final Point boardPos = new Point();
+    private final Point parentPos = new Point();
 
     private final GameResources gr;
     private final CanvasBlitter b;
@@ -185,6 +187,13 @@ public class LevelSelectView extends View
         if( vel != 0) postDelayed(updater, 1000/60);
     }
 
+    private void getBoardPosition(int level, Point center) {
+        Point pos = gr.boardPositions.elementAt(level);
+        center.x = hmargin + pos.x / 2 * getWidth() +
+                (pos.x % cols) * hSpacing + previewWidth / 2;
+        center.y = vmargin + pos.y * vSpacing + previewHeight / 2;
+    }
+
     @Override
     protected void onDraw( Canvas c) {
         b.setCanvas(c, getWidth(), getHeight());
@@ -214,7 +223,6 @@ public class LevelSelectView extends View
         int up = (int)Math.ceil(Math.max(-fm.ascent,-fm.top)+fm.leading);
         int down = (int)Math.ceil(Math.max(fm.descent,fm.bottom));
 
-        int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
         IntroScreen.draw_back(b);
         IntroScreen.draw_fore(gr,b);
 
@@ -223,58 +231,92 @@ public class LevelSelectView extends View
 
         b.pushTransform( 1f, -xOffset * getWidth(), 0f);
 
-        int fromPage = Math.max(0, Math.round(xOffset * getWidth()) / getWidth());
-        int toPage = Math.min(npages, fromPage+2);
-        for( int page=fromPage; page < toPage; ++page) {
-            for( int j=0; j < rows; ++j) {
-                for( int i=0; i < cols; ++i) {
-                    int level = (page*rows+j)*cols+i;
-                    if(level >= gr.numlevels) continue;
-                    int x = page*getWidth()+hmargin+i*hSpacing;
-                    int y = vmargin+j*vSpacing;
-                    if(level < nUnlocked) {
-                        if(highlight == level)
-                            b.blit(0x5800000001L, 0, 0,
-                                    previewWidth + 2 * highlightRadius,
-                                    previewHeight + 2 * highlightRadius,
-                                    x - highlightRadius, y - highlightRadius,
-                                    previewWidth + 2 * highlightRadius,
-                                    previewHeight + 2 * highlightRadius);
-                        b.blit(0x5800000000L, x+5, y+5);
-                        b.fill(0xff000000, x-1,
-                            y-1, previewWidth+2,
-                            previewHeight+2);
-                        Preview.blit(b,level,x,y, previewWidth, previewHeight);
-                    } else {
-                        b.blit(R.drawable.misc, 0, 479, 128, 128,
-                            x+(previewWidth-lockSize)/2+10,
-                            y+(previewHeight-lockSize)/2+10,
-                            lockSize, lockSize);
-                        b.blit(R.drawable.misc, 144, 479, 96, 128,
-                            x+(previewWidth-lockSize*96/128)/2,
-                            y+(previewHeight-lockSize)/2,
-                            lockSize*96/128, lockSize);
-                        y -= previewHeight*4/9;
-                    }
+        for( int level = 0; level < gr.numlevels; level++) {
+            getBoardPosition(level, boardPos);
 
-                    // Draw the board title
-                    String label = (level+1) + (level < nUnlocked ?
-                            ". "+gr.boardNames.elementAt(level) : "");
-                    c.drawText( label,
-                            x + previewWidth / 2 - paint.measureText(label) / 2,
-                            y + previewHeight + up, paint);
+            if (level > 0) {
+                // Draw a track from the parent board
+                getBoardPosition(level - 1, parentPos);
 
-                    // Draw the high score
-                    int best = GameResources.shp.getInt("best_"+level, -1);
-                    if( best >= 0) {
-                        String bestText = getContext().getString(R.string.best) + " " + best;
-                        paint.setTypeface(italic);
-                        c.drawText(bestText,
-                                x + previewWidth / 2 - paint.measureText(bestText) / 2,
-                                y + previewHeight + (up + down) + up, paint);
-                        paint.setTypeface(normal);
-                    }
+                if( parentPos.x == boardPos.x) {
+                    int minY = Math.min(parentPos.y, boardPos.y);
+                    int maxY = Math.max(parentPos.y, boardPos.y);
+                    b.blit(R.drawable.misc, 192, 400, 30, 10,
+                            parentPos.x - previewWidth / 8, minY,
+                            previewWidth / 4, maxY - minY);
+                } else {
+                    int minX = Math.min(parentPos.x, boardPos.x);
+                    int maxX = Math.max(parentPos.x, boardPos.x);
+                    b.blit(R.drawable.misc, 420, 394, 10, 30,
+                            minX, parentPos.y - previewWidth / 8,
+                            maxX - minX, previewWidth / 4);
                 }
+            }
+        }
+
+        for( int level = 0; level < gr.numlevels; level++) {
+            getBoardPosition(level, boardPos);
+
+            if( level < nUnlocked) {
+                // Draw the board preview
+
+                int x = boardPos.x - previewWidth / 2;
+                int y = boardPos.y - previewHeight / 2;
+
+                if(highlight == level)
+                    b.blit(0x5800000001L, 0, 0,
+                            previewWidth + 2 * highlightRadius,
+                            previewHeight + 2 * highlightRadius,
+                            x - highlightRadius, y - highlightRadius,
+                            previewWidth + 2 * highlightRadius,
+                            previewHeight + 2 * highlightRadius);
+                b.blit(0x5800000000L, x+5, y+5);
+                b.fill(0xff000000, x-1,
+                        y-1, previewWidth+2,
+                        previewHeight+2);
+                Preview.blit(b,level,x,y, previewWidth, previewHeight);
+
+                // Draw the board title
+                String label = (level+1) + (level < nUnlocked ?
+                        ". "+gr.boardNames.elementAt(level) : "");
+                float txtX = boardPos.x - paint.measureText(label) / 2;
+                float txtY = y + previewHeight + up;
+                float txtShadowOffset = previewWidth * 0.02f;
+                paint.setColor(0xff000000);
+                c.drawText( label, txtX + txtShadowOffset, txtY + txtShadowOffset, paint);
+                paint.setColor(0xffffffff);
+                c.drawText( label, txtX, txtY, paint);
+
+                // Draw the high score
+                int best = GameResources.shp.getInt("best_"+level, -1);
+                if( best >= 0) {
+                    String bestText = getContext().getString(R.string.best) + " " + best;
+                    paint.setTypeface(italic);
+                    txtX = boardPos.x - paint.measureText(bestText) / 2;
+                    txtY = y + previewHeight + (up + down) + up;
+                    paint.setColor(0xff000000);
+                    c.drawText(bestText, txtX + txtShadowOffset, txtY + txtShadowOffset, paint);
+                    paint.setColor(0xffffffff);
+                    c.drawText(bestText, txtX, txtY, paint);
+                    paint.setTypeface(normal);
+                }
+            } else {
+                // Draw the lock icon
+
+                int x = boardPos.x - lockSize * 96 / 256;
+                int y = boardPos.y - lockSize * 91 / 128;
+
+                b.blit(R.drawable.misc, 0, 479, 128, 128,
+                        x - lockSize / 8 + 10, y + 10, lockSize, lockSize);
+                b.blit(R.drawable.misc, 144, 479, 96, 128,
+                        x, y, lockSize * 96 / 128, lockSize);
+
+                // Draw the board number on the lock
+                String label = (level+1) + "";
+                float txtX = boardPos.x - paint.measureText(label) / 2;
+                float txtY = boardPos.y + (up - down) / 2;
+                paint.setColor(0xff000000);
+                c.drawText( label, txtX, txtY, paint);
             }
         }
         b.popTransform();
@@ -314,19 +356,14 @@ public class LevelSelectView extends View
     private int pickLevel( float x, float y)
     {
         x += xOffset * getWidth();
-        int page = (int)Math.floor(x / getWidth());
-        x -= page * getWidth();
-        y -= vmargin;
-        int j = (int)Math.floor(y / vSpacing);
-        if( j < 0 || j >= rows) return -1;
-        if( y - j*vSpacing > previewHeight) return -1;
-        x -= hmargin;
-        int i = (int)Math.floor(x / hSpacing);
-        if( i < 0 || i >= cols) return -1;
-        if( x - i*hSpacing > previewWidth) return -1;
-        int level = (page*rows+j)*cols+i;
-        if(level < 0 || level >= gr.numlevels) return -1;
-        return level;
+
+        for( int level = 0; level < gr.numlevels; ++level) {
+            getBoardPosition(level, boardPos);
+            if( Math.abs(x - boardPos.x) <= previewWidth / 2 &&
+                    Math.abs(y - boardPos.y) <= previewHeight / 2)
+                return level;
+        }
+        return -1;
     }
 
     private void fling( float velX)
