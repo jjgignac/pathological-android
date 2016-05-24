@@ -46,6 +46,7 @@ author=John-Paul Gignac and James Porto
 boardtimer=60
 launchtimer=4
 firstcolors=6,6,6,6,3,2,4
+pos=0,0
 +---+---+---+---+---+---+---+---+
 |   |   |   |   |   | 6 |Ob | c |
 |   |   |   |   |   | 3 | a | 9 |
@@ -60,6 +61,8 @@ author=John-Paul Gignac
 boardtimer=60
 launchtimer=4
 firstcolors=3,3,3,2,2,3,2,2,6,4
+pos=0,1
+from=1
 +---+---+---+---+---+---+---+---+
 |   |   |   |   |   |O5 |   |   |
 |   |   |   |   |   | 5 |   |   |
@@ -74,6 +77,7 @@ author=John-Paul Gignac
 boardtimer=600
 launchtimer=90
 maxmarbles=5
+pos=1,1
 +---+---+---+---+---+---+---+---+
 |   |   |   |O7 | a |Od |   |   |
 |   |   |   | 5 |   | 5 |   |   |
@@ -88,6 +92,7 @@ author=Mike Brenneman
 boardtimer=300
 launchtimer=10
 maxmarbles=5
+pos=1,0
 +---+---+---+---+---+---+---+---+
 |   |O5 |   |   |   |   |O5 |   |
 |   | 5 |   |   |   |   | 5 |   |
@@ -102,6 +107,7 @@ author=John-Paul Gignac <jp@gignac.org>
 boardtimer=300
 launchtimer=15
 maxmarbles=5
+pos=2,0
 +---+---+---+---+---+---+---+---+
 |   |O7 | a | a | a | a |Od |   |
 |   | 3 | a |ve |ve | a | 9 |   |
@@ -114,6 +120,8 @@ maxmarbles=5
 name=Follow the Leader
 author=John-Paul Gignac <jp@gignac.org>
 boardtimer=240
+pos=1,2
+from=3
 +---+---+---+---+---+---+---+---+
 | 6 | a | a |O9 |O2 | a | a | c |
 | 5 | 6 | c | 6 | c | 6 | a | 9 |
@@ -126,6 +134,7 @@ boardtimer=240
 name=Tickled Pink
 author=Kim Gignac
 boardtimer=150
+pos=2,2
 +---+---+---+---+---+---+---+---+
 |   |   |   |O5 |   |O5 |   |   |
 |   |   |   | 5 |   | 5 |   |   |
@@ -140,6 +149,7 @@ author=Mike Brenneman
 boardtimer=180
 launchtimer=4
 maxmarbles=5
+pos=2,1
 +---+---+---+---+---+---+---+---+
 |   |   |O5 |   |   |O5 |   |   |
 |   |   | 5 |   |   | 5 |   |   |
@@ -155,6 +165,7 @@ colors=2,3,4,6
 boardtimer=240
 launchtimer=2
 maxmarbles=5
+pos=3,1
 +---+---+---+---+---+---+---+---+
 |   |   | 5 |   |   |   |   |   |
 |O2 |&a4|Of | a | a |&a3| a |O8 |
@@ -167,6 +178,7 @@ maxmarbles=5
 name=Stop and Go
 author=John-Paul Gignac <jp@gignac.org>
 boardtimer=120
+pos=3,0
 +---+---+---+---+---+---+---+---+
 |   |   |O7 | a | c |   |   |   |
 |   |   | 5 |   |@5 |   |   |   |
@@ -182,6 +194,8 @@ colors=2,3,4,6
 boardtimer=300
 launchtimer=8
 maxmarbles=5
+pos=3,2
+from=9
 +---+---+---+---+---+---+---+---+
 |   |   |O5 |   |   |O5 |   |   |
 |   |   | 5 |O6 |Oc | 5 |   |   |
@@ -197,6 +211,8 @@ colors=2,3,4,6
 boardtimer=240
 launchtimer=6
 maxmarbles=5
+pos=4,0
+from=10
 +---+---+---+---+---+---+---+---+
 |   |O5 |   |   |   |   |O5 |   |
 |   | 5 |   |   |   |   | 5 |   |
@@ -209,6 +225,8 @@ maxmarbles=5
 name=Disconnect
 author=Kim Gignac
 boardtimer=120
+pos=4,2
+from=11
 +---+---+---+---+---+---+---+---+
 |   |   |O7 | a | a | c |   |   |
 |   |   | 5 |   |   |O1 |   |   |
@@ -224,6 +242,8 @@ colors=2,3,4,6
 boardtimer=300
 launchtimer=10
 maxmarbles=5
+pos=5,0
+from=12
 +---+---+---+---+---+---+---+---+
 | 6 |Of | a | c |O7 | c |O5 |   |
 | 3 | f | a | f | f | 9 | 5 |   |
@@ -238,6 +258,8 @@ author=Mike Brenneman
 boardtimer=240
 launchtimer=6
 maxmarbles=5
+pos=5,2
+from=13
 +---+---+---+---+---+---+---+---+
 |   | 6 |Od |   |   |O7 | c |   |
 |   |O1 | 5 |   |   | 5 |O1 |   |
@@ -252,6 +274,8 @@ author=John-Paul Gignac <jp@gignac.org>
 colors=6
 boardtimer=120
 launchtimer=2
+pos=6,0
+from=14
 +---+---+---+---+---+---+---+---+
 |   |   |   |   |O7 |Od |   |   |
 |   |   |   |   |O3 |O9 |   |   |
@@ -265,6 +289,8 @@ name=Rules of the Road
 author=Kim Gignac
 colors=2,3,4,6
 boardtimer=150
+pos=5,1
+from=14,15
 +---+---+---+---+---+---+---+---+
 |   |   |&66|Of | a |vc |   |   |
 |   |   |O1 | 5 |   |O3 |O8 |   |
@@ -277,6 +303,7 @@ boardtimer=150
 name=Criss-Cross
 author=John-Paul Gignac <jp@gignac.org>
 boardtimer=300
+pos=6,1
 +---+---+---+---+---+---+---+---+
 |   |O5 |O5 |   |   |O5 |O5 |   |
 |   | 5 | 5 |   |   | 5 | 5 |   |
@@ -291,6 +318,7 @@ author=John-Paul Gignac <jp@gignac.org>
 colors=2,3,4,6
 maxmarbles=3
 boardtimer=210
+pos=6,2
 +---+---+---+---+---+---+---+---+
 |   | 6 |Of | a |#a3|Oe |&82|   |
 |   |X1 | 5 |   |   | 5 |   |   |
@@ -305,6 +333,7 @@ author=Mike Brenneman
 boardtimer=180
 launchtimer=4
 maxmarbles=5
+pos=7,2
 +---+---+---+---+---+---+---+---+
 |   |   |   |O7 |Od |   |   |   |
 |   |   |=4f|=1f|=1a|=4a|   |   |
@@ -318,6 +347,7 @@ name=Multiplicity
 author=John-Paul Gignac <jp@gignac.org>
 boardtimer=60
 launchtimer=3
+pos=7,1
 +---+---+---+---+---+---+---+---+
 |   |   | 6 |Of | a | c |   |   |
 |   |   |*52|*34| c |*52|   |   |
@@ -330,6 +360,7 @@ launchtimer=3
 name=Neither Here nor There
 author=John-Paul Gignac <jp@gignac.org>
 boardtimer=180
+pos=8,1
 +---+---+---+---+---+---+---+---+
 |   |   |O7 | a |<a>| a | c |   |
 |   |   | 5 |   |   |   |O5 |   |
@@ -344,6 +375,8 @@ author=John-Paul Gignac
 boardtimer=210
 launchtimer=10
 maxmarbles=5
+pos=8,0
+from=16,22
 +---+---+---+---+---+---+---+---+
 |   |   | 6 |Od | 6 |Od |   |   |
 |   | 6 | f | f | 9 | 5 |   |   |
@@ -356,6 +389,7 @@ maxmarbles=5
 name=Which Way is Left?
 author=John-Paul Gignac <jp@gignac.org>
 colors=0,2,7
+pos=9,0
 +---+---+---+---+---+---+---+---+
 |   |   |   |O5 |   |   |   |   |
 |   |   |   | 5 |   |   |   |   |
@@ -370,6 +404,7 @@ author=John-Paul Gignac
 boardtimer=600
 launchtimer=90
 maxmarbles=30
+pos=9,1
 +---+---+---+---+---+---+---+---+
 |   |O7 |<e |<e |<e |<e | c |   |
 |   |*54| 5 | 5 | 5 | 5 | 5 |   |
@@ -384,6 +419,7 @@ author=John-Paul Gignac <jp@gignac.org>
 maxmarbles=9
 launchtimer=2
 colors=0,1,2,3,4,5,6,7
+pos=9,2
 +---+---+---+---+---+---+---+---+
 | 6 | a | a | a |<ev| a |<ev|<dv|
 | 5 | 6 | a | a | f |<ev| f |<dv|
@@ -403,6 +439,7 @@ colors=2,3,4,6
 launchtimer=20
 maxmarbles=10
 boardtimer=240
+pos=10,2
 +---+---+---+---+---+---+---+---+
 |   |   |   |O7 | c |O7 | c |   |
 |   |   |   | 3 |@f |<9 |O1 |   |
@@ -417,6 +454,7 @@ author=John-Paul Gignac <jp@gignac.org>
 colors=3
 launchtimer=20
 boardtimer=240
+pos=10,1
 +---+---+---+---+---+---+---+---+
 |   |   |O7 |Of |Of |Od |   |   |
 |   |   |O7 |Of |Of |Od |   |   |
@@ -429,6 +467,8 @@ boardtimer=240
 name=Wildberries
 author=Kim Gignac
 maxmarbles=10
+pos=11,2
+from=27
 +---+---+---+---+---+---+---+---+
 |   | 5 |   |   |   |v6 |O9 |   |
 |&62|<b>|&a6| a |>ev|@f |=a | c |
@@ -441,6 +481,7 @@ maxmarbles=10
 name=Greetings, Earthling 
 author=John-Paul Gignac <jp@gignac.org>
 colors=0,2,4,6,7
+pos=11,1
 +---+---+---+---+---+---+---+---+
 |   |   |O7 | a |Od |   |   |   |
 |   |O4 | 3 |ve | 9 |O4 |   |   |
@@ -456,6 +497,7 @@ colors=2,3,4,6
 boardtimer=180
 launchtimer=6
 maxmarbles=5
+pos=11,0
 +---+---+---+---+---+---+---+---+
 |   |O7 | a |=aa|&a2| a |Od |   |
 |   |#52|   |   |   |   |#52|   |
@@ -467,6 +509,7 @@ maxmarbles=5
 
 name=Lily Pads
 author=Kim Gignac
+pos=12,0
 +---+---+---+---+---+---+---+---+
 |   |O7 |&a7| c |   |O5 |   |   |
 |   | 5 |   |=1a|   | 5 |   |   |
@@ -482,6 +525,7 @@ boardtimer=360
 launchtimer=20
 maxmarbles=10
 colors=2,5,3,7,8
+pos=12,1
 +---+---+---+---+---+---+---+---+
 |   |   |=4a|O7 |Od |=4b|   |   |
 |   |O2 |@f2|vd<|>7v|@f3|O8 |   |
@@ -494,6 +538,7 @@ colors=2,5,3,7,8
 name=Inky Binky Bonky
 boardtimer=240
 colors=2,4,6
+pos=12,2
 +---+---+---+---+---+---+---+---+
 |v6>| a |<dv|O1 |   |O4 |   |   |
 |>7v| c | 5 | 6 | c | 5 |   |   |
@@ -508,6 +553,8 @@ author=Mike Brenneman
 boardtimer=480
 launchtimer=6
 maxmarbles=5
+pos=13,1
+from=33
 +---+---+---+---+---+---+---+---+
 |   |O5 |O2 |=at|O8 |   |O5 |   |
 |O4 |O7 |Oe | a |=ab|Oe |Od |O4 |
@@ -520,6 +567,8 @@ maxmarbles=5
 name=It's All in the Wrist
 author=John-Paul Gignac <jp@gignac.org>
 colors=0,1,2,3,4,5,6,7
+pos=13,2
+from=34,35
 +---+---+---+---+---+---+---+---+
 |X1 |O1 |O1 |O1 |O1 |O1 |O1 |O1 |
 |   |   |   |   |   |   |   |   |
@@ -532,6 +581,7 @@ colors=0,1,2,3,4,5,6,7
 name=The Asylum
 author=Kim Gignac
 colors=2,3,4,6
+pos=14,2
 +---+---+---+---+---+---+---+---+
 |   |O3 | c |   |   | 6 |O9 |   |
 |   |   | 3 |Oc |O2 | 9 |   |   |
@@ -548,6 +598,7 @@ maxmarbles=16
 boardtimer=180
 launchtimer=1
 stoplight=2,3,7
+pos=14,1
 +---+---+---+---+---+---+---+---+
 |>6v|*82|   |   |   | 6 | 9 |   |
 |05^| 6 | a | a | a |@f |>a |O8 |
@@ -563,6 +614,7 @@ colors=0
 maxmarbles=20
 boardtimer=600
 launchtimer=1
+pos=14,0
 +---+---+---+---+---+---+---+---+
 |   |   |   | 6 | c | 6 | 9 |   |
 |O2 |#a6|<a |@f |@f |@f | c |X4 |
@@ -577,6 +629,7 @@ author=John-Paul Gignac <jp@gignac.org>
 maxmarbles=9
 launchtimer=2
 colors=0,1,2,3,4,5,6,7
+pos=15,0
 +---+---+---+---+---+---+---+---+
 | 6 | a | a |>b | a | a | a | c |
 |v7^|ve<|ve<|ve<|ve<|ve<|ve<|vd<|
@@ -596,6 +649,7 @@ colors=2,3,4,6
 boardtimer=180
 launchtimer=2
 maxmarbles=5
+pos=16,0
 +---+---+---+---+---+---+---+---+
 |   |   |   | 5 |   |   |   |   |
 |   |>2 |&a4|Od |   |   |   |   |
@@ -612,6 +666,7 @@ maxmarbles=16
 boardtimer=180
 launchtimer=1
 stoplight=7,2,3
+pos=17,0
 +---+---+---+---+---+---+---+---+
 |>6v|*82|   |   |!  | 6 | 9 |   |
 |05^| 6 | a | a | a |@f |>a |O8 |
@@ -627,6 +682,7 @@ colors=2,3,4,6
 boardtimer=320
 launchtimer=3
 maxmarbles=5
+pos=17,1
 +---+---+---+---+---+---+---+---+
 |O5 |   |O4 |   |O4 |   |O4 |   |
 | 5 |   |#53|!  |&56|   |=5a|   |
@@ -640,6 +696,8 @@ name=Tick Tock
 author=John-Paul Gignac <jp@gignac.org>
 launchtimer=6
 boardtimer=120
+pos=16,1
+from=41,43
 +---+---+---+---+---+---+---+---+
 |   |   |   |   | 3 | a |&c3|   |
 |   | 6 | a | a | a | a | f | c |
@@ -655,6 +713,7 @@ colors=0
 maxmarbles=26
 boardtimer=600
 launchtimer=1
+pos=15,1
 +---+---+---+---+---+---+---+---+
 |O2 |#c6|X4 | 6 | c | 6 | 9 |X4 |
 |O4 |^3 |@f |@f |@f |@f | c | 5 |
@@ -671,6 +730,8 @@ boardtimer=300
 launchtimer=4
 maxmarbles=5
 stoplight=6,4,2
+pos=16,2
+from=44
 +---+---+---+---+---+---+---+---+
 |O5 |   |O5 |   |   |O5 |   |O5 |
 | 5 |%  | 5 |   |   | 5 |!  | 5 |
@@ -686,6 +747,7 @@ colors=2,3,4,6
 boardtimer=360
 launchtimer=30
 maxmarbles=6
+pos=17,2
 +---+---+---+---+---+---+---+---+
 |O6 |&a0|#c6|@6 |*a2|ve<|Ob |O9 |
 |&50|X6 |^d<|@3 |ve |<b | a | c |
@@ -699,6 +761,7 @@ name=Hot Potato
 author=Kim Gignac
 boardtimer=180
 colors=2,4,6,7
+pos=18,2
 +---+---+---+---+---+---+---+---+
 | 6 | a | a |O9 |O2 | a | a | c |
 | 5 | 6 | c | 6 | c | 6 | a |O9 |
@@ -714,6 +777,7 @@ colors=2,3,4,6
 boardtimer=360
 launchtimer=3
 maxmarbles=5
+pos=18,1
 +---+---+---+---+---+---+---+---+
 |   |O5 |   |   |   | 6 | c |   |
 |   | 5 |O6 |Oc |   | 3 |&f3|O8 |
@@ -728,6 +792,7 @@ author=Mike Brenneman
 boardtimer=60
 launchtimer=1
 maxmarbles=5
+pos=18,0
 +---+---+---+---+---+---+---+---+
 | 5 |   |   |   |   |   |O5 |   |
 |O5 |   |O4 |   |   |   |&54|   |
@@ -743,6 +808,7 @@ colors=2,3,4,6
 boardtimer=360
 launchtimer=3
 maxmarbles=5
+pos=19,0
 +---+---+---+---+---+---+---+---+
 |   |O7 | a | a | a | a | a |Oc |
 |   | 3 | a |Oe |Oe | a | c |=1a|
@@ -758,6 +824,7 @@ maxmarbles=10
 launchtimer=4
 boardtimer=120
 colors=1,2,3,6
+pos=19,1
 +---+---+---+---+---+---+---+---+
 | 6 |ve>| c | 5 |   | 6 |>ev| c |
 |^7>|Of | 9 | 3 | c |^7>|Of |<dv|

@@ -70,6 +70,8 @@ public class GameResources
     public final int numlevels;
     public Vector<String> boardNames;
     public Vector<Point> boardPositions;
+    public Vector<int[]> fromBoards;
+    public int maxXPos;
 
     public static synchronized GameResources getInstance(Context context) {
         if(instance == null) instance = new GameResources(context);
@@ -148,10 +150,38 @@ public class GameResources
         return context.getResources().openRawResource(resid);
     }
 
+    public int nextLevel(int level) {
+        return nextLevel(level, level+1);
+    }
+
+    private int nextLevel(int level, int minResult) {
+        if( level == numlevels - 1) return -1;
+        for( int i = minResult; i < numlevels; i++) {
+            for( int from : fromBoards.elementAt(i)) {
+                if( from == level) return i;
+            }
+        }
+        int result = minResult;
+        for( int from : fromBoards.elementAt(level)) {
+            result = Math.min(result, nextLevel(from, minResult));
+        }
+        return result;
+    }
+
+    public boolean isUnlocked(int level) {
+        if( level == 0) return true;
+        if( GameResources.shp.getInt("best_"+level, -1) != -1) return true;
+        for( int from : fromBoards.elementAt(level)) {
+            if( GameResources.shp.getInt("best_"+from, -1) != -1) return true;
+        }
+        return false;
+    }
+
     private void getBoardInfo()
     {
         boardNames = new Vector<>();
         boardPositions = new Vector<>();
+        fromBoards = new Vector<>();
         BufferedReader f = null;
 
         try {
@@ -161,15 +191,23 @@ public class GameResources
                 String line = f.readLine();
                 if( line==null) break;
                 if( line.startsWith("name=")) {
-                    int level = boardNames.size();
-
                     boardNames.add(line.substring(5));
-
-                    int y = ((level / 6) & 1) == 0 ?
-                            (level % 6) / 2 : 2 - (level % 6) / 2;
-                    int x = (level / 6) * 2 +
-                            ((level ^ (level / 2) ^ (level / 6)) & 1);
+                    if( fromBoards.size() < boardNames.size())
+                        fromBoards.add(new int[] {fromBoards.size()-1});
+                } else if( line.startsWith("pos=")) {
+                    String[] pos = line.substring(4).split(",");
+                    int x = Integer.parseInt(pos[0]);
+                    int y = Integer.parseInt(pos[1]);
                     boardPositions.add(new Point(x,y));
+                    maxXPos = Math.max(maxXPos, x);
+                } else if( line.startsWith("from=")) {
+                    String[] fromStr = line.substring(5).split(",");
+                    int[] from = new int[fromStr.length];
+                    for (int i=0; i < fromStr.length; i++) {
+                        from[i] = Integer.parseInt(fromStr[i])-1;
+                    }
+                    if( fromBoards.size() < boardNames.size()) fromBoards.add(from);
+                    else fromBoards.set(fromBoards.size()-1, from);
                 }
             }
         } catch(IOException e) {

@@ -315,13 +315,6 @@ public class GameActivity extends Activity
 
         int prevBest = GameResources.shp.getInt("best_"+level, -1);
 
-        if(level >= GameResources.shp.getInt("nUnlocked",1)-1
-                && level < gr.numlevels - 1) {
-            SharedPreferences.Editor e = GameResources.shp.edit();
-            e.putInt("nUnlocked",level+2);
-            e.apply();
-        }
-
         if( total > prevBest) {
             SharedPreferences.Editor e = GameResources.shp.edit();
             e.putInt("best_"+level, total);
@@ -360,7 +353,7 @@ public class GameActivity extends Activity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         SharedPreferences.Editor e = GameResources.shp.edit();
-                        e.putInt("level", level + 1);
+                        e.putInt("level", Math.max(level, gr.nextLevel(level)));
                         e.apply();
                         finish();
                     }
@@ -371,11 +364,11 @@ public class GameActivity extends Activity
                         playLevel(level);
                     }
                 });
-        if(level < gr.numlevels-1) {
+        if(gr.nextLevel(level) != -1) {
             builder.setNeutralButton(R.string.next_level, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    playLevel(level + 1);
+                    playLevel(gr.nextLevel(level));
                 }
             });
         }

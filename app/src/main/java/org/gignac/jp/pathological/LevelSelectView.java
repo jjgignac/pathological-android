@@ -47,7 +47,6 @@ public class LevelSelectView extends View
     private float xOffset;
     private float vel;
     private long prevTime;
-    private int nUnlocked=0;
     private int highlight;
     private final Canvas c = new Canvas();
     private final SpriteCache sc;
@@ -75,8 +74,6 @@ public class LevelSelectView extends View
     }
 
     public void onResume() {
-        nUnlocked = GameResources.shp.getInt("nUnlocked",1);
-
         IntroScreen.setup(sc);
         mNeedsPrep = true;
     }
@@ -155,8 +152,8 @@ public class LevelSelectView extends View
             }
         }
 
-        int highlightPage = highlight / (rows * cols);
-        int npages = (gr.numlevels + rows*cols - 1) / (rows*cols);
+        int highlightPage = gr.boardPositions.elementAt(highlight).x / cols;
+        int npages = 1 + gr.maxXPos / cols;
         float pos = xOffset;
         float prevPos = pos;
         int a = Math.round(pos);
@@ -200,8 +197,9 @@ public class LevelSelectView extends View
 
         if( mNeedsPrep) {
             mNeedsPrep = false;
-            highlight = GameResources.shp.getInt("level", 0);
-            int highlightPage = highlight / (rows * cols);
+            highlight = Math.max(0, Math.min( gr.numlevels - 1,
+                    GameResources.shp.getInt("level", 0)));
+            int highlightPage = gr.boardPositions.elementAt(highlight).x / cols;
             if( xOffset > highlightPage + 1) {
                 xOffset = highlightPage + 1;
             } else if( xOffset < highlightPage - 1) {
@@ -210,7 +208,15 @@ public class LevelSelectView extends View
             mZoomDelay = 1000;
             prevTime = SystemClock.uptimeMillis();
 
-            Preview.cache(getContext(),sc,gr,nUnlocked);
+            int maxUnlocked = 0;
+            for( int level = gr.numlevels-1; level > 0; level--) {
+                if( gr.isUnlocked(level)) {
+                    maxUnlocked = level;
+                    break;
+                }
+            }
+
+            Preview.cache(getContext(), sc, gr, maxUnlocked + 1);
         }
 
         update();
@@ -235,21 +241,23 @@ public class LevelSelectView extends View
             getBoardPosition(level, boardPos);
 
             if (level > 0) {
-                // Draw a track from the parent board
-                getBoardPosition(level - 1, parentPos);
+                for( int from : gr.fromBoards.elementAt(level)) {
+                    // Draw tracks from the parent board(s)
+                    getBoardPosition(from, parentPos);
 
-                if( parentPos.x == boardPos.x) {
-                    int minY = Math.min(parentPos.y, boardPos.y);
-                    int maxY = Math.max(parentPos.y, boardPos.y);
-                    b.blit(R.drawable.misc, 192, 400, 30, 10,
-                            parentPos.x - previewWidth / 8, minY,
-                            previewWidth / 4, maxY - minY);
-                } else {
-                    int minX = Math.min(parentPos.x, boardPos.x);
-                    int maxX = Math.max(parentPos.x, boardPos.x);
-                    b.blit(R.drawable.misc, 420, 394, 10, 30,
-                            minX, parentPos.y - previewWidth / 8,
-                            maxX - minX, previewWidth / 4);
+                    if (parentPos.x == boardPos.x) {
+                        int minY = Math.min(parentPos.y, boardPos.y);
+                        int maxY = Math.max(parentPos.y, boardPos.y);
+                        b.blit(R.drawable.misc, 192, 400, 30, 10,
+                                parentPos.x - previewWidth / 8, minY,
+                                previewWidth / 4, maxY - minY);
+                    } else {
+                        int minX = Math.min(parentPos.x, boardPos.x);
+                        int maxX = Math.max(parentPos.x, boardPos.x);
+                        b.blit(R.drawable.misc, 420, 394, 10, 30,
+                                minX, parentPos.y - previewWidth / 8,
+                                maxX - minX, previewWidth / 4);
+                    }
                 }
             }
         }
@@ -257,7 +265,7 @@ public class LevelSelectView extends View
         for( int level = 0; level < gr.numlevels; level++) {
             getBoardPosition(level, boardPos);
 
-            if( level < nUnlocked) {
+            if( gr.isUnlocked(level)) {
                 // Draw the board preview
 
                 int x = boardPos.x - previewWidth / 2;
@@ -277,8 +285,7 @@ public class LevelSelectView extends View
                 Preview.blit(b,level,x,y, previewWidth, previewHeight);
 
                 // Draw the board title
-                String label = (level+1) + (level < nUnlocked ?
-                        ". "+gr.boardNames.elementAt(level) : "");
+                String label = (level+1) + ". " + gr.boardNames.elementAt(level);
                 float txtX = boardPos.x - paint.measureText(label) / 2;
                 float txtY = y + previewHeight + up;
                 float txtShadowOffset = previewWidth * 0.02f;
@@ -345,7 +352,7 @@ public class LevelSelectView extends View
     {
         int level = pickLevel(x,y);
         if(level == -1) return;
-        if(BuildConfig.BUILD_TYPE.equals("release") && level >= nUnlocked) return;
+        if(BuildConfig.BUILD_TYPE.equals("release") && !gr.isUnlocked(level)) return;
         highlight = level;
         invalidate();
         Intent intent = new Intent(getContext(),GameActivity.class);
