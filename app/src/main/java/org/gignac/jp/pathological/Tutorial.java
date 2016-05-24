@@ -61,7 +61,8 @@ class Tutorial {
                 if( dt < 1.0f) {
                     drawSpinWheelTutorial(board.gr, b, 1.0f - dt, dtSnapshot + dt, true);
                 } else {
-                    stage = -1; // done
+                    stage = 1; // start again
+                    stageStartTime = time;
                 }
                 break;
             case 4:
