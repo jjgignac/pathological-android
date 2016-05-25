@@ -60,16 +60,7 @@ public class MainActivity extends Activity
             }
         }
 
-        GameResources.shp = getSharedPreferences(
-                "org.gignac.jp.pathological.Pathological", Context.MODE_PRIVATE);
-
-        // If we just upgraded, delete the cached preview images
-        if( BuildConfig.VERSION_CODE != GameResources.shp.getInt("version", 1)) {
-            SharedPreferences.Editor e = GameResources.shp.edit();
-            e.putInt("version", BuildConfig.VERSION_CODE);
-            e.apply();
-            Preview.clearCache(this);
-        }
+        GameResources.setup(this);
 
         setContentView(R.layout.main);
         setRequestedOrientation(

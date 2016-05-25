@@ -66,7 +66,7 @@ public class LevelSelectView extends View
         g = new GestureDetector(context, new LevelSelectGestureListener(this));
         g.setIsLongpressEnabled(false);
         gr = GameResources.getInstance(getContext());
-        xOffset = GameResources.shp.getInt("level", 0) / (rows * cols);
+        xOffset = GameResources.getCurrentLevel() / (rows * cols);
 
         updater = new Runnable() {
             public void run() { update(); }
@@ -198,7 +198,7 @@ public class LevelSelectView extends View
         if( mNeedsPrep) {
             mNeedsPrep = false;
             highlight = Math.max(0, Math.min( gr.numlevels - 1,
-                    GameResources.shp.getInt("level", 0)));
+                    GameResources.getCurrentLevel()));
             int highlightPage = gr.boardPositions.elementAt(highlight).x / cols;
             if( xOffset > highlightPage + 1) {
                 xOffset = highlightPage + 1;
@@ -295,7 +295,7 @@ public class LevelSelectView extends View
                 c.drawText( label, txtX, txtY, paint);
 
                 // Draw the high score
-                int best = GameResources.shp.getInt("best_"+level, -1);
+                int best = GameResources.bestScore(level);
                 if( best >= 0) {
                     String bestText = getContext().getString(R.string.best) + " " + best;
                     paint.setTypeface(italic);

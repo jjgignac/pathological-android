@@ -27,7 +27,7 @@ import java.io.*;
 public class GameResources
 {
     private static GameResources instance;
-    public static SharedPreferences shp;
+    private static SharedPreferences shp;
     public Context context;
     public final Random random;
     private static final int[] sound_resid = {
@@ -219,5 +219,39 @@ public class GameResources
                 //
             }
         }
+    }
+
+    public static void setup(Context context) {
+        shp = context.getSharedPreferences(
+                "org.gignac.jp.pathological.Pathological", Context.MODE_PRIVATE);
+
+        // If we just upgraded, delete the cached preview images
+        if( BuildConfig.VERSION_CODE != GameResources.shp.getInt("version", 1)) {
+            SharedPreferences.Editor e = GameResources.shp.edit();
+            e.putInt("version", BuildConfig.VERSION_CODE);
+            e.apply();
+            Preview.clearCache(context);
+        }
+    }
+
+    public static int getCurrentLevel() {
+        return shp.getInt("level", 0);
+    }
+
+    public static void setCurrentLevel(int level) {
+        if( level == getCurrentLevel()) return;
+        SharedPreferences.Editor e = GameResources.shp.edit();
+        e.putInt("level", level);
+        e.apply();
+    }
+
+    public static int bestScore(int level) {
+        return GameResources.shp.getInt("best_"+level, -1);
+    }
+
+    public static void setBestScore(int level, int score) {
+        SharedPreferences.Editor e = GameResources.shp.edit();
+        e.putInt("best_" + level, score);
+        e.apply();
     }
 }

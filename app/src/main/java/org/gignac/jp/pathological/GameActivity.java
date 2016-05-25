@@ -157,11 +157,7 @@ public class GameActivity extends Activity
     }
 
     public void playLevel(final int level) {
-        if( level != GameResources.shp.getInt("level", 0)) {
-            SharedPreferences.Editor e = GameResources.shp.edit();
-            e.putInt("level", level);
-            e.apply();
-        }
+        GameResources.setCurrentLevel(level);
         loadLevel(level);
         music.resume();
     }
@@ -313,13 +309,8 @@ public class GameActivity extends Activity
                 emptyHolePercentage, timeRemainingPercentage,
                 ReportStatsTask.REASON_COMPLETED).execute();
 
-        int prevBest = GameResources.shp.getInt("best_"+level, -1);
-
-        if( total > prevBest) {
-            SharedPreferences.Editor e = GameResources.shp.edit();
-            e.putInt("best_"+level, total);
-            e.apply();
-        }
+        int prevBest = GameResources.bestScore(level);
+        if( total > prevBest) GameResources.setBestScore(level, total);
 
         View view = getLayoutInflater().inflate( R.layout.level_cleared,
                 (ViewGroup)gv.getRootView(), false);
@@ -352,9 +343,7 @@ public class GameActivity extends Activity
                 .setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences.Editor e = GameResources.shp.edit();
-                        e.putInt("level", Math.max(level, gr.nextLevel(level)));
-                        e.apply();
+                        GameResources.setCurrentLevel(Math.max(level, gr.nextLevel(level)));
                         finish();
                     }
                 })
