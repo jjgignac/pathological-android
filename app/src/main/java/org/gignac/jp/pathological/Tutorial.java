@@ -92,7 +92,9 @@ class Tutorial {
                 if( dt < 1.0f) {
                     drawEjectTutorial(board.gr, b, 1.0f - dt, dtSnapshot, true);
                 } else {
-                    stage = -1; // done
+                    staticLayout = null;
+                    stage = 8;
+                    stageStartTime = time;
                 }
                 break;
             case 8:
