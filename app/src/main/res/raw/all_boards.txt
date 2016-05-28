@@ -43,8 +43,8 @@
 
 name=Pathology 101
 author=John-Paul Gignac and James Porto
-boardtimer=60
-launchtimer=4
+boardtimer=2400
+launchtimer=300
 firstcolors=6,6,6,6,3,2,4
 pos=0,0
 +---+---+---+---+---+---+---+---+
@@ -58,8 +58,8 @@ pos=0,0
 
 name=Bicycle
 author=John-Paul Gignac
-boardtimer=60
-launchtimer=4
+boardtimer=2400
+launchtimer=300
 firstcolors=3,3,3,2,2,3,2,2,6,4
 pos=0,1
 from=1
