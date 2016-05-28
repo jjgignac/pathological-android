@@ -2,11 +2,16 @@ package org.gignac.jp.pathological;
 
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 
 class Tutorial {
     private static final Paint paint = new Paint();
     private static final RectF rect = new RectF();
     private static final int[] marbles = { 0, 0, 0, 0 };
+    private static final TextPaint textPaint = new TextPaint();
+    private StaticLayout staticLayout;
 
     private final Board board;
     private int stage;
@@ -41,7 +46,7 @@ class Tutorial {
                 break;
             case 1:
                 // Introduce the spin tutorial
-                drawSpinWheelTutorial(board.gr, b, Math.min(dt, 1.0f), 0.0f, false);
+                drawSpinWheelTutorial(board.gr, b, Math.min(dt, 1.0f), 0.0f);
                 if( dt >= 1.0f) {
                     stage = 2;
                     stageStartTime = time;
@@ -49,7 +54,7 @@ class Tutorial {
                 break;
             case 2:
                 // Animate the spin tutorial
-                drawSpinWheelTutorial( board.gr, b, 1.0f, dt, false);
+                drawSpinWheelTutorial( board.gr, b, 1.0f, dt);
                 if( dt >= 7f) {
                     stageStartTime = time;
                 }
@@ -137,23 +142,35 @@ class Tutorial {
         b.blit(R.drawable.misc, 242, 434, 121, 275, x - 40, y - 10);
     }
 
-    private static void drawSpinWheelTutorial(GameResources gr, CanvasBlitter b,
-                                              float visibility, float time, boolean done) {
+    private void drawSpinWheelTutorial(GameResources gr, CanvasBlitter b,
+                                       float visibility, float time) {
         int x = Tile.tile_size / 2;
-        int y = Tile.tile_size * 7 / 2;
-        int w = Tile.tile_size * 5 / 2;
+        int y = Tile.tile_size * 3;
+        int w = Tile.tile_size * 9 / 2;
         int h = Tile.tile_size * 3;
+        int textWidth = Tile.tile_size * 9 / 4;
+        int textMargin = 14;
 
         int offset = (int)Math.round(
                 Math.pow(1f - visibility, 1.8) * Tile.tile_size * 7);
 
-        if( done) y += offset;
-        else x += offset;
+        x += offset;
 
         int wheelX = x + Tile.tile_size * 3 / 5;
         int wheelY = y + Tile.tile_size / 3;
 
         drawFrame(b, x, y, w, h);
+
+        if( staticLayout == null) {
+            textPaint.setTextSize(24);
+            staticLayout = new StaticLayout(gr.context.getString(R.string.turn_wheel_instructions),
+                    textPaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
+        }
+
+        b.c.save();
+        b.c.translate(x + w - textWidth - textMargin, y + textMargin);
+        staticLayout.draw(b.c);
+        b.c.restore();
 
         // Adjust time a bit to control the animation speed and phase
         time = time * 0.5f + 0.2f;
