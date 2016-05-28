@@ -160,6 +160,7 @@ public class GameActivity extends Activity
         GameResources.setCurrentLevel(level);
         loadLevel(level);
         music.resume();
+        new ReportStatsTask(this, level).execute();
     }
 
     private void loadLevel(int level) {
