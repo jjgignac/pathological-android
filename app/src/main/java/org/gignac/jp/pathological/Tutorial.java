@@ -50,18 +50,7 @@ class Tutorial {
             case 2:
                 // Animate the spin tutorial
                 drawSpinWheelTutorial( board.gr, b, 1.0f, dt, false);
-                if( dt > 6.5f) {
-                    stage = 3;
-                    stageStartTime = time;
-                    dtSnapshot = dt;
-                }
-                break;
-            case 3:
-                // Send the spin tutorial away
-                if( dt < 1.0f) {
-                    drawSpinWheelTutorial(board.gr, b, 1.0f - dt, dtSnapshot + dt, true);
-                } else {
-                    stage = 1; // start again
+                if( dt >= 7f) {
                     stageStartTime = time;
                 }
                 break;
