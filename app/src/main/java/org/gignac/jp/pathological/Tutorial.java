@@ -77,8 +77,10 @@ class Tutorial {
             case 6:
                 // Animate the eject tutorial
                 drawEjectTutorial(board.gr, b, 1.0f, dt, false);
-                for( int i=0; i < 4; ++i) {
-                    if( wheel2.marbles[i] < 0) continue;
+                int count = 0;
+                for( int i=0; i < 4; ++i)
+                    if( wheel2.marbles[i] >= 0) count ++;
+                if( count > 1) {
                     stage = 7;
                     stageStartTime = time;
                     dtSnapshot = dt;
@@ -224,12 +226,14 @@ class Tutorial {
                 wheelY + Tile.tile_size / 2 + Math.round(fingerPos * 10));
     }
 
-    private static void drawEjectTutorial(GameResources gr, CanvasBlitter b,
-                                          float visibility, float time, boolean done) {
+    private void drawEjectTutorial(GameResources gr, CanvasBlitter b,
+                                   float visibility, float time, boolean done) {
         int x = Tile.tile_size / 2;
         int y = Tile.tile_size * 7 / 2;
-        int w = Tile.tile_size * 3;
+        int w = Tile.tile_size * 5;
         int h = Tile.tile_size * 3;
+        int textWidth = Tile.tile_size * 9 / 4;
+        int textMargin = 14;
 
         int offset = (int)Math.round(
                 Math.pow(1f - visibility, 1.8) * Tile.tile_size * 7);
@@ -237,10 +241,22 @@ class Tutorial {
         if( done) y += offset;
         else x += offset;
 
-        int wheelX = x + Tile.tile_size * 3 / 5;
-        int wheelY = y + Tile.tile_size / 3;
+        int wheelX = x + Tile.tile_size / 4;
+        int wheelY = y + Tile.tile_size / 4;
 
         drawFrame(b, x, y, w, h);
+
+        if( staticLayout == null) {
+            textPaint.setTextSize(24);
+            staticLayout = new StaticLayout(gr.context.getString(R.string.eject_instructions),
+                    textPaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
+        }
+
+        b.c.save();
+        b.c.translate(x + w - textWidth - textMargin,
+                wheelY + Tile.tile_size / 2 + Marble.marble_size / 2 + textMargin);
+        staticLayout.draw(b.c);
+        b.c.restore();
 
         // Adjust time a bit to control the animation speed and phase
         time = (time + 1.0f) * 0.5f;
