@@ -129,12 +129,18 @@ class Tutorial {
 
     private static void drawFrame(CanvasBlitter b, int x, int y, int w, int h) {
         int cornerRadius = Tile.tile_size / 2;
-        paint.setColor(0xffffffff);
+        paint.setColor(0x30000000);
         paint.setStyle(Paint.Style.FILL);
+        rect.left = x + 10;
+        rect.top = y + 10;
+        rect.right = rect.left + w;
+        rect.bottom = rect.top + h;
+        b.c.drawRoundRect( rect, cornerRadius, cornerRadius, paint);
         rect.left = x;
         rect.top = y;
-        rect.right = x + w;
-        rect.bottom = y + h;
+        rect.right = rect.left + w;
+        rect.bottom = rect.top + h;
+        paint.setColor(0xffffffff);
         b.c.drawRoundRect( rect, cornerRadius, cornerRadius, paint);
         paint.setColor(0xff000000);
         paint.setStyle(Paint.Style.STROKE);
