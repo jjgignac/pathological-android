@@ -313,37 +313,43 @@ class Tutorial {
         drawFingerTouchingXY(b, Math.round(fingerX), Math.round(fingerY));
     }
 
-    private static void drawClearWheelsTutorial(GameResources gr, CanvasBlitter b) {
-        int x = Tile.tile_size;
+    private void drawClearWheelsTutorial(GameResources gr, CanvasBlitter b) {
+        int x = Tile.tile_size / 4;
         int y = 16;
-        int w = Tile.tile_size * 3;
-        int h = Tile.tile_size * 2 - 20;
+        int w = Tile.tile_size * 23 / 4;
+        int h = Tile.tile_size + 40;
+        int textWidth = Tile.tile_size * 5 / 2;
+        int textMargin = 17;
 
         int wheel1X = x + 20;
-        int wheel2X = wheel1X + Tile.tile_size + 54;
+        int wheel2X = wheel1X + Tile.tile_size + 46;
         int wheelY = y + 20;
 
         drawFrame(b, x, y, w, h);
 
+        if( staticLayout == null) {
+            textPaint.setTextSize(24);
+            staticLayout = new StaticLayout(gr.context.getString(R.string.completion_instructions),
+                    textPaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
+        }
+
+        b.c.save();
+        b.c.translate(x + w - textWidth - textMargin, y + textMargin);
+        staticLayout.draw(b.c);
+        b.c.restore();
+
         // Draw the incomplete wheel
-        for( int i=0; i < 4; ++i) marbles[i] = -2;
+        for( int i=0; i < 4; ++i) marbles[i] = 3;
         Wheel.draw(gr, b, marbles, wheel1X, wheelY, 0, false);
 
         // Draw the arrow
         b.blit( R.drawable.misc, 393, 732, 29, 30,
-                wheel1X + Tile.tile_size + 15,
+                wheel1X + Tile.tile_size + 11,
                 wheelY + 30);
 
         // Draw the completed wheel
+        for( int i=0; i < 4; ++i) marbles[i] = -2;
         Wheel.draw(gr, b, marbles, wheel2X, wheelY, 0, true);
-
-        // Draw the ex
-        b.blit( R.drawable.misc, 392, 706, 26, 25,
-                wheel1X + (Tile.tile_size - 26) / 2, wheelY + Tile.tile_size + 10);
-
-        // Draw the check
-        b.blit( R.drawable.misc, 392, 677, 29, 29,
-                wheel2X + (Tile.tile_size - 29) / 2, wheelY + Tile.tile_size + 8);
     }
 
     private static void drawTriggerTutorial(GameResources gr, CanvasBlitter b,
