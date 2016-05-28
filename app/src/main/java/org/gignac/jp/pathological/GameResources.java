@@ -72,6 +72,7 @@ public class GameResources
     public Vector<Point> boardPositions;
     public Vector<int[]> fromBoards;
     public int maxXPos;
+    private final boolean[] mIsUnlocked;
 
     public static synchronized GameResources getInstance(Context context) {
         if(instance == null) instance = new GameResources(context);
@@ -86,6 +87,22 @@ public class GameResources
 
         getBoardInfo();
         numlevels = boardNames.size();
+
+        mIsUnlocked = new boolean[numlevels];
+
+        // Determine which levels are unlocked
+        for( int level=0; level < numlevels; ++level) {
+            if( level == 0 || GameResources.bestScore(level) != -1) {
+                mIsUnlocked[level] = true;
+                continue;
+            }
+            for( int from : fromBoards.elementAt(level)) {
+                if( GameResources.bestScore(from) != -1) {
+                    mIsUnlocked[level] = true;
+                    break;
+                }
+            }
+        }
 
         random = new Random();
 
@@ -169,12 +186,7 @@ public class GameResources
     }
 
     public boolean isUnlocked(int level) {
-        if( level == 0) return true;
-        if( GameResources.shp.getInt("best_"+level, -1) != -1) return true;
-        for( int from : fromBoards.elementAt(level)) {
-            if( GameResources.shp.getInt("best_"+from, -1) != -1) return true;
-        }
-        return false;
+        return mIsUnlocked[level];
     }
 
     private void getBoardInfo()
@@ -249,9 +261,15 @@ public class GameResources
         return GameResources.shp.getInt("best_"+level, -1);
     }
 
-    public static void setBestScore(int level, int score) {
+    public void setBestScore(int level, int score) {
         SharedPreferences.Editor e = GameResources.shp.edit();
         e.putInt("best_" + level, score);
         e.apply();
+
+        for( int i = 0; i < numlevels; ++i) {
+            for( int from : fromBoards.elementAt(i)) {
+                if( from == level) mIsUnlocked[i] = true;
+            }
+        }
     }
 }

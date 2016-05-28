@@ -310,7 +310,7 @@ public class GameActivity extends Activity
                 ReportStatsTask.REASON_COMPLETED).execute();
 
         int prevBest = GameResources.bestScore(level);
-        if( total > prevBest) GameResources.setBestScore(level, total);
+        if( total > prevBest) gr.setBestScore(level, total);
 
         View view = getLayoutInflater().inflate( R.layout.level_cleared,
                 (ViewGroup)gv.getRootView(), false);
