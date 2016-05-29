@@ -30,7 +30,7 @@ public class GameView extends View
 
     public GameView(Context c,AttributeSet a) {
         super(c,a);
-        b = new CanvasBlitter(GameResources.getInstance(c).sc);
+        b = isInEditMode() ? null : new CanvasBlitter(GameResources.getInstance(c).sc);
     }
 
     public void setBoard(Board board) {
@@ -39,6 +39,7 @@ public class GameView extends View
 
     @Override
     protected void onDraw(Canvas c) {
+        if( isInEditMode()) return;
         b.setCanvas(c, getWidth(), getHeight());
         if(board != null) board.paint(b);
     }
