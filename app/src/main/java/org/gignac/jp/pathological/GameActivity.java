@@ -170,7 +170,8 @@ public class GameActivity extends Activity
                 h.post(gameLoop);
             }
         });
-        final String title = (level+1) + ". " + board.name;
+        final String title = (BuildConfig.BUILD_TYPE.equals("release") ?
+                "" : (level+1) + ". ") + board.name;
 
         h.post( new Runnable() {
             public void run() {

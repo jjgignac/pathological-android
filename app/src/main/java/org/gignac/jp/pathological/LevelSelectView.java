@@ -285,7 +285,7 @@ public class LevelSelectView extends View
                 Preview.blit(b,level,x,y, previewWidth, previewHeight);
 
                 // Draw the board title
-                String label = (level+1) + ". " + gr.boardNames.elementAt(level);
+                String label = gr.boardNames.elementAt(level);
                 float txtX = boardPos.x - paint.measureText(label) / 2;
                 float txtY = y + previewHeight + up;
                 float txtShadowOffset = previewWidth * 0.02f;
@@ -318,12 +318,14 @@ public class LevelSelectView extends View
                 b.blit(R.drawable.misc, 144, 479, 96, 128,
                         x, y, lockSize * 96 / 128, lockSize);
 
-                // Draw the board number on the lock
-                String label = (level+1) + "";
-                float txtX = boardPos.x - paint.measureText(label) / 2;
-                float txtY = boardPos.y + (up - down) / 2;
-                paint.setColor(0xff000000);
-                c.drawText( label, txtX, txtY, paint);
+                if( !BuildConfig.BUILD_TYPE.equals("release")) {
+                    // Draw the board number on the lock
+                    String label = (level + 1) + "";
+                    float txtX = boardPos.x - paint.measureText(label) / 2;
+                    float txtY = boardPos.y + (up - down) / 2;
+                    paint.setColor(0xff000000);
+                    c.drawText(label, txtX, txtY, paint);
+                }
             }
         }
         b.popTransform();
