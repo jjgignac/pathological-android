@@ -45,6 +45,7 @@ public class GameActivity extends Activity
     public static BitmapBlitter bg;
     private MutableMusicPlayer music;
     private InterstitialAd mLevelFailedInterstitial;
+    private AdView mBannerAd;
 
     public GameActivity()
     {
@@ -77,10 +78,10 @@ public class GameActivity extends Activity
         score_view = (TextView)findViewById(R.id.score);
         score_view.setText("0");
 
-        AdView mAdView = (AdView)findViewById(R.id.adView);
+        mBannerAd = (AdView)findViewById(R.id.adView);
         AdRequest adRequest = Util.getAdMobRequest(this);
         if( adRequest != null) {
-            mAdView.loadAd(adRequest);
+            mBannerAd.loadAd(adRequest);
         }
 
         mLevelFailedInterstitial = new InterstitialAd(this);
@@ -190,6 +191,8 @@ public class GameActivity extends Activity
 
         // Schedule the updates
         gameLoop.start();
+
+        mBannerAd.resume();
     }
 
     @Override
@@ -203,6 +206,7 @@ public class GameActivity extends Activity
     {
         super.onPause();
         gameLoop.stop();
+        mBannerAd.pause();
     }
 
     @Override
@@ -223,6 +227,7 @@ public class GameActivity extends Activity
         super.onDestroy();
         gr.destroy();
         music.stop();
+        mBannerAd.destroy();
     }
 
     private void requestNewLevelFailedInterstitial() {
