@@ -138,7 +138,7 @@ public class GameActivity extends Activity
     private void update_board_timer()
     {
         // Draw the board timer
-        int timerColor = 0xff000080;
+        int timerColor = 0xff4040f0;
         float timeLeft = (float)board.board_timeout / frames_per_sec;
         if( timeLeft < 60f && board.board_timeout*2 < board.board_timeout_start) {
             // Make the timer flash to indicate that time

@@ -282,10 +282,10 @@ class Board {
         return board_state;
     }
 
-    public void paint(Blitter b, boolean includeBottomMargin)
+    public void paint(Blitter b)
     {
         int width = b.getWidth();
-        int height = b.getHeight() - (includeBottomMargin ? 30 : 0);
+        int height = b.getHeight();
         scale = height * screen_width < width * screen_height ?
             (float)height / screen_height : (float)width / screen_width;
 

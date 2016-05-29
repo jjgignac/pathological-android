@@ -9,13 +9,12 @@
     <View
         android:id="@+id/board_timer"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignBottom="@+id/board_name"
+        android:layout_height="12dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:layout_below="@+id/adView"
         tools:layout_width="300dp"
-        tools:background="#00b"/>
+        tools:background="#4040f0"/>
 
     <TextView
         android:id="@+id/board_name"
@@ -25,6 +24,7 @@
         android:padding="3dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/score"
         android:layout_toStartOf="@+id/score"
         tools:text="Example Board Name" />
@@ -35,6 +35,7 @@
         android:padding="3dp"
         android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_alignTop="@id/board_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/pause"
@@ -51,7 +52,7 @@
         android:layout_marginEnd="10dp"
         android:layout_toLeftOf="@+id/retry"
         android:layout_toStartOf="@+id/retry"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/board_name"
         android:layout_alignBottom="@+id/board_name"
         android:onClick="toggleMusic"
         android:contentDescription="@string/mute_music" />
@@ -66,7 +67,7 @@
         android:layout_marginEnd="10dp"
         android:layout_toLeftOf="@+id/mute_music"
         android:layout_toStartOf="@+id/mute_music"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/board_name"
         android:layout_alignBottom="@+id/board_name"
         android:onClick="togglePause"
         android:contentDescription="@string/pause" />
@@ -81,7 +82,7 @@
         android:layout_marginEnd="10dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/board_name"
         android:layout_alignBottom="@+id/board_name"
         android:onClick="retry"
         android:contentDescription="@string/retry" />
@@ -91,15 +92,15 @@
         tools:background="#8ad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/board_name"
-        android:layout_above="@+id/adView" />
+        android:layout_below="@+id/board_timer"
+        android:layout_above="@id/board_name" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         ads:adSize="SMART_BANNER"
         ads:adUnitId="ca-app-pub-1344285941475721/3178114694">
     </com.google.android.gms.ads.AdView>
