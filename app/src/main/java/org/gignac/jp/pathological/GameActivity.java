@@ -33,6 +33,7 @@ import com.google.android.gms.ads.InterstitialAd;
 public class GameActivity extends Activity
 {
     public static final int frames_per_sec = 50;
+    private static final int firstAdLevel = 3;
 
     private final Handler h = new Handler();
     public int level;
@@ -46,6 +47,7 @@ public class GameActivity extends Activity
     private MutableMusicPlayer music;
     private InterstitialAd mLevelFailedInterstitial;
     private AdView mBannerAd;
+    private boolean mIsBannerAdLoaded;
 
     public GameActivity()
     {
@@ -79,10 +81,6 @@ public class GameActivity extends Activity
         score_view.setText("0");
 
         mBannerAd = (AdView)findViewById(R.id.adView);
-        AdRequest adRequest = Util.getAdMobRequest(this);
-        if( adRequest != null) {
-            mBannerAd.loadAd(adRequest);
-        }
 
         mLevelFailedInterstitial = new InterstitialAd(this);
         mLevelFailedInterstitial.setAdUnitId("ca-app-pub-1344285941475721/4714906695");
@@ -136,6 +134,21 @@ public class GameActivity extends Activity
         playLevel(level);
     }
 
+    private void loadAd() {
+        if(mIsBannerAdLoaded) return;
+        AdRequest adRequest = Util.getAdMobRequest(this);
+        if (adRequest != null) {
+            // Set the banner to the correct size
+            ViewGroup.LayoutParams params = mBannerAd.getLayoutParams();
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            mBannerAd.setLayoutParams(params);
+
+            // Start showing ads
+            mBannerAd.loadAd(adRequest);
+            mIsBannerAdLoaded = true;
+        }
+    }
+
     private void update_board_timer()
     {
         // Draw the board timer
@@ -162,6 +175,7 @@ public class GameActivity extends Activity
         loadLevel(level);
         music.resume();
         new ReportStatsTask(this, level).execute();
+        if( level >= firstAdLevel) loadAd();
     }
 
     private void loadLevel(int level) {
@@ -192,7 +206,7 @@ public class GameActivity extends Activity
         // Schedule the updates
         gameLoop.start();
 
-        mBannerAd.resume();
+        if(mIsBannerAdLoaded) mBannerAd.resume();
     }
 
     @Override
@@ -206,7 +220,7 @@ public class GameActivity extends Activity
     {
         super.onPause();
         gameLoop.stop();
-        mBannerAd.pause();
+        if(mIsBannerAdLoaded) mBannerAd.pause();
     }
 
     @Override
