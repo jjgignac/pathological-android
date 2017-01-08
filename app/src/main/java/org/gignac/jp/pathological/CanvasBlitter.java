@@ -31,6 +31,7 @@ class CanvasBlitter
     private final SpriteCache sc;
     private int width;
     private int height;
+    private int alpha = 0xff;
 
     public CanvasBlitter(SpriteCache sc)
     {
@@ -56,6 +57,12 @@ class CanvasBlitter
     public void popTransform()
     {
         c.restore();
+    }
+
+    @Override
+    public void setAlpha(int alpha)
+    {
+        this.alpha = alpha;
     }
 
     @Override
@@ -105,7 +112,8 @@ class CanvasBlitter
         rect.top = y;
         rect.right = x + w;
         rect.bottom = y + h;
-        c.drawBitmap( b, null, rect, null);
+        paint.setAlpha(alpha);
+        c.drawBitmap( b, null, rect, paint);
     }
 
     private void blit( Bitmap b, int sx, int sy,
@@ -119,7 +127,8 @@ class CanvasBlitter
         rect.top = y;
         rect.right = x + w;
         rect.bottom = y + h;
-        if(b != null) c.drawBitmap( b, src, rect, null);
+        paint.setAlpha(alpha);
+        if(b != null) c.drawBitmap( b, src, rect, paint);
     }
 
     @Override

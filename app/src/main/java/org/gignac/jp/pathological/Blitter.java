@@ -19,6 +19,7 @@ package org.gignac.jp.pathological;
 @SuppressWarnings("SameParameterValue")
 interface Blitter
 {
+    void setAlpha(int alpha);
     void blit( int resid, int x, int y, int w, int h);
     void blit( int resid, int sx, int sy, int sw, int sh, int x, int y);
     void blit( int resid, int sx, int sy, int sw, int sh, int x, int y, int w, int h);

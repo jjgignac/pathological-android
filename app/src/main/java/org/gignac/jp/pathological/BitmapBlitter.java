@@ -70,6 +70,12 @@ public class BitmapBlitter
         c.restore();
     }
 
+    @Override
+    public void setAlpha(int alpha)
+    {
+        paint.setAlpha(alpha);
+    }
+
     public void blit(int resid, int sx, int sy,
         int sw, int sh, int x, int y)
     {
