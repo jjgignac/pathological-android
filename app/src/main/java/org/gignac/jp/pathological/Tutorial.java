@@ -76,7 +76,25 @@ class Tutorial {
                     stageStartTime = time;
                 }
                 if (!waiting) {
-                    stage = -1;
+                    stage = 3;
+                    stageStartTime = time;
+                }
+                break;
+            case 3:
+                // Wait for a marble to be in the slot for too long
+                if( wheel1.marbles[3] < 0) {
+                    stageStartTime = time;
+                } else if (dt >= 7f) {
+                    stage = 4;
+                    stageStartTime = time;
+                }
+                break;
+            case 4:
+                // Re-introduce the finger
+                drawTapWheelHint(b, Math.min(dt, 1f), dt);
+                if( wheel1.marbles[3] < 0) {
+                    stage = 3;
+                    stageStartTime = time;
                 }
                 break;
             case 100:
@@ -168,8 +186,10 @@ class Tutorial {
         b.c.drawRoundRect( rect, cornerRadius, cornerRadius, paint);
     }
 
-    private static void drawFingerTouchingXY(Blitter b, int x, int y) {
+    private static void drawFingerTouchingXY(Blitter b, int x, int y, int alpha) {
+        b.setAlpha(alpha);
         b.blit(R.drawable.misc, 242, 434, 121, 275, x - 40, y - 10);
+        b.setAlpha(0xff);
     }
 
     private void drawGotItButton(GameResources gr, CanvasBlitter b, int x, int y, int w, int h) {
@@ -297,7 +317,35 @@ class Tutorial {
         // Show the finger
         drawFingerTouchingXY(b,
                 wheelX + Tile.tile_size / 2 + Math.round(fingerPos * 2),
-                wheelY + Tile.tile_size / 2 + Math.round(fingerPos * 10));
+                wheelY + Tile.tile_size / 2 + Math.round(fingerPos * 10),
+                255);
+    }
+
+    private void drawTapWheelHint(CanvasBlitter b,
+                                  float fingerVisibility, float time) {
+        int wheelY = Tile.tile_size;
+
+        // Adjust time a bit to control the animation speed and phase
+        time = time * 0.5f + 0.2f;
+
+        float phase = time - (float)Math.floor(time);
+
+        float fingerPos = (float)Math.sin(phase * 2 * Math.PI) + 1f;
+
+        if( fingerPos < 0.3f) {
+            // Show the press
+            int opacity = Math.round((0.3f - fingerPos) * 400);
+            paint.setColor((opacity << 24) | 0x3080ff);
+            paint.setStyle(Paint.Style.FILL);
+            b.c.drawCircle( Tile.tile_size / 2,
+                    wheelY + Tile.tile_size / 2, 20, paint);
+        }
+
+        // Show the finger
+        drawFingerTouchingXY(b,
+                Tile.tile_size / 2 + Math.round(fingerPos * 2),
+                wheelY + Tile.tile_size / 2 + Math.round(fingerPos * 10),
+                Math.round(fingerVisibility * 200));
     }
 
     private void drawEjectTutorial(GameResources gr, CanvasBlitter b,
@@ -384,7 +432,7 @@ class Tutorial {
         }
 
         // Show the finger
-        drawFingerTouchingXY(b, Math.round(fingerX), Math.round(fingerY));
+        drawFingerTouchingXY(b, Math.round(fingerX), Math.round(fingerY), 255);
     }
 
     private void drawClearWheelsTutorial(GameResources gr, CanvasBlitter b) {
