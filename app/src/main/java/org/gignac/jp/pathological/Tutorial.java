@@ -100,47 +100,79 @@ class Tutorial {
                     stageStartTime = time;
                 }
                 break;
+            case 5:
+                // Introduce darkened wheels tutorial
+//                drawDarkenedWheelTutorial(board.gr, b, Math.min(dt, 1.0f), 0.0f);
+                if( dt >= 1.0f || !waiting) {
+                    stage = 6;
+                    stageStartTime = time;
+                    waiting = true;
+                }
+                break;
+            case 6:
+                if (!waiting) {
+                    stage = 7;
+                    stageStartTime = time;
+                }
+                break;
+            case 7:
+                // Give the user a few moments to figure it out
+                if( wheel2.marbles[0] >= 0 ||
+                        wheel2.marbles[1] >= 0 ||
+                        wheel2.marbles[2] >= 0 ||
+                        wheel2.marbles[3] >= 0) {
+                    // The user already knows how to eject
+                    stageStartTime = time;
+                    stage = 103;
+                } else if( wheel1.marbles[0] < 0 &&
+                        wheel1.marbles[1] < 0 &&
+                        wheel1.marbles[2] < 0 &&
+                        wheel1.marbles[3] < 0) {
+                    // The wheel is empty -- just keep waiting
+                    stageStartTime = time;
+                } else if (dt >= 5f) {
+                    stageStartTime = time;
+                    stage = 100;
+                }
+                break;
             case 100:
                 // Wait for a marble in the right position
-                if( wheel1.marbles[1] >= 0) {
+                if( wheel1.marbles[1] >= 0 && wheel1.spinpos == 0) {
                     stage = 101;
                     stageStartTime = time;
+                    waiting = true;
                 }
                 break;
             case 101:
                 // Introduce the eject tutorial
-                drawEjectTutorial( board.gr, b, Math.min(dt, 1.0f), 0.0f, false);
-                if( dt >= 1.0f) {
+                drawEjectTutorial( board.gr, b, Math.min(dt, 1.0f), 0.0f);
+                if( dt >= 1.0f || !waiting) {
                     stage = 102;
                     stageStartTime = time;
                 }
                 break;
             case 102:
                 // Animate the eject tutorial
-                drawEjectTutorial(board.gr, b, 1.0f, dt, false);
-                int count = 0;
-                for( int i=0; i < 4; ++i)
-                    if( wheel2.marbles[i] >= 0) count ++;
-                if( count > 1) {
+                drawEjectTutorial(board.gr, b, 1.0f, dt);
+                if(!waiting) {
                     stage = 103;
                     stageStartTime = time;
-                    dtSnapshot = dt;
-                    break;
                 }
                 break;
             case 103:
-                // Send the eject tutorial away
-                if( dt < 1.0f) {
-                    drawEjectTutorial(board.gr, b, 1.0f - dt, dtSnapshot, true);
-                } else {
-                    staticLayout = null;
+                if(wheel1.completed || wheel2.completed) {
                     stage = 200;
                     stageStartTime = time;
+                    staticLayout = null;
+                    waiting = true;
                 }
                 break;
             case 200:
-                // Draw the clear-wheels tutorial
-                drawClearWheelsTutorial(board.gr, b);
+                // Introduce the clear-wheels tutorial
+                drawClearWheelsTutorial(board.gr, b, Math.min(dt, 1.0f));
+                if(!waiting) {
+                    stage = -1;
+                }
                 break;
             case 300:
                 // Wait for the trigger to appear
@@ -335,19 +367,18 @@ class Tutorial {
     }
 
     private void drawEjectTutorial(GameResources gr, CanvasBlitter b,
-                                   float visibility, float time, boolean done) {
+                                   float visibility, float time) {
         int x = Tile.tile_size / 2;
         int y = Tile.tile_size * 7 / 2;
         int w = Tile.tile_size * 5;
-        int h = Tile.tile_size * 3;
+        int h = Tile.tile_size * 4;
         int textWidth = Tile.tile_size * 9 / 4;
         int textMargin = 14;
 
         int offset = (int)Math.round(
                 Math.pow(1f - visibility, 1.8) * Tile.tile_size * 7);
 
-        if( done) y += offset;
-        else x += offset;
+        x += offset;
 
         int wheelX = x + Tile.tile_size / 4;
         int wheelY = y + Tile.tile_size / 4;
@@ -360,11 +391,15 @@ class Tutorial {
                     textPaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
         }
 
+        int textX = x + w - textWidth - textMargin;
+
         b.c.save();
-        b.c.translate(x + w - textWidth - textMargin,
+        b.c.translate(textX,
                 wheelY + Tile.tile_size / 2 + Marble.marble_size / 2 + textMargin);
         staticLayout.draw(b.c);
         b.c.restore();
+
+        drawGotItButton(gr, b, textX, y, textWidth, h);
 
         // Adjust time a bit to control the animation speed and phase
         time = (time + 1.0f) * 0.5f;
@@ -421,17 +456,26 @@ class Tutorial {
         drawFingerTouchingXY(b, Math.round(fingerX), Math.round(fingerY), 255);
     }
 
-    private void drawClearWheelsTutorial(GameResources gr, CanvasBlitter b) {
+    private void drawClearWheelsTutorial(GameResources gr, CanvasBlitter b, float visibility) {
         int x = Tile.tile_size / 4;
-        int y = 16;
-        int w = Tile.tile_size * 23 / 4;
-        int h = Tile.tile_size + 40;
-        int textWidth = Tile.tile_size * 5 / 2;
-        int textMargin = 17;
+        int y = Tile.tile_size * 7 / 2;
+        int w = Tile.tile_size * 5;
+        int h = Tile.tile_size * 5 / 2;
+        int margin = 17;
 
-        int wheel1X = x + 20;
-        int wheel2X = wheel1X + Tile.tile_size + 46;
-        int wheelY = y + 20;
+        int offset = (int)Math.round(
+                Math.pow(1f - visibility, 1.8) * Tile.tile_size * 7);
+
+        x += offset;
+
+        int wheelX = x + margin;
+        int wheelY = y + margin;
+
+        int checkMarkX = wheelX + Tile.tile_size + 7;
+        int checkMarkWid = 29;
+
+        int textX = checkMarkX + checkMarkWid + margin;
+        int textWidth = x + w - textX - margin;
 
         drawFrame(b, x, y, w, h);
 
@@ -442,22 +486,19 @@ class Tutorial {
         }
 
         b.c.save();
-        b.c.translate(x + w - textWidth - textMargin, y + textMargin);
+        b.c.translate(textX, y + margin);
         staticLayout.draw(b.c);
         b.c.restore();
 
-        // Draw the incomplete wheel
-        for( int i=0; i < 4; ++i) marbles[i] = 3;
-        Wheel.draw(gr, b, marbles, wheel1X, wheelY, 0, false);
+        // Draw the darkened wheel
+        for( int i=0; i < 4; ++i) marbles[i] = -1;
+        Wheel.draw(gr, b, marbles, wheelX, wheelY, 0, true);
 
-        // Draw the arrow
-        b.blit( R.drawable.misc, 393, 732, 29, 30,
-                wheel1X + Tile.tile_size + 11,
-                wheelY + 30);
+        // Draw the check mark
+        b.blit( R.drawable.misc, 392, 677, checkMarkWid, 29,
+                checkMarkX, wheelY + 30);
 
-        // Draw the completed wheel
-        for( int i=0; i < 4; ++i) marbles[i] = -2;
-        Wheel.draw(gr, b, marbles, wheel2X, wheelY, 0, true);
+        drawGotItButton(gr, b, x, y, w, h);
     }
 
     private static void drawTriggerTutorial(GameResources gr, CanvasBlitter b,

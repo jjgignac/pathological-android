@@ -59,6 +59,6 @@
     <string name="got_it">Got it!</string>
     <string name="turn_wheel_instructions">Turn the wheel to let marbles in.  Four matching marbles will clear the wheel.</string>
     <string name="eject_instructions">Swipe to release a marble. And make sure the other wheel is ready to receive it!</string>
-    <string name="completion_instructions">Make all wheels dark by filling them with matching marbles.</string>
+    <string name="completion_instructions">Great job! You completed a wheel! Now complete the other wheel to finish the level.</string>
 
 </resources>

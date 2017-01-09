@@ -58,9 +58,9 @@ pos=0,0
 
 name=Bicycle
 author=John-Paul Gignac
+colors=3
 boardtimer=2400
 launchtimer=300
-firstcolors=3,3,3,2,2,3,2,2,6,4
 pos=0,1
 from=1
 +---+---+---+---+---+---+---+---+
