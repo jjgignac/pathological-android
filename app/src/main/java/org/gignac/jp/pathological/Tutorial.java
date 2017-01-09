@@ -1,6 +1,7 @@
 package org.gignac.jp.pathological;
 
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.Layout;
 import android.text.StaticLayout;
@@ -12,6 +13,7 @@ class Tutorial {
     private static final int[] marbles = { 0, 0, 0, 0 };
     private static final TextPaint textPaint = new TextPaint();
     private StaticLayout staticLayout;
+    private final Rect textBounds = new Rect();
 
     private final Board board;
     private int stage;
@@ -19,6 +21,12 @@ class Tutorial {
     private float dtSnapshot;
     private Wheel wheel1;
     private Wheel wheel2;
+    private int time = 0;
+
+    // When waiting is true, the game pauses
+    // until the user taps the "Got it!" button.
+    public boolean waiting = false;
+    public final Rect gotItButtonPos = new Rect();
 
     public Tutorial(Board b, int initialStage) {
         board = b;
@@ -34,20 +42,28 @@ class Tutorial {
         }
     }
 
-    public void paint(CanvasBlitter b, float time) {
+    public void update() {
+        time += 1;
+    }
+
+    public void paint(CanvasBlitter b) {
+        float time = (float)this.time / GameActivity.frames_per_sec;
         float dt = time - stageStartTime;
         switch(stage) {
             case 0:
-                // We are waiting for a marble to drop into the wheel
-                if( wheel1.marbles[3] >= 0) {
+                // Wait for a marble to be in the slot for too long
+                if( wheel1.marbles[3] < 0) {
+                    stageStartTime = time;
+                } else if (dt >= 4f) {
                     stage = 1;
                     stageStartTime = time;
+                    waiting = true;
                 }
                 break;
             case 1:
                 // Introduce the spin tutorial
                 drawSpinWheelTutorial(board.gr, b, Math.min(dt, 1.0f), 0.0f);
-                if( dt >= 1.0f) {
+                if( dt >= 1.0f || !waiting) {
                     stage = 2;
                     stageStartTime = time;
                 }
@@ -56,7 +72,11 @@ class Tutorial {
                 // Animate the spin tutorial
                 drawSpinWheelTutorial( board.gr, b, 1.0f, dt);
                 if( dt >= 7f) {
+                    // Repeat the animation
                     stageStartTime = time;
+                }
+                if (!waiting) {
+                    stage = -1;
                 }
                 break;
             case 100:
@@ -152,6 +172,48 @@ class Tutorial {
         b.blit(R.drawable.misc, 242, 434, 121, 275, x - 40, y - 10);
     }
 
+    private void drawGotItButton(GameResources gr, CanvasBlitter b, int x, int y, int w, int h) {
+        float fontSize = 36f;
+        int borderWidth = 2;
+        int padding = 16;
+        int cornerRadius = 10;
+        int margin = 20;
+
+        String gotItStr = gr.context.getString(R.string.got_it);
+        paint.setTextSize(fontSize);
+        paint.getTextBounds(gotItStr, 0, gotItStr.length(), textBounds);
+
+        int buttonWidth = textBounds.width() + 2 * (borderWidth + padding);
+        int buttonHeight = textBounds.height() + 2 * (borderWidth + padding);
+
+        // Bottom-align the button
+        y += h - buttonHeight - margin;
+
+        // Center the button
+        x += (w - buttonWidth) / 2;
+
+        // Set the button position so the game can pause
+        // and wait for the user to tap.
+        int tapMargin = Tile.tile_size / 3;
+        gotItButtonPos.set(x - tapMargin, y - tapMargin,
+                x + buttonWidth + tapMargin, y + buttonHeight + tapMargin);
+
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(0xffa0c0f0);
+        rect.left = x + borderWidth / 2;
+        rect.top = y + borderWidth / 2;
+        rect.right = rect.left + buttonWidth + borderWidth;
+        rect.bottom = rect.top + buttonHeight + borderWidth;
+        b.c.drawRoundRect( rect, cornerRadius, cornerRadius, paint);
+        paint.setColor(0xff000000);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(borderWidth);
+        b.c.drawRoundRect( rect, cornerRadius, cornerRadius, paint);
+        paint.setStyle(Paint.Style.FILL);
+        b.c.drawText(gotItStr, x + borderWidth + padding - textBounds.left,
+                y + padding + borderWidth - textBounds.top, paint);
+    }
+
     private void drawSpinWheelTutorial(GameResources gr, CanvasBlitter b,
                                        float visibility, float time) {
         int x = Tile.tile_size / 2;
@@ -177,10 +239,14 @@ class Tutorial {
                     textPaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
         }
 
+        int textX = x + w - textWidth - textMargin;
+
         b.c.save();
-        b.c.translate(x + w - textWidth - textMargin, y + textMargin);
+        b.c.translate(textX, y + textMargin);
         staticLayout.draw(b.c);
         b.c.restore();
+
+        drawGotItButton(gr, b, textX, y, textWidth, h);
 
         // Adjust time a bit to control the animation speed and phase
         time = time * 0.5f + 0.2f;

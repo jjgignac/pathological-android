@@ -213,6 +213,14 @@ class Board {
         // sent once.
         if(paused || board_state != INCOMPLETE) return INCOMPLETE;
 
+        if (tutorial != null) {
+            tutorial.update();
+
+            // Pause updates when there's a "Got it!" button in the tutorial.
+            if (tutorial.waiting)
+                return INCOMPLETE;
+        }
+
         // Animate the marbles
         marblesCopy = marbles.toArray(marblesCopy);
         for(Marble marble : marblesCopy) {
@@ -327,8 +335,7 @@ class Board {
         draw_fore(b);
 
         if( tutorial != null && b instanceof CanvasBlitter) {
-            tutorial.paint((CanvasBlitter)b,
-                    - (float)board_timeout / GameActivity.frames_per_sec);
+            tutorial.paint((CanvasBlitter)b);
         }
 
         b.popTransform();
@@ -487,6 +494,18 @@ class Board {
             }
             return;
         }
+
+        if(tutorial != null && tutorial.waiting) {
+            // The tutorial is waiting for the user to tap
+            // the "Got it!" button.  Only process touches that
+            // begin and end inside that button.
+            if (tutorial.gotItButtonPos.contains(downx, downy) &&
+                    tutorial.gotItButtonPos.contains(posx, posy)) {
+                tutorial.waiting = false;
+            }
+            return;
+        }
+
         Tile downtile = whichTile(downx,downy);
         if(downtile == null) return;
         int downtile_x = downx / Tile.tile_size;
