@@ -59,64 +59,64 @@ class Tutorial {
                     stageStartTime = time;
                 }
                 break;
-            case 4:
+            case 100:
                 // Wait for a marble in the right position
                 if( wheel1.marbles[1] >= 0) {
-                    stage = 5;
+                    stage = 101;
                     stageStartTime = time;
                 }
                 break;
-            case 5:
+            case 101:
                 // Introduce the eject tutorial
                 drawEjectTutorial( board.gr, b, Math.min(dt, 1.0f), 0.0f, false);
                 if( dt >= 1.0f) {
-                    stage = 6;
+                    stage = 102;
                     stageStartTime = time;
                 }
                 break;
-            case 6:
+            case 102:
                 // Animate the eject tutorial
                 drawEjectTutorial(board.gr, b, 1.0f, dt, false);
                 int count = 0;
                 for( int i=0; i < 4; ++i)
                     if( wheel2.marbles[i] >= 0) count ++;
                 if( count > 1) {
-                    stage = 7;
+                    stage = 103;
                     stageStartTime = time;
                     dtSnapshot = dt;
                     break;
                 }
                 break;
-            case 7:
+            case 103:
                 // Send the eject tutorial away
                 if( dt < 1.0f) {
                     drawEjectTutorial(board.gr, b, 1.0f - dt, dtSnapshot, true);
                 } else {
                     staticLayout = null;
-                    stage = 8;
+                    stage = 200;
                     stageStartTime = time;
                 }
                 break;
-            case 8:
+            case 200:
                 // Draw the clear-wheels tutorial
                 drawClearWheelsTutorial(board.gr, b);
                 break;
-            case 9:
+            case 300:
                 // Wait for the trigger to appear
                 if( board.trigger.marbles != null) {
-                    stage = 10;
+                    stage = 301;
                     stageStartTime = time;
                 }
                 break;
-            case 10:
+            case 301:
                 // Introduce the trigger tutorial and wait for the trigger to be completed
                 drawTriggerTutorial( board.gr, b, board, Math.min(dt, 1.0f));
                 if( board.trigger.marbles == null) {
-                    stage = 11;
+                    stage = 302;
                     stageStartTime = time;
                 }
                 break;
-            case 11:
+            case 302:
                 // Send the trigger tutorial away
                 if( dt < 1.0f) {
                     drawTriggerTutorial( board.gr, b, board, 1.0f - dt);
