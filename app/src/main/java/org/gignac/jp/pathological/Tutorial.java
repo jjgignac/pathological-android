@@ -91,7 +91,10 @@ class Tutorial {
                 break;
             case 4:
                 // Re-introduce the finger
-                drawTapWheelHint(b, Math.min(dt, 1f), dt);
+                drawFingerTappingXY(b,
+                        Tile.tile_size * wheel1.tile_x + Tile.tile_size / 2,
+                        Tile.tile_size * wheel1.tile_y + Tile.tile_size / 2,
+                        Math.min(dt, 1f), time * 0.5f);
                 if( wheel1.marbles[3] < 0) {
                     stage = 3;
                     stageStartTime = time;
@@ -303,31 +306,15 @@ class Tutorial {
                     marbleX + Marble.marble_size - wid, marbleY, wid, Marble.marble_size);
         }
 
-        float fingerPos = (float)Math.sin(phase * 2 * Math.PI) + 1f;
-
-        if( fingerPos < 0.3f) {
-            // Show the press
-            int opacity = Math.round((0.3f - fingerPos) * 400);
-            paint.setColor((opacity << 24) | 0x3080ff);
-            paint.setStyle(Paint.Style.FILL);
-            b.c.drawCircle( wheelX + Tile.tile_size / 2,
-                    wheelY + Tile.tile_size / 2, 20, paint);
-        }
-
         // Show the finger
-        drawFingerTouchingXY(b,
-                wheelX + Tile.tile_size / 2 + Math.round(fingerPos * 2),
-                wheelY + Tile.tile_size / 2 + Math.round(fingerPos * 10),
-                255);
+        drawFingerTappingXY(b,
+                wheelX + Tile.tile_size / 2,
+                wheelY + Tile.tile_size / 2,
+                1f, time);
     }
 
-    private void drawTapWheelHint(CanvasBlitter b,
-                                  float fingerVisibility, float time) {
-        int wheelY = Tile.tile_size;
-
-        // Adjust time a bit to control the animation speed and phase
-        time = time * 0.5f + 0.2f;
-
+    private void drawFingerTappingXY(CanvasBlitter b, int x, int y,
+                                     float fingerVisibility, float time) {
         float phase = time - (float)Math.floor(time);
 
         float fingerPos = (float)Math.sin(phase * 2 * Math.PI) + 1f;
@@ -337,14 +324,13 @@ class Tutorial {
             int opacity = Math.round((0.3f - fingerPos) * 400);
             paint.setColor((opacity << 24) | 0x3080ff);
             paint.setStyle(Paint.Style.FILL);
-            b.c.drawCircle( Tile.tile_size / 2,
-                    wheelY + Tile.tile_size / 2, 20, paint);
+            b.c.drawCircle( x, y, 20, paint);
         }
 
         // Show the finger
         drawFingerTouchingXY(b,
-                Tile.tile_size / 2 + Math.round(fingerPos * 2),
-                wheelY + Tile.tile_size / 2 + Math.round(fingerPos * 10),
+                x + Math.round(fingerPos * 2),
+                y + Math.round(fingerPos * 10),
                 Math.round(fingerVisibility * 200));
     }
 
