@@ -165,13 +165,50 @@ class Tutorial {
                     stageStartTime = time;
                     staticLayout = null;
                     waiting = true;
+                } else if(wheel1.marbles[1] < 0) {
+                    stageStartTime = time;
+                } else if(dt >= 3f) {
+                    stage = 104;
+                    stageStartTime = time;
+                }
+                break;
+            case 104:
+                // Show the swiping hint
+                drawSwipingFinger(b,
+                        wheel1.tile_x * Tile.tile_size + Tile.tile_size / 2,
+                        wheel1.tile_y * Tile.tile_size + Tile.tile_size / 2,
+                        Math.min(dt, 1f), time * 0.5f + 0.2f);
+                if(wheel1.marbles[1] < 0 || wheel1.spinpos != 0) {
+                    stage = 103;
+                    stageStartTime = time;
                 }
                 break;
             case 200:
                 // Introduce the clear-wheels tutorial
                 drawClearWheelsTutorial(board.gr, b, Math.min(dt, 1.0f));
                 if(!waiting) {
+                    stage = 201;
+                }
+                break;
+            case 201:
+                if(wheel2.completed) {
                     stage = -1;
+                } else if(wheel1.marbles[1] < 0) {
+                    stageStartTime = time;
+                } else if(dt >= 3f) {
+                    stage = 202;
+                    stageStartTime = time;
+                }
+                break;
+            case 202:
+                // Show the swiping hint
+                drawSwipingFinger(b,
+                        wheel1.tile_x * Tile.tile_size + Tile.tile_size / 2,
+                        wheel1.tile_y * Tile.tile_size + Tile.tile_size / 2,
+                        Math.min(dt, 1f), time * 0.5f + 0.2f);
+                if(wheel1.marbles[1] < 0 || wheel1.spinpos != 0) {
+                    stage = 201;
+                    stageStartTime = time;
                 }
                 break;
             case 300:
@@ -407,7 +444,7 @@ class Tutorial {
         float phase = time - (float)Math.floor(time);
 
         for( int i=0; i < 4; ++i) {
-            marbles[i] = (i < 2 ? -2 : 3);
+            marbles[i] = (i == 3 ? 3 : -2);
         }
 
         // Draw a path
@@ -430,10 +467,20 @@ class Tutorial {
         b.blit( R.drawable.misc, 28*3, 357, wid, 28,
                 marbleX, marbleY, wid, Marble.marble_size);
 
+        // Show the finger
+        drawSwipingFinger(b,
+                wheelX + Tile.tile_size / 2,
+                wheelY + Tile.tile_size / 2,
+                1f, time);
+    }
+
+    private static void drawSwipingFinger(CanvasBlitter b, int x, int y,
+                                          float visibility, float time) {
+        float phase = time - (float)Math.floor(time);
         float fingerPos = (float)Math.cos(phase * 2 * Math.PI) + 1f;
 
-        float fingerX = wheelX + Tile.tile_size / 2 + fingerPos * 30;
-        float fingerY = wheelY + Tile.tile_size / 2 + 5;
+        float fingerX = x + fingerPos * 30;
+        float fingerY = y + 5;
 
         if( phase < 0.5f) {
             // Swing the finger downwards slightly on its way back
@@ -445,7 +492,7 @@ class Tutorial {
             int opacity = Math.round(Math.min(phase - 0.5f, 0.1f) * 1200);
             paint.setColor((opacity << 24) | 0x3080ff);
             paint.setStyle(Paint.Style.FILL);
-            rect.left = wheelX + Tile.tile_size / 2 - 20;
+            rect.left = x - 20;
             rect.top = fingerY - 20;
             rect.right = fingerX + 20;
             rect.bottom = fingerY + 20;
@@ -453,7 +500,8 @@ class Tutorial {
         }
 
         // Show the finger
-        drawFingerTouchingXY(b, Math.round(fingerX), Math.round(fingerY), 255);
+        drawFingerTouchingXY(b, Math.round(fingerX), Math.round(fingerY),
+                Math.round(visibility * 200));
     }
 
     private void drawClearWheelsTutorial(GameResources gr, CanvasBlitter b, float visibility) {
