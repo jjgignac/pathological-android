@@ -72,33 +72,35 @@ from=1
 |   |   |   |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
 
-name=Clowning Around
+name=Pass it On
 author=John-Paul Gignac
+colors=2,4
 boardtimer=600
 launchtimer=90
+firstcolors=2,4,2,4
 maxmarbles=5
 pos=1,1
 +---+---+---+---+---+---+---+---+
 |   |   |   |O7 | a |Od |   |   |
 |   |   |   | 5 |   | 5 |   |   |
-|   |   |   |&51|   |&57|   |   |
 |   |   |   | 5 |   | 5 |   |   |
-|   |   |   |O3 | a |O9 |   |   |
+|   |   |   | 5 |   | 5 |   |   |
+|   |   |   | 3 | a | 9 |   |   |
 |   |   |   |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
 
-name=Grand Canyon
-author=Mike Brenneman
+name=Quad Rotor
+author=John-Paul Gignac <jp@gignac.org>
 boardtimer=300
-launchtimer=10
+launchtimer=12
 maxmarbles=5
 pos=1,0
 +---+---+---+---+---+---+---+---+
-|   |O5 |   |   |   |   |O5 |   |
+|   |O7 | a | a | a | a |Od |   |
 |   | 5 |   |   |   |   | 5 |   |
 |   | 5 |   |   |   |   | 5 |   |
 |   | 5 |   |   |   |   | 5 |   |
-|   |O1 |   |   |   |   |O1 |   |
+|   |O3 | a | a | a | a |O9 |   |
 |   |   |   |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
 
@@ -120,6 +122,7 @@ pos=2,0
 name=Follow the Leader
 author=John-Paul Gignac <jp@gignac.org>
 boardtimer=240
+launchtimer=15
 pos=1,2
 from=3
 +---+---+---+---+---+---+---+---+
@@ -159,32 +162,32 @@ pos=2,1
 |   |   |   |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
 
-name=Trigger Practice
-author=Mike Brenneman
-colors=2,3,4,6
-boardtimer=240
-launchtimer=2
-maxmarbles=5
-pos=3,1
-+---+---+---+---+---+---+---+---+
-|   |   | 5 |   |   |   |   |   |
-|O2 |&a4|Of | a | a |&a3| a |O8 |
-|   |   |&52|   |%  |   |   |   |
-|   |   |O1 |   |   |   |   |   |
-|   |   |   |   |   |   |   |   |
-|   |   |   |   |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-
 name=Stop and Go
 author=John-Paul Gignac <jp@gignac.org>
 boardtimer=120
-pos=3,0
+pos=3,1
 +---+---+---+---+---+---+---+---+
 |   |   |O7 | a | c |   |   |   |
 |   |   | 5 |   |@5 |   |   |   |
 |   |   | 5 |   | 3 | a |O8 |   |
 |   |   | 5 |   |   |   |   |   |
 |   |   |O1 |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+name=Trigger Practice
+author=Mike Brenneman
+colors=2,3,4,6
+boardtimer=240
+launchtimer=2
+maxmarbles=5
+pos=3,0
++---+---+---+---+---+---+---+---+
+|   |   | 5 |   |   |   |   |   |
+|O2 |&a4|Of | a | a |&a3| a |O8 |
+|   |   |&52|   |%  |   |   |   |
+|   |   |O1 |   |   |   |   |   |
+|   |   |   |   |   |   |   |   |
 |   |   |   |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
 
