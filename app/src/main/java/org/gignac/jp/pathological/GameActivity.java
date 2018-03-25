@@ -17,6 +17,7 @@
 package org.gignac.jp.pathological;
 
 import android.app.*;
+import android.net.Uri;
 import android.os.*;
 import android.view.View;
 import android.view.ViewGroup;
@@ -365,7 +366,12 @@ public class GameActivity extends Activity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         GameResources.setCurrentLevel(Math.max(level, gr.nextLevel(level)));
-                        finish();
+                        if(gr.boardNames.elementAt(level).equals("The Auto-Solver") &&
+                            GameResources.ratePromptCount() < 2) {
+                            showRateDialog(false);
+                        } else {
+                            finish();
+                        }
                     }
                 })
                 .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
@@ -378,7 +384,13 @@ public class GameActivity extends Activity
             builder.setNeutralButton(R.string.next_level, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    playLevel(gr.nextLevel(level));
+                    if(gr.boardNames.elementAt(level).equals("It's All in the Wrist") &&
+                            GameResources.ratePromptCount() < 1) {
+                        GameResources.setCurrentLevel(gr.nextLevel(level));
+                        showRateDialog(true);
+                    } else {
+                        playLevel(gr.nextLevel(level));
+                    }
                 }
             });
         }
@@ -387,6 +399,52 @@ public class GameActivity extends Activity
         dialog.show();
 
         temporarilyDisableButtons(dialog);
+    }
+
+    private void showRateDialog(final boolean play_next) {
+        final int ratePromptCount = GameResources.ratePromptCount();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(R.string.rate_this_app)
+                .setMessage(R.string.rate_this_app_message)
+                .setCancelable(true)
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        GameResources.setRatePromptCount(ratePromptCount+1);
+                        if(play_next) playLevel(gr.nextLevel(level));
+                        else finish();
+                    }
+                })
+                .setNegativeButton(R.string.no_thanks, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        GameResources.setRatePromptCount(100);
+                        if(play_next) playLevel(gr.nextLevel(level));
+                        else finish();
+                    }
+                })
+                .setPositiveButton(R.string.rate_it_now, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        GameResources.setRatePromptCount(100);
+                        finish();
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("market://details?id=" + getPackageName())));
+                    }
+                });
+        if(ratePromptCount == 0) {
+            builder.setNeutralButton(R.string.remind_me_later, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    GameResources.setRatePromptCount(ratePromptCount+1);
+                    if(play_next) playLevel(gr.nextLevel(level));
+                    else finish();
+                }
+            });
+        }
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setWindowAnimations(R.style.dialog_animation);
+        dialog.show();
     }
 
     private void temporarilyDisableButtons(final AlertDialog dialog) {

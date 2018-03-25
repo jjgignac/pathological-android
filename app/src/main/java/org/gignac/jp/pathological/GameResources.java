@@ -272,4 +272,14 @@ public class GameResources
             }
         }
     }
+
+    public static int ratePromptCount() {
+        return GameResources.shp.getInt("ratePromptCount", 0);
+    }
+
+    public static void setRatePromptCount(int count) {
+        SharedPreferences.Editor e = GameResources.shp.edit();
+        e.putInt("ratePromptCount", count);
+        e.apply();
+    }
 }
