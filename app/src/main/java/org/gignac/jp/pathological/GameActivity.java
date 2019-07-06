@@ -358,6 +358,13 @@ public class GameActivity extends Activity
             view.findViewById(R.id.new_best).setVisibility(View.VISIBLE);
         }
 
+        if( total >= board.twoStarThreshold) {
+            ((ImageView)view.findViewById(R.id.star2)).setImageResource(R.drawable.star);
+        }
+        if( total >= board.threeStarThreshold) {
+            ((ImageView)view.findViewById(R.id.star3)).setImageResource(R.drawable.star);
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.level_cleared)
                 .setView(view)

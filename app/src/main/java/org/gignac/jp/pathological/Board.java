@@ -52,6 +52,8 @@ class Board {
     public int board_timeout_start;
     public String colors;
     public String firstColors;
+    public int twoStarThreshold;
+    public int threeStarThreshold;
     private Marble[] marblesCopy = new Marble[20];
     private final HashMap<Integer,Point> down;
     private float launch_queue_offset;
@@ -584,6 +586,10 @@ class Board {
                     for(char c : line.substring(10).toCharArray())
                         if( c >= '0' && c <= '7')
                             stoplight = stoplight + c;
+                } else if( line.startsWith("starscores=")) {
+                    String[] thresholds = line.substring(11).split(",");
+                    twoStarThreshold = Integer.parseInt(thresholds[0]);
+                    threeStarThreshold = Integer.parseInt(thresholds[1]);
                 }
 
                 continue;

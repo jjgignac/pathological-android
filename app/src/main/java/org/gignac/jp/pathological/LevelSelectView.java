@@ -136,6 +136,8 @@ public class LevelSelectView extends View
         c.drawText(text, 0, -paint.ascent(), paint);
         paint.setTypeface(normal);
         sc.cache(0x5800000002L,authorAttrib);
+
+        sc.cache(R.drawable.star);
     }
 
     private void update()
@@ -306,6 +308,25 @@ public class LevelSelectView extends View
                     paint.setColor(0xffffffff);
                     c.drawText(bestText, txtX, txtY, paint);
                     paint.setTypeface(normal);
+                }
+
+                int starSize = previewWidth/4;
+                int starSpan = starSize + starSize/10;
+                int starX = boardPos.x + previewWidth/2 - starSize*3/4;
+                int starY = y + previewHeight - starSize - starSize/8;
+
+                // Draw the star rating
+                if( best >= 0) {
+                    b.blit(R.drawable.star, 0, 0, 128, 128,
+                            starX, starY, starSize, starSize);
+                }
+                if( best >= gr.boardInfo(level).twoStarThreshold) {
+                    b.blit(R.drawable.star, 0, 0, 128, 128,
+                            starX - starSpan, starY, starSize, starSize);
+                }
+                if( best >= gr.boardInfo(level).threeStarThreshold) {
+                    b.blit(R.drawable.star, 0, 0, 128, 128,
+                            starX - 2*starSpan, starY, starSize, starSize);
                 }
             } else {
                 // Draw the lock icon

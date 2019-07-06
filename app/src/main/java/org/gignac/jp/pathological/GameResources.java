@@ -72,6 +72,8 @@ public class GameResources
         Point position;
         int[] from;
         boolean isUnlocked;
+        int twoStarThreshold;
+        int threeStarThreshold;
     };
 
     public final int numlevels;
@@ -226,6 +228,10 @@ public class GameResources
                         from[i] = Integer.parseInt(fromStr[i])-1;
                     }
                     bi.from = from;
+                } else if( line.startsWith("starscores=")) {
+                    String[] thresholds = line.substring(11).split(",");
+                    bi.twoStarThreshold = Integer.parseInt(thresholds[0]);
+                    bi.threeStarThreshold = Integer.parseInt(thresholds[1]);
                 }
             }
         } catch(IOException e) {

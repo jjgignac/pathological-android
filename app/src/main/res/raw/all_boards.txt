@@ -43,10 +43,11 @@
 
 name=Pathology 101
 author=John-Paul Gignac and James Porto
-boardtimer=2400
+boardtimer=1000
 launchtimer=300
 firstcolors=6,6,6,6,3,2,4
 pos=0,0
+starscores=745,750
 +---+---+---+---+---+---+---+---+
 |   |   |   |   |   |   |O1 |   |
 |   |   |   |   |   |   |   |   |
@@ -63,6 +64,7 @@ boardtimer=2400
 launchtimer=300
 pos=0,1
 from=1
+starscores=795,800
 +---+---+---+---+---+---+---+---+
 |   |   |   |   |   |O5 |   |   |
 |   |   |   |   |   | 5 |   |   |
@@ -80,6 +82,7 @@ launchtimer=90
 firstcolors=2,4,2,4
 maxmarbles=5
 pos=1,1
+starscores=751,790
 +---+---+---+---+---+---+---+---+
 |   |   |   |O7 | a |Od |   |   |
 |   |   |   | 5 |   | 5 |   |   |
@@ -95,6 +98,7 @@ boardtimer=300
 launchtimer=12
 maxmarbles=5
 pos=1,0
+starscores=693,762
 +---+---+---+---+---+---+---+---+
 |   |O7 | a | a | a | a |Od |   |
 |   | 5 |   |   |   |   | 5 |   |
@@ -110,6 +114,7 @@ boardtimer=300
 launchtimer=15
 maxmarbles=5
 pos=2,0
+starscores=708,796
 +---+---+---+---+---+---+---+---+
 |   |O7 | a | a | a | a |Od |   |
 |   | 3 | a |ve |ve | a | 9 |   |
@@ -125,6 +130,7 @@ boardtimer=240
 launchtimer=15
 pos=1,2
 from=3
+starscores=595,690
 +---+---+---+---+---+---+---+---+
 | 6 | a | a |O9 |O2 | a | a | c |
 | 5 | 6 | c | 6 | c | 6 | a | 9 |
@@ -138,6 +144,7 @@ name=Tickled Pink
 author=Kim Gignac
 boardtimer=150
 pos=2,2
+starscores=595,695
 +---+---+---+---+---+---+---+---+
 |   |   |   |O5 |   |O5 |   |   |
 |   |   |   | 5 |   | 5 |   |   |
@@ -153,6 +160,7 @@ boardtimer=180
 launchtimer=4
 maxmarbles=5
 pos=2,1
+starscores=643,750
 +---+---+---+---+---+---+---+---+
 |   |   |O5 |   |   |O5 |   |   |
 |   |   | 5 |   |   | 5 |   |   |
@@ -166,6 +174,7 @@ name=Stop and Go
 author=John-Paul Gignac <jp@gignac.org>
 boardtimer=120
 pos=3,1
+starscores=516,821
 +---+---+---+---+---+---+---+---+
 |   |   |O7 | a | c |   |   |   |
 |   |   | 5 |   |@5 |   |   |   |
@@ -182,6 +191,7 @@ boardtimer=240
 launchtimer=2
 maxmarbles=5
 pos=3,0
+starscores=833,860
 +---+---+---+---+---+---+---+---+
 |   |   | 5 |   |   |   |   |   |
 |O2 |&a4|Of | a | a |&a3| a |O8 |
@@ -199,6 +209,7 @@ launchtimer=8
 maxmarbles=5
 pos=3,2
 from=9
+starscores=726,802
 +---+---+---+---+---+---+---+---+
 |   |   |O5 |   |   |O5 |   |   |
 |   |   | 5 |O6 |Oc | 5 |   |   |
@@ -216,6 +227,7 @@ launchtimer=6
 maxmarbles=5
 pos=4,0
 from=10
+starscores=625,728
 +---+---+---+---+---+---+---+---+
 |   |O5 |   |   |   |   |O5 |   |
 |   | 5 |   |   |   |   | 5 |   |
@@ -230,6 +242,7 @@ author=Kim Gignac
 boardtimer=120
 pos=4,2
 from=11
+starscores=475,602
 +---+---+---+---+---+---+---+---+
 |   |   |O7 | a | a | c |   |   |
 |   |   | 5 |   |   |O1 |   |   |
@@ -247,6 +260,7 @@ launchtimer=10
 maxmarbles=5
 pos=5,0
 from=12
+starscores=663,840
 +---+---+---+---+---+---+---+---+
 | 6 |Of | a | c |O7 | c |O5 |   |
 | 3 | f | a | f | f | 9 | 5 |   |
@@ -263,6 +277,7 @@ launchtimer=6
 maxmarbles=5
 pos=5,2
 from=13
+starscores=664,756
 +---+---+---+---+---+---+---+---+
 |   | 6 |Od |   |   |O7 | c |   |
 |   |O1 | 5 |   |   | 5 |O1 |   |
@@ -279,6 +294,7 @@ boardtimer=120
 launchtimer=2
 pos=6,0
 from=14
+starscores=849,885
 +---+---+---+---+---+---+---+---+
 |   |   |   |   |O7 |Od |   |   |
 |   |   |   |   |O3 |O9 |   |   |
@@ -294,6 +310,7 @@ colors=2,3,4,6
 boardtimer=150
 pos=5,1
 from=14,15
+starscores=660,757
 +---+---+---+---+---+---+---+---+
 |   |   |&66|Of | a |vc |   |   |
 |   |   |O1 | 5 |   |O3 |O8 |   |
@@ -307,6 +324,7 @@ name=Criss-Cross
 author=John-Paul Gignac <jp@gignac.org>
 boardtimer=300
 pos=6,1
+starscores=807,903
 +---+---+---+---+---+---+---+---+
 |   |O5 |O5 |   |   |O5 |O5 |   |
 |   | 5 | 5 |   |   | 5 | 5 |   |
@@ -322,6 +340,7 @@ colors=2,3,4,6
 maxmarbles=3
 boardtimer=210
 pos=6,2
+starscores=580,666
 +---+---+---+---+---+---+---+---+
 |   | 6 |Of | a |#a3|Oe |&82|   |
 |   |X1 | 5 |   |   | 5 |   |   |
@@ -337,6 +356,7 @@ boardtimer=180
 launchtimer=4
 maxmarbles=5
 pos=7,2
+starscores=606,701
 +---+---+---+---+---+---+---+---+
 |   |   |   |O7 |Od |   |   |   |
 |   |   |=4f|=1f|=1a|=4a|   |   |
@@ -351,6 +371,7 @@ author=John-Paul Gignac <jp@gignac.org>
 boardtimer=60
 launchtimer=3
 pos=7,1
+starscores=511,623
 +---+---+---+---+---+---+---+---+
 |   |   | 6 |Of | a | c |   |   |
 |   |   |*52|*34| c |*52|   |   |
@@ -364,6 +385,7 @@ name=Neither Here nor There
 author=John-Paul Gignac <jp@gignac.org>
 boardtimer=180
 pos=8,1
+starscores=590,687
 +---+---+---+---+---+---+---+---+
 |   |   |O7 | a |<a>| a | c |   |
 |   |   | 5 |   |   |   |O5 |   |
@@ -380,6 +402,7 @@ launchtimer=10
 maxmarbles=5
 pos=8,0
 from=16,22
+starscores=608,726
 +---+---+---+---+---+---+---+---+
 |   |   | 6 |Od | 6 |Od |   |   |
 |   | 6 | f | f | 9 | 5 |   |   |
@@ -393,6 +416,7 @@ name=Which Way is Left?
 author=John-Paul Gignac <jp@gignac.org>
 colors=0,2,7
 pos=9,0
+starscores=475,594
 +---+---+---+---+---+---+---+---+
 |   |   |   |O5 |   |   |   |   |
 |   |   |   | 5 |   |   |   |   |
@@ -408,6 +432,7 @@ boardtimer=600
 launchtimer=90
 maxmarbles=30
 pos=9,1
+starscores=926,991
 +---+---+---+---+---+---+---+---+
 |   |O7 |<e |<e |<e |<e | c |   |
 |   |*54| 5 | 5 | 5 | 5 | 5 |   |
@@ -423,6 +448,7 @@ maxmarbles=9
 launchtimer=2
 colors=0,1,2,3,4,5,6,7
 pos=9,2
+starscores=950,1030
 +---+---+---+---+---+---+---+---+
 | 6 | a | a | a |<ev| a |<ev|<dv|
 | 5 | 6 | a | a | f |<ev| f |<dv|
@@ -443,6 +469,7 @@ launchtimer=20
 maxmarbles=10
 boardtimer=240
 pos=10,2
+starscores=661,772
 +---+---+---+---+---+---+---+---+
 |   |   |   |O7 | c |O7 | c |   |
 |   |   |   | 3 |@f |<9 |O1 |   |
@@ -458,6 +485,7 @@ colors=3
 launchtimer=20
 boardtimer=240
 pos=10,1
+starscores=1250,1275
 +---+---+---+---+---+---+---+---+
 |   |   |O7 |Of |Of |Od |   |   |
 |   |   |O7 |Of |Of |Od |   |   |
@@ -472,6 +500,7 @@ author=Kim Gignac
 maxmarbles=10
 pos=11,2
 from=27
+starscores=749,809
 +---+---+---+---+---+---+---+---+
 |   | 5 |   |   |   |v6 |O9 |   |
 |&62|<b>|&a6| a |>ev|@f |=a | c |
@@ -485,6 +514,7 @@ name=Greetings, Earthling
 author=John-Paul Gignac <jp@gignac.org>
 colors=0,2,4,6,7
 pos=11,1
+starscores=609,717
 +---+---+---+---+---+---+---+---+
 |   |   |O7 | a |Od |   |   |   |
 |   |O4 | 3 |ve | 9 |O4 |   |   |
@@ -501,6 +531,7 @@ boardtimer=180
 launchtimer=6
 maxmarbles=5
 pos=11,0
+starscores=634,727
 +---+---+---+---+---+---+---+---+
 |   |O7 | a |=aa|&a2| a |Od |   |
 |   |#52|   |   |   |   |#52|   |
@@ -513,6 +544,7 @@ pos=11,0
 name=Lily Pads
 author=Kim Gignac
 pos=12,0
+starscores=768,841
 +---+---+---+---+---+---+---+---+
 |   |O7 |&a7| c |   |O5 |   |   |
 |   | 5 |   |=1a|   | 5 |   |   |
@@ -529,6 +561,7 @@ launchtimer=20
 maxmarbles=10
 colors=2,5,3,7,8
 pos=12,1
+starscores=622,741
 +---+---+---+---+---+---+---+---+
 |   |   |=4a|O7 |Od |=4b|   |   |
 |   |O2 |@f2|vd<|>7v|@f3|O8 |   |
@@ -542,6 +575,7 @@ name=Inky Binky Bonky
 boardtimer=240
 colors=2,4,6
 pos=12,2
+starscores=480,560
 +---+---+---+---+---+---+---+---+
 |v6>| a |<dv|O1 |   |O4 |   |   |
 |>7v| c | 5 | 6 | c | 5 |   |   |
@@ -558,6 +592,7 @@ launchtimer=6
 maxmarbles=5
 pos=13,1
 from=33
+starscores=1066,1135
 +---+---+---+---+---+---+---+---+
 |   |O5 |O2 |=at|O8 |   |O5 |   |
 |O4 |O7 |Oe | a |=ab|Oe |Od |O4 |
@@ -572,6 +607,7 @@ author=John-Paul Gignac <jp@gignac.org>
 colors=0,1,2,3,4,5,6,7
 pos=13,2
 from=34,35
+starscores=693,785
 +---+---+---+---+---+---+---+---+
 |X1 |O1 |O1 |O1 |O1 |O1 |O1 |O1 |
 |   |   |   |   |   |   |   |   |
@@ -585,6 +621,7 @@ name=The Asylum
 author=Kim Gignac
 colors=2,3,4,6
 pos=14,2
+starscores=678,757
 +---+---+---+---+---+---+---+---+
 |   |O3 | c |   |   | 6 |O9 |   |
 |   |   | 3 |Oc |O2 | 9 |   |   |
@@ -602,6 +639,7 @@ boardtimer=180
 launchtimer=1
 stoplight=2,3,7
 pos=14,1
+starscores=530,626
 +---+---+---+---+---+---+---+---+
 |>6v|*82|   |   |   | 6 | 9 |   |
 |05^| 6 | a | a | a |@f |>a |O8 |
@@ -618,6 +656,7 @@ maxmarbles=20
 boardtimer=600
 launchtimer=1
 pos=14,0
+starscores=795,815
 +---+---+---+---+---+---+---+---+
 |   |   |   | 6 | c | 6 | 9 |   |
 |O2 |#a6|<a |@f |@f |@f | c |X4 |
@@ -633,6 +672,7 @@ maxmarbles=9
 launchtimer=2
 colors=0,1,2,3,4,5,6,7
 pos=15,0
+starscores=806,857
 +---+---+---+---+---+---+---+---+
 | 6 | a | a |>b | a | a | a | c |
 |v7^|ve<|ve<|ve<|ve<|ve<|ve<|vd<|
@@ -653,6 +693,7 @@ boardtimer=180
 launchtimer=2
 maxmarbles=5
 pos=16,0
+starscores=782,828
 +---+---+---+---+---+---+---+---+
 |   |   |   | 5 |   |   |   |   |
 |   |>2 |&a4|Od |   |   |   |   |
@@ -670,6 +711,7 @@ boardtimer=180
 launchtimer=1
 stoplight=7,2,3
 pos=17,0
+starscores=621,725
 +---+---+---+---+---+---+---+---+
 |>6v|*82|   |   |!  | 6 | 9 |   |
 |05^| 6 | a | a | a |@f |>a |O8 |
@@ -686,6 +728,7 @@ boardtimer=320
 launchtimer=3
 maxmarbles=5
 pos=17,1
+starscores=886,965
 +---+---+---+---+---+---+---+---+
 |O5 |   |O4 |   |O4 |   |O4 |   |
 | 5 |   |#53|!  |&56|   |=5a|   |
@@ -701,6 +744,7 @@ launchtimer=6
 boardtimer=120
 pos=16,1
 from=41,43
+starscores=739,774
 +---+---+---+---+---+---+---+---+
 |   |   |   |   | 3 | a |&c3|   |
 |   | 6 | a | a | a | a | f | c |
@@ -717,6 +761,7 @@ maxmarbles=26
 boardtimer=600
 launchtimer=1
 pos=15,1
+starscores=758,804
 +---+---+---+---+---+---+---+---+
 |O2 |#c6|X4 | 6 | c | 6 | 9 |X4 |
 |O4 |^3 |@f |@f |@f |@f | c | 5 |
@@ -735,6 +780,7 @@ maxmarbles=5
 stoplight=6,4,2
 pos=16,2
 from=44
+starscores=1005,1080
 +---+---+---+---+---+---+---+---+
 |O5 |   |O5 |   |   |O5 |   |O5 |
 | 5 |%  | 5 |   |   | 5 |!  | 5 |
@@ -751,6 +797,7 @@ boardtimer=360
 launchtimer=30
 maxmarbles=6
 pos=17,2
+starscores=571,650
 +---+---+---+---+---+---+---+---+
 |O6 |&a0|#c6|@6 |*a2|ve<|Ob |O9 |
 |&50|X6 |^d<|@3 |ve |<b | a | c |
@@ -765,6 +812,7 @@ author=Kim Gignac
 boardtimer=180
 colors=2,4,6,7
 pos=18,2
+starscores=517,581
 +---+---+---+---+---+---+---+---+
 | 6 | a | a |O9 |O2 | a | a | c |
 | 5 | 6 | c | 6 | c | 6 | a |O9 |
@@ -781,6 +829,7 @@ boardtimer=360
 launchtimer=3
 maxmarbles=5
 pos=18,1
+starscores=906,960
 +---+---+---+---+---+---+---+---+
 |   |O5 |   |   |   | 6 | c |   |
 |   | 5 |O6 |Oc |   | 3 |&f3|O8 |
@@ -796,6 +845,7 @@ boardtimer=60
 launchtimer=1
 maxmarbles=5
 pos=18,0
+starscores=418,497
 +---+---+---+---+---+---+---+---+
 | 5 |   |   |   |   |   |O5 |   |
 |O5 |   |O4 |   |   |   |&54|   |
@@ -812,6 +862,7 @@ boardtimer=360
 launchtimer=3
 maxmarbles=5
 pos=19,0
+starscores=896,963
 +---+---+---+---+---+---+---+---+
 |   |O7 | a | a | a | a | a |Oc |
 |   | 3 | a |Oe |Oe | a | c |=1a|
@@ -828,6 +879,7 @@ launchtimer=4
 boardtimer=120
 colors=1,2,3,6
 pos=19,1
+starscores=617,683
 +---+---+---+---+---+---+---+---+
 | 6 |ve>| c | 5 |   | 6 |>ev| c |
 |^7>|Of | 9 | 3 | c |^7>|Of |<dv|
