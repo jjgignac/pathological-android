@@ -67,12 +67,21 @@ public class GameResources
     public final int[][] holecenters_x;
     public final int[][] holecenters_y;
 
+    public class BoardInfo {
+        String name;
+        Point position;
+        int[] from;
+        boolean isUnlocked;
+    };
+
     public final int numlevels;
-    public Vector<String> boardNames;
-    public Vector<Point> boardPositions;
-    public Vector<int[]> fromBoards;
     public int maxXPos;
-    private final boolean[] mIsUnlocked;
+
+    private Vector<BoardInfo> mBoardInfo;
+
+    public BoardInfo boardInfo(int level) {
+        return mBoardInfo.elementAt(level);
+    }
 
     public static synchronized GameResources getInstance(Context context) {
         if(instance == null) instance = new GameResources(context);
@@ -86,19 +95,17 @@ public class GameResources
         sc = new SpriteCache( context.getResources());
 
         getBoardInfo();
-        numlevels = boardNames.size();
-
-        mIsUnlocked = new boolean[numlevels];
+        numlevels = mBoardInfo.size();
 
         // Determine which levels are unlocked
         for( int level=0; level < numlevels; ++level) {
             if( level == 0 || GameResources.bestScore(level) != -1) {
-                mIsUnlocked[level] = true;
+                boardInfo(level).isUnlocked = true;
                 continue;
             }
-            for( int from : fromBoards.elementAt(level)) {
+            for( int from : boardInfo(level).from) {
                 if( GameResources.bestScore(from) != -1) {
-                    mIsUnlocked[level] = true;
+                    boardInfo(level).isUnlocked = true;
                     break;
                 }
             }
@@ -174,43 +181,43 @@ public class GameResources
     private int nextLevel(int level, int minResult) {
         if( level == numlevels - 1) return -1;
         for( int i = minResult; i < numlevels; i++) {
-            for( int from : fromBoards.elementAt(i)) {
+            for( int from : boardInfo(i).from) {
                 if( from == level) return i;
             }
         }
         int result = minResult;
-        for( int from : fromBoards.elementAt(level)) {
+        for( int from : boardInfo(level).from) {
             result = Math.min(result, nextLevel(from, minResult));
         }
         return result;
     }
 
     public boolean isUnlocked(int level) {
-        return mIsUnlocked[level];
+        return boardInfo(level).isUnlocked;
     }
 
     private void getBoardInfo()
     {
-        boardNames = new Vector<>();
-        boardPositions = new Vector<>();
-        fromBoards = new Vector<>();
+        mBoardInfo = new Vector<>();
         BufferedReader f = null;
 
         try {
             f = new BufferedReader( new InputStreamReader(
                 openRawResource( R.raw.all_boards)));
+            BoardInfo bi = null;
             while( true) {
                 String line = f.readLine();
                 if( line==null) break;
                 if( line.startsWith("name=")) {
-                    boardNames.add(line.substring(5));
-                    if( fromBoards.size() < boardNames.size())
-                        fromBoards.add(new int[] {fromBoards.size()-1});
+                    bi = new BoardInfo();
+                    mBoardInfo.add(bi);
+                    bi.name = line.substring(5);
+                    bi.from = new int[] {mBoardInfo.size() - 2};
                 } else if( line.startsWith("pos=")) {
                     String[] pos = line.substring(4).split(",");
                     int x = Integer.parseInt(pos[0]);
                     int y = Integer.parseInt(pos[1]);
-                    boardPositions.add(new Point(x,y));
+                    bi.position = new Point(x,y);
                     maxXPos = Math.max(maxXPos, x);
                 } else if( line.startsWith("from=")) {
                     String[] fromStr = line.substring(5).split(",");
@@ -218,8 +225,7 @@ public class GameResources
                     for (int i=0; i < fromStr.length; i++) {
                         from[i] = Integer.parseInt(fromStr[i])-1;
                     }
-                    if( fromBoards.size() < boardNames.size()) fromBoards.add(from);
-                    else fromBoards.set(fromBoards.size()-1, from);
+                    bi.from = from;
                 }
             }
         } catch(IOException e) {
@@ -267,8 +273,8 @@ public class GameResources
         e.apply();
 
         for( int i = 0; i < numlevels; ++i) {
-            for( int from : fromBoards.elementAt(i)) {
-                if( from == level) mIsUnlocked[i] = true;
+            for( int from : boardInfo(i).from) {
+                if( from == level) boardInfo(i).isUnlocked = true;
             }
         }
     }

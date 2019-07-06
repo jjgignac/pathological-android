@@ -366,7 +366,7 @@ public class GameActivity extends Activity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         GameResources.setCurrentLevel(Math.max(level, gr.nextLevel(level)));
-                        if(gr.boardNames.elementAt(level).equals("The Auto-Solver") &&
+                        if(gr.boardInfo(level).name.equals("The Auto-Solver") &&
                             GameResources.ratePromptCount() < 2) {
                             showRateDialog(false);
                         } else {
@@ -384,7 +384,7 @@ public class GameActivity extends Activity
             builder.setNeutralButton(R.string.next_level, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if(gr.boardNames.elementAt(level).equals("It's All in the Wrist") &&
+                    if(gr.boardInfo(level).name.equals("It's All in the Wrist") &&
                             GameResources.ratePromptCount() < 1) {
                         GameResources.setCurrentLevel(gr.nextLevel(level));
                         showRateDialog(true);

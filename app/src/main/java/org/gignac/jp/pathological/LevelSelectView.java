@@ -152,7 +152,7 @@ public class LevelSelectView extends View
             }
         }
 
-        int highlightPage = gr.boardPositions.elementAt(highlight).x / cols;
+        int highlightPage = gr.boardInfo(highlight).position.x / cols;
         int npages = 1 + gr.maxXPos / cols;
         float pos = xOffset;
         float prevPos = pos;
@@ -185,7 +185,7 @@ public class LevelSelectView extends View
     }
 
     private void getBoardPosition(int level, Point center) {
-        Point pos = gr.boardPositions.elementAt(level);
+        Point pos = gr.boardInfo(level).position;
         center.x = hmargin + pos.x / 2 * getWidth() +
                 (pos.x % cols) * hSpacing + previewWidth / 2;
         center.y = vmargin + pos.y * vSpacing + previewHeight / 2;
@@ -199,7 +199,7 @@ public class LevelSelectView extends View
             mNeedsPrep = false;
             highlight = Math.max(0, Math.min( gr.numlevels - 1,
                     GameResources.getCurrentLevel()));
-            int highlightPage = gr.boardPositions.elementAt(highlight).x / cols;
+            int highlightPage = gr.boardInfo(highlight).position.x / cols;
             if( xOffset > highlightPage + 1) {
                 xOffset = highlightPage + 1;
             } else if( xOffset < highlightPage - 1) {
@@ -241,7 +241,7 @@ public class LevelSelectView extends View
             getBoardPosition(level, boardPos);
 
             if (level > 0) {
-                for( int from : gr.fromBoards.elementAt(level)) {
+                for( int from : gr.boardInfo(level).from) {
                     // Draw tracks from the parent board(s)
                     getBoardPosition(from, parentPos);
 
@@ -285,7 +285,7 @@ public class LevelSelectView extends View
                 Preview.blit(b,level,x,y, previewWidth, previewHeight);
 
                 // Draw the board title
-                String label = gr.boardNames.elementAt(level);
+                String label = gr.boardInfo(level).name;
                 float txtX = boardPos.x - paint.measureText(label) / 2;
                 float txtY = y + previewHeight + up;
                 float txtShadowOffset = previewWidth * 0.02f;
