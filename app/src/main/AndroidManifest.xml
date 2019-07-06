@@ -24,6 +24,8 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             />
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1344285941475721~9224648294"/>
     </application>
-
 </manifest>
