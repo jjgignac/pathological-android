@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.gignac.jp.pathological">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         tools:ignore="AndroidLintGoogleAppIndexingWarning"
         android:icon="@drawable/wheel"
